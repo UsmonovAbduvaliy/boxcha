@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Boxcha — Kirish</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+
+            font-family: "Segoe UI", Arial, sans-serif;
+
+            color: #29294a;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            overflow-x: hidden;
+
+            background:
+                    radial-gradient(
+                            circle at 5% 10%,
+                            #eee9ff 0,
+                            transparent 27%
+                    ),
+                    radial-gradient(
+                            circle at 95% 15%,
+                            #fff3d9 0,
+                            transparent 25%
+                    ),
+                    linear-gradient(
+                            135deg,
+                            #ffffff,
+                            #faf9ff
+                    );
+
+            position: relative;
+        }
+
+
+        /* =========================
+           DECORATIVE BACKGROUND
+        ========================= */
+
+        .circle {
+            position: fixed;
+
+            border-radius: 50%;
+
+            pointer-events: none;
+
+            z-index: 0;
+        }
+
+        .circle.one {
+            width: 280px;
+            height: 280px;
+
+            left: -130px;
+            top: 12%;
+
+            background: #eee9ff;
+
+            opacity: 0.8;
+        }
+
+        .circle.two {
+            width: 220px;
+            height: 220px;
+
+            right: -90px;
+            bottom: 10%;
+
+            background: #fff1cf;
+
+            opacity: 0.75;
+        }
+
+        .star {
+            position: fixed;
+
+            color: #e5dfff;
+
+            font-size: 30px;
+
+            z-index: 0;
+
+            animation: floatStar 4s ease-in-out infinite;
+        }
+
+        .star.one {
+            top: 15%;
+            left: 12%;
+        }
+
+        .star.two {
+            right: 15%;
+            top: 25%;
+
+            animation-delay: 1s;
+        }
+
+        .star.three {
+            left: 17%;
+            bottom: 18%;
+
+            animation-delay: 2s;
+        }
+
+        @keyframes floatStar {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-10px) rotate(8deg);
+            }
+        }
+
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .page {
+            width: 100%;
+
+            min-height: 100vh;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 30px;
+
+            position: relative;
+
+            z-index: 2;
+        }
+
+
+        /* =========================
+           LOGIN CARD
+        ========================= */
+
+        .login-card {
+
+            width: 100%;
+
+            max-width: 1050px;
+
+            min-height: 620px;
+
+            display: grid;
+
+            grid-template-columns: 1fr 0.85fr;
+
+            background: rgba(255, 255, 255, 0.92);
+
+            border: 1px solid #eeeafd;
+
+            border-radius: 35px;
+
+            overflow: hidden;
+
+            box-shadow:
+                    0 25px 70px rgba(65, 45, 150, 0.12);
+
+            animation: cardAppear 0.8s ease-out;
+        }
+
+
+        @keyframes cardAppear {
+
+            from {
+                opacity: 0;
+                transform: translateY(25px) scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+
+        /* =========================
+           LEFT SIDE
+        ========================= */
+
+        .login-side {
+
+            padding: 55px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: center;
+
+            position: relative;
+
+            background:
+                    linear-gradient(
+                            145deg,
+                            #ffffff,
+                            #faf9ff
+                    );
+        }
+
+
+        .back-home {
+
+            position: absolute;
+
+            top: 30px;
+            left: 35px;
+
+            text-decoration: none;
+
+            color: #77778b;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            transition: 0.25s;
+        }
+
+
+        .back-home:hover {
+
+            color: #6543df;
+
+            transform: translateX(-3px);
+        }
+
+
+        /* =========================
+           LOGO
+        ========================= */
+
+        .brand {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 11px;
+
+            margin-bottom: 45px;
+        }
+
+
+        .brand-icon {
+
+            width: 48px;
+            height: 48px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 15px;
+
+            background: #eee9ff;
+
+            font-size: 26px;
+
+            box-shadow:
+                    0 7px 18px rgba(101, 67, 223, 0.1);
+        }
+
+
+        .brand-name {
+
+            font-size: 25px;
+
+            font-weight: 800;
+
+            color: #5435d6;
+        }
+
+
+        /* =========================
+           TITLE
+        ========================= */
+
+        .login-title {
+
+            font-size: 40px;
+
+            line-height: 1.15;
+
+            letter-spacing: -1px;
+
+            color: #29294a;
+
+            margin-bottom: 12px;
+        }
+
+
+        .login-title span {
+
+            color: #6543df;
+        }
+
+
+        .login-description {
+
+            color: #7a7a8e;
+
+            font-size: 15px;
+
+            line-height: 1.7;
+
+            margin-bottom: 32px;
+
+            max-width: 430px;
+        }
+
+
+        /* =========================
+           FORM
+        ========================= */
+
+        .form-group {
+
+            margin-bottom: 19px;
+        }
+
+
+        .form-group label {
+
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: #42425c;
+
+            font-size: 14px;
+
+            font-weight: 700;
+        }
+
+
+        .input-wrapper {
+
+            position: relative;
+        }
+
+
+        .input-icon {
+
+            position: absolute;
+
+            left: 15px;
+
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            font-size: 18px;
+
+            opacity: 0.65;
+
+            pointer-events: none;
+        }
+
+
+        .form-control {
+
+            width: 100%;
+
+            height: 52px;
+
+            border-radius: 14px;
+
+            border: 1.5px solid #e4e1ef;
+
+            background: #ffffff;
+
+            padding: 0 45px;
+
+            outline: none;
+
+            color: #30304b;
+
+            font-size: 15px;
+
+            transition: 0.25s;
+        }
+
+
+        .form-control::placeholder {
+
+            color: #aaa9b8;
+        }
+
+
+        .form-control:focus {
+
+            border-color: #7255e7;
+
+            box-shadow:
+                    0 0 0 4px rgba(101, 67, 223, 0.09);
+        }
+
+
+        .password-toggle {
+
+            position: absolute;
+
+            right: 15px;
+
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            border: none;
+
+            background: transparent;
+
+            cursor: pointer;
+
+            font-size: 17px;
+
+            opacity: 0.6;
+
+        }
+
+
+        /* =========================
+           ERROR
+        ========================= */
+
+        .error-message {
+
+            display: none;
+
+            padding: 12px 14px;
+
+            margin-bottom: 17px;
+
+            border-radius: 12px;
+
+            background: #fff0f0;
+
+            border: 1px solid #ffd1d1;
+
+            color: #d33b3b;
+
+            font-size: 13px;
+
+            line-height: 1.4;
+        }
+
+
+        /* =========================
+           REMEMBER
+        ========================= */
+
+        .form-options {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            margin-bottom: 25px;
+
+            font-size: 13px;
+        }
+
+
+        .remember {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            color: #747489;
+
+            cursor: pointer;
+        }
+
+
+        .remember input {
+
+            accent-color: #6543df;
+
+            width: 16px;
+            height: 16px;
+        }
+
+
+        .forgot {
+
+            color: #6543df;
+
+            text-decoration: none;
+
+            font-weight: 600;
+        }
+
+
+        .forgot:hover {
+
+            text-decoration: underline;
+        }
+
+
+        /* =========================
+           LOGIN BUTTON
+        ========================= */
+
+        .login-button {
+
+            width: 100%;
+
+            height: 54px;
+
+            border: none;
+
+            border-radius: 15px;
+
+            background:
+                    linear-gradient(
+                            135deg,
+                            #7254e8,
+                            #5432d0
+                    );
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: 750;
+
+            cursor: pointer;
+
+            box-shadow:
+                    0 10px 25px rgba(101, 67, 223, 0.25);
+
+            transition: 0.3s;
+        }
+
+
+        .login-button:hover {
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                    0 15px 30px rgba(101, 67, 223, 0.3);
+        }
+
+
+        .login-button:active {
+
+            transform: translateY(0);
+        }
+
+
+        .login-button.loading {
+
+            opacity: 0.7;
+
+            pointer-events: none;
+        }
+
+
+        /* =========================
+           RIGHT SIDE
+        ========================= */
+
+        .visual-side {
+
+            position: relative;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            overflow: hidden;
+
+            background:
+                    linear-gradient(
+                            145deg,
+                            #eee9ff,
+                            #f8f5ff 55%,
+                            #fff4dc
+                    );
+        }
+
+
+        .visual-side::before {
+
+            content: "";
+
+            position: absolute;
+
+            width: 500px;
+            height: 500px;
+
+            border-radius: 50%;
+
+            background: rgba(255, 255, 255, 0.45);
+
+            top: -170px;
+
+            right: -180px;
+        }
+
+
+        .visual-side::after {
+
+            content: "";
+
+            position: absolute;
+
+            width: 350px;
+            height: 350px;
+
+            border-radius: 50%;
+
+            background: rgba(255, 255, 255, 0.3);
+
+            bottom: -160px;
+
+            left: -120px;
+        }
+
+
+        .visual-content {
+
+            position: relative;
+
+            z-index: 2;
+
+            text-align: center;
+
+            width: 100%;
+
+            padding: 35px;
+        }
+
+
+        .visual-title {
+
+            font-size: 28px;
+
+            color: #39365b;
+
+            font-weight: 800;
+
+            margin-bottom: 8px;
+        }
+
+
+        .visual-subtitle {
+
+            color: #77748f;
+
+            font-size: 14px;
+
+            line-height: 1.6;
+
+            max-width: 330px;
+
+            margin: 0 auto 15px;
+        }
+
+
+        /* =========================
+           BEAR IMAGE
+        ========================= */
+
+        .bear {
+
+            width: 100%;
+
+            max-width: 370px;
+
+            height: auto;
+
+            object-fit: contain;
+
+            display: block;
+
+            margin: 0 auto;
+
+            filter:
+                    drop-shadow(
+                            0 25px 30px rgba(70, 50, 150, 0.18)
+                    );
+
+            animation: bearFloat 4s ease-in-out infinite;
+        }
+
+
+        @keyframes bearFloat {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-9px);
+            }
+        }
+
+
+        /* =========================
+           INFO BADGES
+        ========================= */
+
+        .badges {
+
+            display: flex;
+
+            justify-content: center;
+
+            gap: 10px;
+
+            flex-wrap: wrap;
+
+            margin-top: 8px;
+        }
+
+
+        .badge {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            padding: 8px 12px;
+
+            border-radius: 30px;
+
+            background: rgba(255, 255, 255, 0.7);
+
+            border: 1px solid rgba(255, 255, 255, 0.8);
+
+            color: #67637d;
+
+            font-size: 12px;
+
+            font-weight: 600;
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 850px) {
+
+            .login-card {
+
+                max-width: 520px;
+
+                grid-template-columns: 1fr;
+
+            }
+
+            .visual-side {
+
+                display: none;
+            }
+
+            .login-side {
+
+                padding: 60px 45px;
+            }
+        }
+
+
+        @media (max-width: 550px) {
+
+            .page {
+
+                padding: 15px;
+            }
+
+            .login-card {
+
+                border-radius: 25px;
+            }
+
+            .login-side {
+
+                padding: 55px 25px 35px;
+            }
+
+            .back-home {
+
+                left: 25px;
+
+                top: 22px;
+            }
+
+            .brand {
+
+                margin-bottom: 35px;
+            }
+
+            .login-title {
+
+                font-size: 32px;
+            }
+
+            .login-description {
+
+                font-size: 14px;
+            }
+
+            .form-options {
+
+                align-items: flex-start;
+
+                gap: 10px;
+            }
+
+            .forgot {
+
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Background decoration -->
+
+<div class="circle one"></div>
+<div class="circle two"></div>
+
+<div class="star one">✦</div>
+<div class="star two">✦</div>
+<div class="star three">✦</div>
+
+
+<div class="page">
+
+    <div class="login-card">
+
+
+        <!-- =========================
+             LOGIN FORM
+        ========================= -->
+
+        <div class="login-side">
+
+            <a href="/home.html" class="back-home">
+                ← Bosh sahifaga qaytish
+            </a>
+
+
+            <div class="brand">
+
+                <div class="brand-icon">
+                    🧸
+                </div>
+
+                <div class="brand-name">
+                    Boxcha
+                </div>
+
+            </div>
+
+
+            <h1 class="login-title">
+                Xush kelibsiz! <br>
+                <span>Boxcha'ga kiring.</span>
+            </h1>
+
+
+            <p class="login-description">
+                Boxcha boshqaruv tizimiga kirish uchun
+                emailingiz va parolingizni kiriting.
+            </p>
+
+
+            <div id="error-msg" class="error-message">
+                Login yoki parol noto‘g‘ri!
+            </div>
+
+
+            <form id="loginForm" autocomplete="off">
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <span class="input-icon">
+                            ✉️
+                        </span>
+
+                        <input
+                                type="email"
+                                class="form-control"
+                                id="email"
+                                name="email"
+                                placeholder="example@gmail.com"
+                                autocomplete="username"
+                                required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Parol
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <span class="input-icon">
+                            🔒
+                        </span>
+
+                        <input
+                                type="password"
+                                class="form-control"
+                                id="password"
+                                name="password"
+                                placeholder="Parolingizni kiriting"
+                                autocomplete="current-password"
+                                required
+                        >
+
+                        <button
+                                type="button"
+                                class="password-toggle"
+                                id="passwordToggle"
+                                aria-label="Parolni ko‘rsatish"
+                        >
+                            👁️
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- OPTIONS -->
+
+                <div class="form-options">
+
+                    <label class="remember">
+
+                        <input
+                                type="checkbox"
+                                id="remember"
+                        >
+
+                        Meni eslab qolish
+
+                    </label>
+
+
+                    <a href="#" class="forgot">
+                        Parolni unutdingizmi?
+                    </a>
+
+                </div>
+
+
+                <!-- LOGIN -->
+
+                <button
+                        type="submit"
+                        class="login-button"
+                        id="loginButton"
+                >
+                    Kirish →
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- =========================
+             VISUAL SIDE
+        ========================= -->
+
+        <div class="visual-side">
+
+            <div class="visual-content">
+
+                <h2 class="visual-title">
+                    Bolajonlar olamiga
+                    xush kelibsiz! 🧸
+                </h2>
+
+                <p class="visual-subtitle">
+                    Har bir bola mehr, e'tibor va
+                    quvonch bilan ulg‘ayishi uchun
+                    Boxcha yoningizda.
+                </p>
+
+
+                <img
+                        src="/images/boxcha-bear.png"
+                        alt="Boxcha ayiqchasi"
+                        class="bear"
+                >
+
+
+                <div class="badges">
+
+                    <div class="badge">
+                        🛡️ Xavfsiz
+                    </div>
+
+                    <div class="badge">
+                        ❤️ Mehribon
+                    </div>
+
+                    <div class="badge">
+                        📚 Ta'lim
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    /* =========================
+       PASSWORD SHOW / HIDE
+    ========================= */
+
+    const passwordInput =
+        document.getElementById("password");
+
+    const passwordToggle =
+        document.getElementById("passwordToggle");
+
+
+    passwordToggle.addEventListener("click", function () {
+
+        if (passwordInput.type === "password") {
+
+            passwordInput.type = "text";
+
+            passwordToggle.textContent = "🙈";
+
+        } else {
+
+            passwordInput.type = "password";
+
+            passwordToggle.textContent = "👁️";
+        }
+
+    });
+
+
+    /* =========================
+       LOGIN
+    ========================= */
+
+    document
+        .getElementById("loginForm")
+        .addEventListener("submit", async function (e) {
+
+            e.preventDefault();
+
+
+            const email =
+                document
+                    .getElementById("email")
+                    .value
+                    .trim();
+
+
+            const password =
+                document
+                    .getElementById("password")
+                    .value
+                    .trim();
+
+
+            const errorMsg =
+                document.getElementById("error-msg");
+
+
+            const loginButton =
+                document.getElementById("loginButton");
+
+
+            errorMsg.style.display = "none";
+
+
+            loginButton.classList.add("loading");
+
+            loginButton.textContent =
+                "Kirilmoqda...";
+
+
+            try {
+
+                const response =
+                    await fetch("/api/user/login", {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            email: email,
+                            password: password
+                        })
+
+                    });
+
+
+                if (!response.ok) {
+
+                    let message =
+                        "Login yoki parol noto‘g‘ri!";
+
+                    try {
+
+                        const errorData =
+                            await response.json();
+
+                        if (errorData.message) {
+                            message =
+                                errorData.message;
+                        }
+
+                    } catch (_) {
+                        // Backend JSON qaytarmasa
+                    }
+
+
+                    errorMsg.textContent = message;
+
+                    errorMsg.style.display =
+                        "block";
+
+                    loginButton.classList.remove(
+                        "loading"
+                    );
+
+                    loginButton.textContent =
+                        "Kirish →";
+
+                    return;
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                console.log(
+                    "Login response:",
+                    data
+                );
+
+
+                const token =
+                    data.accessToken;
+
+
+                if (!token) {
+
+                    errorMsg.textContent =
+                        "Token topilmadi, backendni tekshiring!";
+
+                    errorMsg.style.display =
+                        "block";
+
+                    loginButton.classList.remove(
+                        "loading"
+                    );
+
+                    loginButton.textContent =
+                        "Kirish →";
+
+                    return;
+                }
+
+
+                /*
+                 * JWT tokenlarni saqlash
+                 */
+
+                localStorage.setItem(
+                    "accessToken",
+                    token
+                );
+
+
+                if (data.refreshToken) {
+
+                    localStorage.setItem(
+                        "refreshToken",
+                        data.refreshToken
+                    );
+
+                }
+
+
+                /*
+                 * Cabinet
+                 */
+
+                window.location.href =
+                    "/cabinet.html";
+
+
+            } catch (error) {
+
+                console.error(
+                    "Login error:",
+                    error
+                );
+
+
+                errorMsg.textContent =
+                    "Server bilan aloqa qilib bo‘lmadi.";
+
+
+                errorMsg.style.display =
+                    "block";
+
+
+                loginButton.classList.remove(
+                    "loading"
+                );
+
+
+                loginButton.textContent =
+                    "Kirish →";
+            }
+
+        });
+
+</script>
+
+</body>
+</html>

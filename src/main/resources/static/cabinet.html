@@ -1,0 +1,5051 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Boxcha — Kabinet</title>
+
+    <link rel="stylesheet" href="/css/CabinetPage.css">
+</head>
+
+<body>
+
+<div class="cabinet-container">
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="logo-section">
+            <img
+                    src="/images/logo.jpg"
+                    alt="Boxcha"
+                    class="logo"
+            >
+
+            <div class="brand-info">
+                <h2>Boxcha</h2>
+                <span>Bolalar markazi</span>
+            </div>
+        </div>
+
+
+        <nav class="menu">
+
+            <button class="menu-item active" id="homeBtn">
+                <span class="menu-icon">⌂</span>
+                <span>Bosh sahifa</span>
+            </button>
+
+            <button class="menu-item" id="groupBtn">
+                <span class="menu-icon">▦</span>
+                <span>Guruhlar</span>
+            </button>
+
+            <button class="menu-item" id="childrenBtn">
+                <span class="menu-icon">♙</span>
+                <span>Bolalar</span>
+            </button>
+
+            <button class="menu-item" id="teachersBtn">
+                <span class="menu-icon">♙</span>
+                <span>Ustozlar</span>
+            </button>
+
+            <button class="menu-item" id="othersBtn">
+                <span class="menu-icon">◉</span>
+                <span>Boshqalar</span>
+            </button>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <div class="user-mini" id="sidebarUser">
+
+                <div class="user-avatar" id="userAvatar">
+                    ?
+                </div>
+
+                <div class="user-mini-info">
+                    <strong id="sidebarUserName">
+                        Yuklanmoqda...
+                    </strong>
+
+                    <span id="sidebarUserRole">
+                        -
+                    </span>
+                </div>
+
+            </div>
+
+
+            <button class="logout-btn" id="logoutBtn">
+                <span>↪</span>
+                Chiqish
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="main-content" id="mainContent">
+
+        <!-- ================= WELCOME ================= -->
+
+        <section class="welcome-page">
+
+            <div class="welcome-card">
+
+                <div class="welcome-text">
+
+                    <span class="welcome-label">
+                        BOXCHA KABINET
+                    </span>
+
+                    <h1>
+                        Xush kelibsiz,
+                        <span id="welcomeUserName">
+                            ...
+                        </span>!
+                    </h1>
+
+                    <p>
+                        Bolalar markazi boshqaruv paneliga xush kelibsiz.
+                        Kerakli bo‘limni chap menyudan tanlang.
+                    </p>
+
+                </div>
+
+                <div class="welcome-icon">
+                    🏠
+                </div>
+
+            </div>
+
+
+            <div class="quick-grid">
+
+                <button class="quick-card" id="quickGroups">
+
+                    <div class="quick-icon group-icon">
+                        ▦
+                    </div>
+
+                    <div>
+                        <strong>Guruhlar</strong>
+                        <span>Guruhlarni ko‘rish</span>
+                    </div>
+
+                </button>
+
+
+                <button class="quick-card" id="quickChildren">
+
+                    <div class="quick-icon children-icon">
+                        ♙
+                    </div>
+
+                    <div>
+                        <strong>Bolalar</strong>
+                        <span>Bolalar ro‘yxati</span>
+                    </div>
+
+                </button>
+
+
+                <button class="quick-card" id="quickTeachers">
+
+                    <div class="quick-icon teacher-icon">
+                        ♙
+                    </div>
+
+                    <div>
+                        <strong>Ustozlar</strong>
+                        <span>Ustozlar ro‘yxati</span>
+                    </div>
+
+                </button>
+
+
+                <button class="quick-card" id="quickOthers">
+
+                    <div class="quick-icon other-icon">
+                        ◉
+                    </div>
+
+                    <div>
+                        <strong>Boshqalar</strong>
+                        <span>Xodimlar ro‘yxati</span>
+                    </div>
+
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- ================= TOAST ================= -->
+
+<div id="toast" class="toast"></div>
+
+
+<!-- ================= CONFIRM MODAL ================= -->
+
+<div id="confirmModal" class="modal-overlay">
+
+    <div class="confirm-modal">
+
+        <div class="confirm-icon">
+            !
+        </div>
+
+        <h3 id="confirmText">
+            Amalni tasdiqlaysizmi?
+        </h3>
+
+        <p>
+            Ushbu amalni bajarishni tasdiqlang.
+        </p>
+
+        <div class="modal-actions">
+
+            <button
+                    class="btn btn-cancel"
+                    id="noBtn">
+                Bekor qilish
+            </button>
+
+            <button
+                    class="btn btn-danger"
+                    id="yesBtn">
+                Tasdiqlash
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    /* =====================================================
+       TOKEN
+    ===================================================== */
+
+    const accessToken = localStorage.getItem("accessToken");
+
+    if (!accessToken) {
+        window.location.href = "/auth/login.html";
+    }
+
+
+    /* =====================================================
+       API
+    ===================================================== */
+
+    const API = {
+
+        users: "/api/user",
+        groups: "/api/group",
+        children: "/api/children",
+        others: "/api/others",
+        roles: "/api/role"
+
+    };
+
+
+    /* =====================================================
+       GLOBAL VARIABLES
+    ===================================================== */
+
+    let currentUserRoles = [];
+
+    let currentPage = 0;
+
+    const pageSize = 10;
+
+    let currentUrl = "";
+
+    let currentSection = "home";
+
+
+    /* =====================================================
+       JWT PAYLOAD
+    ===================================================== */
+
+    function getJwtPayload(token) {
+
+        try {
+
+            const base64Url = token.split(".")[1];
+
+            const base64 = base64Url
+                .replace(/-/g, "+")
+                .replace(/_/g, "/");
+
+            return JSON.parse(
+                decodeURIComponent(
+                    atob(base64)
+                        .split("")
+                        .map(function (c) {
+                            return "%" +
+                                ("00" + c.charCodeAt(0).toString(16))
+                                    .slice(-2);
+                        })
+                        .join("")
+                )
+            );
+
+        } catch (error) {
+
+            console.warn("JWT payload o‘qilmadi.");
+
+            return {};
+
+        }
+
+    }
+
+
+    const jwtPayload = getJwtPayload(accessToken);
+
+
+    /* =====================================================
+       CURRENT USER
+    ===================================================== */
+
+    currentUserRoles = jwtPayload.roles || [];
+
+
+    if (typeof currentUserRoles === "string") {
+
+        currentUserRoles =
+            currentUserRoles
+                .split(",")
+                .map(role => role.trim());
+
+    }
+
+
+    function getCurrentUserName() {
+
+        return (
+            jwtPayload.firstName ||
+            jwtPayload.name ||
+            "Foydalanuvchi"
+        );
+
+    }
+
+
+    function isAdmin() {
+
+        return (
+            currentUserRoles.includes("ADMIN") ||
+            currentUserRoles.includes("SUPER_ADMIN")
+        );
+
+    }
+
+
+    /* =====================================================
+       SET CURRENT USER
+    ===================================================== */
+
+    function setupCurrentUser() {
+
+        const name = getCurrentUserName();
+
+        const firstLetter =
+            name.charAt(0).toUpperCase();
+
+        document.getElementById("welcomeUserName")
+            .textContent = name;
+
+        document.getElementById("sidebarUserName")
+            .textContent = name;
+
+        document.getElementById("userAvatar")
+            .textContent = firstLetter;
+
+
+        const roleElement =
+            document.getElementById("sidebarUserRole");
+
+        if (currentUserRoles.length) {
+
+            roleElement.textContent =
+                currentUserRoles.join(", ");
+
+        } else {
+
+            roleElement.textContent =
+                "Foydalanuvchi";
+
+        }
+
+    }
+
+
+    setupCurrentUser();
+
+
+    /* =====================================================
+       FETCH WITH AUTH
+    ===================================================== */
+
+    async function fetchWithAuth(url, options = {}) {
+
+        const headers = {
+            ...(options.headers || {}),
+            "Authorization": accessToken,
+            "Content-Type": "application/json"
+        };
+
+
+        return fetch(url, {
+            ...options,
+            headers
+        });
+
+    }
+
+
+    /* =====================================================
+       TOAST
+    ===================================================== */
+
+    function showToast(message, type = "success") {
+
+        const toast =
+            document.getElementById("toast");
+
+        toast.textContent = message;
+
+        toast.className =
+            "toast " + type;
+
+        toast.classList.add("show");
+
+
+        setTimeout(() => {
+
+            toast.classList.remove("show");
+
+        }, 2500);
+
+    }
+
+
+    /* =====================================================
+       CONFIRM
+    ===================================================== */
+
+    function showConfirm(message, callback) {
+
+        const modal =
+            document.getElementById("confirmModal");
+
+        const text =
+            document.getElementById("confirmText");
+
+        const yesBtn =
+            document.getElementById("yesBtn");
+
+        const noBtn =
+            document.getElementById("noBtn");
+
+
+        text.textContent = message;
+
+        modal.classList.add("show");
+
+
+        yesBtn.onclick = () => {
+
+            modal.classList.remove("show");
+
+            callback();
+
+        };
+
+
+        noBtn.onclick = () => {
+
+            modal.classList.remove("show");
+
+        };
+
+    }
+
+
+    /* =====================================================
+       MENU ACTIVE
+    ===================================================== */
+
+    function setActiveMenu(id) {
+
+        document
+            .querySelectorAll(".menu-item")
+            .forEach(item => {
+
+                item.classList.remove("active");
+
+            });
+
+
+        const element =
+            document.getElementById(id);
+
+        if (element) {
+
+            element.classList.add("active");
+
+        }
+
+    }
+
+
+    /* =====================================================
+       LOGOUT
+    ===================================================== */
+
+    document
+        .getElementById("logoutBtn")
+        .addEventListener("click", () => {
+
+            localStorage.clear();
+
+            window.location.href =
+                "/auth/login.html";
+
+        });
+
+
+    /* =====================================================
+       HOME
+    ===================================================== */
+
+    function loadHome() {
+
+        currentSection = "home";
+
+        setActiveMenu("homeBtn");
+
+
+        document
+            .getElementById("mainContent")
+            .innerHTML = `
+
+            <section class="welcome-page">
+
+                <div class="welcome-card">
+
+                    <div class="welcome-text">
+
+                        <span class="welcome-label">
+                            BOXCHA KABINET
+                        </span>
+
+                        <h1>
+                            Xush kelibsiz,
+                            <span>
+                                ${escapeHtml(getCurrentUserName())}
+                            </span>!
+                        </h1>
+
+                        <p>
+                            Bolalar markazi boshqaruv paneliga
+                            xush kelibsiz.
+                            Kerakli bo‘limni chap menyudan tanlang.
+                        </p>
+
+                    </div>
+
+                    <div class="welcome-icon">
+                        🏠
+                    </div>
+
+                </div>
+
+
+                <div class="quick-grid">
+
+                    <button class="quick-card" id="quickGroups">
+                        <div class="quick-icon group-icon">▦</div>
+                        <div>
+                            <strong>Guruhlar</strong>
+                            <span>Guruhlarni ko‘rish</span>
+                        </div>
+                    </button>
+
+
+                    <button class="quick-card" id="quickChildren">
+                        <div class="quick-icon children-icon">♙</div>
+                        <div>
+                            <strong>Bolalar</strong>
+                            <span>Bolalar ro‘yxati</span>
+                        </div>
+                    </button>
+
+
+                    <button class="quick-card" id="quickTeachers">
+                        <div class="quick-icon teacher-icon">♙</div>
+                        <div>
+                            <strong>Ustozlar</strong>
+                            <span>Ustozlar ro‘yxati</span>
+                        </div>
+                    </button>
+
+
+                    <button class="quick-card" id="quickOthers">
+                        <div class="quick-icon other-icon">◉</div>
+                        <div>
+                            <strong>Boshqalar</strong>
+                            <span>Xodimlar ro‘yxati</span>
+                        </div>
+                    </button>
+
+                </div>
+
+            </section>
+        `;
+
+
+        document
+            .getElementById("quickGroups")
+            .onclick = loadGroups;
+
+        document
+            .getElementById("quickChildren")
+            .onclick = loadChildren;
+
+        document
+            .getElementById("quickTeachers")
+            .onclick = loadTeachers;
+
+        document
+            .getElementById("quickOthers")
+            .onclick = loadOthers;
+
+    }
+
+
+    document
+        .getElementById("homeBtn")
+        .onclick = loadHome;
+
+
+    /* =====================================================
+       GROUPS
+    ===================================================== */
+
+    document
+        .getElementById("groupBtn")
+        .onclick = loadGroups;
+
+
+    async function loadGroups() {
+
+        currentSection = "groups";
+
+        setActiveMenu("groupBtn");
+
+
+        document
+            .getElementById("mainContent")
+            .innerHTML = `
+
+            <div class="page-header">
+
+                <div>
+                    <span class="page-label">
+                        BOXCHA
+                    </span>
+
+                    <h1>Guruhlar</h1>
+
+                    <p>
+                        Markazdagi barcha guruhlar
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div
+                id="groupsBox"
+                class="groups-grid">
+
+                <div class="loading">
+                    Yuklanmoqda...
+                </div>
+
+            </div>
+        `;
+
+
+        try {
+
+            const response =
+                await fetchWithAuth(API.groups);
+
+
+            if (!response.ok) {
+
+                throw new Error();
+
+            }
+
+
+            const groups =
+                await response.json();
+
+
+            renderGroups(groups);
+
+        } catch (error) {
+
+            document
+                .getElementById("groupsBox")
+                .innerHTML = `
+
+                <div class="empty-state">
+                    <div>⚠️</div>
+                    <h3>Guruhlarni yuklab bo‘lmadi</h3>
+                    <p>Server bilan bog‘lanishda xatolik.</p>
+                </div>
+
+                `;
+
+        }
+
+    }
+
+
+    function renderGroups(groups) {
+
+        const box =
+            document.getElementById("groupsBox");
+
+
+        if (!groups || !groups.length) {
+
+            box.innerHTML = `
+
+                <div class="empty-state">
+                    <div>📭</div>
+                    <h3>Guruhlar topilmadi</h3>
+                    <p>Hozircha guruh mavjud emas.</p>
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        box.innerHTML =
+            groups.map(group => {
+
+
+
+                return `
+
+                <div
+                    class="group-card"
+                    data-id="${group.id}">
+
+                    <div class="group-card-top">
+
+                        <div class="group-icon-large">
+                            ▦
+                        </div>
+
+                        <span class="group-arrow">
+                            →
+                        </span>
+
+                    </div>
+
+
+                    <h3>
+                        ${escapeHtml(
+                    group.groupName ||
+                    group.name ||
+                    "Nomsiz guruh"
+                )}
+                    </h3>
+
+
+
+
+                </div>
+
+                `;
+
+            }).join("");
+
+
+        document
+            .querySelectorAll(".group-card")
+            .forEach(card => {
+
+                card.onclick = () => {
+
+                    const id =
+                        card.dataset.id;
+
+                    loadGroupDetails(id);
+
+                };
+
+            });
+
+    }
+
+
+    /* =====================================================
+       GROUP DETAILS
+    ===================================================== */
+
+    async function loadGroupDetails(groupId) {
+
+        try {
+
+            const response =
+                await fetchWithAuth(
+                    `${API.groups}/${groupId}`
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error();
+
+            }
+
+
+            const group =
+                await response.json();
+
+
+            showGroupModal(group);
+
+        } catch (error) {
+
+            showToast(
+                "Guruh ma'lumotlarini yuklab bo‘lmadi",
+                "error"
+            );
+
+        }
+
+    }
+
+
+    function showGroupModal(group) {
+
+        const teacher =
+            group.teacherFirstname
+                ? `${group.teacherFirstname}
+                   ${group.teacherLastname || ""}`
+                : "Ustoz biriktirilmagan";
+
+
+        const children =
+            group.children || [];
+
+
+        const modal =
+            document.createElement("div");
+
+        modal.className =
+            "dynamic-modal";
+
+
+        modal.innerHTML = `
+
+            <div class="detail-modal">
+
+                <button
+                    class="modal-close">
+                    ×
+                </button>
+
+
+                <div class="detail-header">
+
+                    <div class="detail-avatar">
+                        ▦
+                    </div>
+
+                    <div>
+
+                        <span>GURUH</span>
+
+                        <h2>
+                            ${escapeHtml(
+            group.groupName ||
+            group.name ||
+            "-"
+        )}
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail-grid">
+
+                    <div class="detail-item">
+                        <span>Ustoz</span>
+                        <strong>
+                            ${escapeHtml(teacher)}
+                        </strong>
+                    </div>
+
+
+                    <div class="detail-item">
+                        <span>Bolalar soni</span>
+                        <strong>
+                            ${children.length}
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                ${
+            isAdmin()
+                ? `
+
+                    <div class="modal-actions">
+
+                        <button
+                            class="btn btn-primary"
+                            id="changeTeacherBtn">
+                            👨‍🏫 Ustozni almashtirish
+                        </button>
+
+                    </div>
+
+                    `
+                : ""
+        }
+
+            </div>
+
+        `;
+
+
+        document.body.appendChild(modal);
+
+
+        modal
+            .querySelector(".modal-close")
+            .onclick = () => modal.remove();
+
+
+        if (isAdmin()) {
+
+            modal
+                .querySelector("#changeTeacherBtn")
+                .onclick = () => {
+
+                modal.remove();
+
+                showChangeTeacherModal(group);
+
+            };
+
+        }
+
+    }
+
+
+    /* =====================================================
+       CHANGE GROUP TEACHER
+    ===================================================== */
+
+    async function showChangeTeacherModal(group) {
+
+        try {
+
+            const response =
+                await fetchWithAuth(API.users);
+
+
+            if (!response.ok) {
+
+                throw new Error();
+
+            }
+
+
+            const users =
+                await response.json();
+
+
+            const teachers =
+                users.filter(user => {
+
+                    return user.roles?.some(role =>
+                        String(role.role)
+                            .toUpperCase()
+                            .includes("TEACHER")
+                    );
+
+                });
+
+
+            const modal =
+                document.createElement("div");
+
+            modal.className =
+                "dynamic-modal";
+
+
+            modal.innerHTML = `
+
+                <div class="form-modal">
+
+                    <button class="modal-close">
+                        ×
+                    </button>
+
+                    <h2>
+                        Ustozni almashtirish
+                    </h2>
+
+                    <p class="modal-subtitle">
+                        Guruh:
+                        <strong>
+                            ${escapeHtml(
+                group.groupName ||
+                group.name ||
+                "-"
+            )}
+                        </strong>
+                    </p>
+
+
+                    <label>
+                        Ustoz
+                    </label>
+
+                    <select id="teacherSelect">
+
+                        <option value="">
+                            Ustoz tanlang
+                        </option>
+
+                        ${teachers.map(teacher => `
+
+                            <option value="${teacher.id}">
+                                ${escapeHtml(
+                teacher.firstName
+            )}
+                                ${escapeHtml(
+                teacher.lastName
+            )}
+                            </option>
+
+                        `).join("")}
+
+                    </select>
+
+
+                    <div class="modal-actions">
+
+                        <button
+                            class="btn btn-cancel"
+                            id="cancelTeacher">
+                            Bekor qilish
+                        </button>
+
+                        <button
+                            class="btn btn-primary"
+                            id="saveTeacher">
+                            Saqlash
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            document.body.appendChild(modal);
+
+
+            modal.querySelector(".modal-close")
+                .onclick = () => modal.remove();
+
+
+            modal.querySelector("#cancelTeacher")
+                .onclick = () => modal.remove();
+
+
+            modal.querySelector("#saveTeacher")
+                .onclick = async () => {
+
+                const teacherId =
+                    document.getElementById(
+                        "teacherSelect"
+                    ).value;
+
+
+                if (!teacherId) {
+
+                    showToast(
+                        "Ustoz tanlang",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                /*
+                 * Backenddagi group teacher
+                 * endpointi shu yerga ulanadi.
+                 *
+                 * Hozircha:
+                 */
+
+                showToast(
+                    "Ustozni almashtirish API endpointi backenddan kerak",
+                    "error"
+                );
+
+            };
+
+        } catch (error) {
+
+            showToast(
+                "Ustozlarni yuklab bo‘lmadi",
+                "error"
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       CHILDREN
+    ===================================================== */
+
+    document
+        .getElementById("childrenBtn")
+        .onclick = loadChildren;
+
+
+    async function loadChildren() {
+
+        currentSection = "children";
+
+        currentPage = 0;
+
+        setActiveMenu("childrenBtn");
+
+
+        document
+            .getElementById("mainContent")
+            .innerHTML = `
+
+            <div class="page-header">
+
+                <div>
+                    <span class="page-label">
+                        BOXCHA
+                    </span>
+
+                    <h1>Bolalar</h1>
+
+                    <p>
+                        Bolalar ro‘yxati va ma'lumotlari
+                    </p>
+                </div>
+
+
+                ${
+            isAdmin()
+                ? `
+                    <button
+                        class="btn btn-primary"
+                        id="addChildBtn">
+                        + Yangi bola
+                    </button>
+                    `
+                : ""
+        }
+
+            </div>
+
+
+            <div class="filter-panel">
+
+                <div class="filter-status">
+
+                    <button
+                        class="filter-btn active"
+                        data-status="all"
+                        id="childrenAll">
+                        Barchasi
+                    </button>
+
+                    <button
+                        class="filter-btn"
+                        data-status="true"
+                        id="childrenActive">
+                        Faol
+                    </button>
+
+                    <button
+                        class="filter-btn"
+                        data-status="false"
+                        id="childrenInactive">
+                        Nofaol
+                    </button>
+
+                </div>
+
+
+                <div class="filter-search">
+
+                    <input
+                        type="text"
+                        id="childFirstName"
+                        placeholder="Ism">
+
+
+                    <input
+                        type="text"
+                        id="childLastName"
+                        placeholder="Familiya">
+
+
+                    <select id="childGroupFilter">
+
+                        <option value="">
+                            Barcha guruhlar
+                        </option>
+
+                    </select>
+
+
+                    <button
+                        class="btn btn-primary"
+                        id="childSearchBtn">
+                        🔎 Qidirish
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div id="childrenTableBox"
+                 class="table-container">
+
+                <div class="loading">
+                    Yuklanmoqda...
+                </div>
+
+            </div>
+
+        `;
+
+
+        await loadChildGroupsFilter();
+
+        attachChildrenFilters();
+
+        if (isAdmin()) {
+
+            document
+                .getElementById("addChildBtn")
+                .onclick = showAddChildModal;
+
+        }
+
+
+        await fetchChildren();
+
+    }
+
+
+    async function loadChildGroupsFilter() {
+
+        try {
+
+            const response =
+                await fetchWithAuth(API.groups);
+
+
+            if (!response.ok) return;
+
+
+            const groups =
+                await response.json();
+
+
+            const select =
+                document.getElementById(
+                    "childGroupFilter"
+                );
+
+
+            groups.forEach(group => {
+
+                const option =
+                    document.createElement("option");
+
+                option.value =
+                    group.id;
+
+                option.textContent =
+                    group.groupName ||
+                    group.name;
+
+                select.appendChild(option);
+
+            });
+
+        } catch (error) {
+
+            console.warn(
+                "Guruh filterini yuklashda xatolik"
+            );
+
+        }
+
+    }
+
+
+    function attachChildrenFilters() {
+
+        document
+            .getElementById("childrenAll")
+            .onclick = () => {
+
+            setChildrenFilterActive(
+                "childrenAll"
+            );
+
+            fetchChildren();
+
+        };
+
+
+        document
+            .getElementById("childrenActive")
+            .onclick = () => {
+
+            setChildrenFilterActive(
+                "childrenActive"
+            );
+
+            fetchChildren(true);
+
+        };
+
+
+        document
+            .getElementById("childrenInactive")
+            .onclick = () => {
+
+            setChildrenFilterActive(
+                "childrenInactive"
+            );
+
+            fetchChildren(false);
+
+        };
+
+
+        document
+            .getElementById("childSearchBtn")
+            .onclick = () => {
+
+            fetchChildren();
+
+        };
+
+    }
+
+
+    function setChildrenFilterActive(id) {
+
+        document
+            .querySelectorAll(".filter-status .filter-btn")
+            .forEach(btn =>
+                btn.classList.remove("active")
+            );
+
+
+        document
+            .getElementById(id)
+            .classList.add("active");
+
+    }
+
+
+    async function fetchChildren(status = null) {
+
+        const firstName =
+            document
+                .getElementById("childFirstName")
+                ?.value
+                .trim();
+
+
+        const lastName =
+            document
+                .getElementById("childLastName")
+                ?.value
+                .trim();
+
+
+        const groupId =
+            document
+                .getElementById("childGroupFilter")
+                ?.value;
+
+
+        let url =
+            API.children;
+
+
+        const params =
+            new URLSearchParams();
+
+
+        if (status !== null) {
+
+            params.append(
+                "active",
+                status
+            );
+
+        }
+
+
+        if (firstName) {
+
+            params.append(
+                "firstName",
+                firstName
+            );
+
+        }
+
+
+        if (lastName) {
+
+            params.append(
+                "lastName",
+                lastName
+            );
+
+        }
+
+
+        if (groupId) {
+
+            params.append(
+                "groupId",
+                groupId
+            );
+
+        }
+
+
+        params.append(
+            "page",
+            currentPage
+        );
+
+
+        params.append(
+            "size",
+            pageSize
+        );
+
+
+        if (params.toString()) {
+
+            url += "?" + params.toString();
+
+        }
+
+
+        currentUrl = url;
+
+
+        try {
+
+            const response =
+                await fetchWithAuth(url);
+
+
+            if (!response.ok) {
+
+                throw new Error();
+
+            }
+
+
+            const children =
+                await response.json();
+
+
+            renderChildren(children);
+
+
+        } catch (error) {
+
+            document
+                .getElementById(
+                    "childrenTableBox"
+                )
+                .innerHTML = `
+
+                <div class="empty-state">
+                    <div>⚠️</div>
+                    <h3>Bolalarni yuklab bo‘lmadi</h3>
+                    <p>API bilan bog‘lanishda xatolik.</p>
+                </div>
+
+                `;
+
+        }
+
+    }
+
+
+    function renderChildren(children) {
+
+        const box =
+            document.getElementById(
+                "childrenTableBox"
+            );
+
+
+        if (!children.length) {
+
+            box.innerHTML = `
+
+                <div class="empty-state">
+                    <div>👶</div>
+                    <h3>Bolalar topilmadi</h3>
+                    <p>
+                        Tanlangan filter bo‘yicha
+                        ma'lumot topilmadi.
+                    </p>
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        box.innerHTML = `
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Ism</th>
+
+                            <th>Familiya</th>
+
+                            <th>Otasining ismi</th>
+
+                            <th>Guruh</th>
+
+                            <th>Status</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        ${children.map(child => `
+
+                            <tr
+                                class="clickable-row"
+                                data-id="${child.id}">
+
+                                <td>
+                                    <strong>
+                                        ${escapeHtml(
+            child.firstName
+        )}
+                                    </strong>
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+            child.lastName
+        )}
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+            child.patronymic || "-"
+        )}
+                                </td>
+
+                                <td>
+                                    <span class="group-badge">
+                                        ${escapeHtml(
+            child.groupName ||
+            child.group.name||
+            "Guruh yo‘q"
+        )}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="
+                                        status-badge
+                                        ${child.active
+            ? "status-active"
+            : "status-inactive"}
+                                    ">
+
+                                        ${child.active
+            ? "● Faol"
+            : "● Nofaol"}
+
+                                    </span>
+                                </td>
+
+                            </tr>
+
+                        `).join("")}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <div class="pagination">
+
+                <button
+                    class="btn btn-secondary"
+                    id="childPrev"
+                    ${currentPage === 0
+            ? "disabled"
+            : ""}>
+                    ← Oldingi
+                </button>
+
+
+                <span>
+                    ${currentPage + 1}-sahifa
+                </span>
+
+
+                <button
+                    class="btn btn-secondary"
+                    id="childNext"
+                    ${children.length < pageSize
+            ? "disabled"
+            : ""}>
+                    Keyingi →
+                </button>
+
+            </div>
+
+        `;
+
+
+        document
+            .querySelectorAll(
+                ".clickable-row"
+            )
+            .forEach(row => {
+
+                row.onclick = () => {
+
+                    showChildDetails(
+                        row.dataset.id
+                    );
+
+                };
+
+            });
+
+
+        document
+            .getElementById("childPrev")
+            .onclick = () => {
+
+            currentPage--;
+
+            fetchChildren();
+
+        };
+
+
+        document
+            .getElementById("childNext")
+            .onclick = () => {
+
+            currentPage++;
+
+            fetchChildren();
+
+        };
+
+    }
+
+
+    /* =====================================================
+       CHILD DETAILS
+    ===================================================== */
+
+    async function showChildDetails(id) {
+
+        try {
+
+            const response =
+                await fetchWithAuth(
+                    `${API.children}/${id}`
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error();
+
+            }
+
+
+            const child =
+                await response.json();
+
+
+            const modal =
+                document.createElement("div");
+
+            modal.className =
+                "dynamic-modal";
+
+
+            modal.innerHTML = `
+
+                <div class="detail-modal large-modal">
+
+                    <button
+                        class="modal-close">
+                        ×
+                    </button>
+
+
+                    <div class="detail-header">
+
+                        <div class="detail-avatar child-avatar">
+                            👶
+                        </div>
+
+                        <div>
+
+                            <span>BOLA</span>
+
+                            <h2>
+                                ${escapeHtml(
+                child.firstName
+            )}
+                                ${escapeHtml(
+                child.lastName
+            )}
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail-section">
+
+                        <h3>
+                            Shaxsiy ma'lumotlar
+                        </h3>
+
+                        <div class="detail-grid">
+
+                            <div class="detail-item">
+                                <span>Ism</span>
+                                <strong>
+                                    ${escapeHtml(
+                child.firstName
+            )}
+                                </strong>
+                            </div>
+
+
+                            <div class="detail-item">
+                                <span>Familiya</span>
+                                <strong>
+                                    ${escapeHtml(
+                child.lastName
+            )}
+                                </strong>
+                            </div>
+
+
+                            <div class="detail-item">
+                                <span>Otasining ismi</span>
+                                <strong>
+                                    ${escapeHtml(
+                child.patronymic || "-"
+            )}
+                                </strong>
+                            </div>
+
+
+                            <div class="detail-item">
+                                <span>Yoshi</span>
+                                <strong>
+                                    ${child.age ?? "-"}
+                                </strong>
+                            </div>
+
+
+                            <div class="detail-item">
+                                <span>Jinsi</span>
+                                <strong>
+                                    ${escapeHtml(
+                child.gender || "-"
+            )}
+                                </strong>
+                            </div>
+
+
+                            <div class="detail-item">
+                                <span>Tug‘ilgan sana</span>
+                                <strong>
+                                    ${child.birthDate || "-"}
+                                </strong>
+                            </div>
+
+
+                            <div class="detail-item">
+                                <span>Guruh</span>
+                                <strong>
+                                    ${escapeHtml(
+                child.groupName ||
+                child.group.name||
+                "Guruh yo‘q"
+            )}
+                                </strong>
+                            </div>
+
+
+                            <div class="detail-item">
+                                <span>Status</span>
+
+                                <strong class="
+                                    ${child.active
+                ? "text-success"
+                : "text-danger"}
+                                ">
+
+                                    ${child.active
+                ? "Faol"
+                : "Nofaol"}
+
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail-section">
+
+                        <h3>
+                            Ota-ona ma'lumotlari
+                        </h3>
+
+                        <div class="detail-grid">
+
+                            <div class="detail-item">
+                                <span>Onasi</span>
+                                <strong>
+                                    ${escapeHtml(
+                child.motherFirstName || "-"
+            )}
+                                    ${escapeHtml(
+                child.motherLastName || ""
+            )}
+                                </strong>
+                            </div>
+
+
+                            <div class="detail-item">
+                                <span>Onasining telefoni</span>
+                                <strong>
+                                    ${escapeHtml(
+                child.motherPhone || "-"
+            )}
+                                </strong>
+                            </div>
+
+
+                            <div class="detail-item">
+                                <span>Otasi</span>
+                                <strong>
+                                    ${escapeHtml(
+                child.fatherFirstName || "-"
+            )}
+                                    ${escapeHtml(
+                child.fatherLastName || ""
+            )}
+                                </strong>
+                            </div>
+
+
+                            <div class="detail-item">
+                                <span>Otasining telefoni</span>
+                                <strong>
+                                    ${escapeHtml(
+                child.fatherPhone || "-"
+            )}
+                                </strong>
+                            </div>
+
+
+                            <div class="detail-item full">
+                                <span>Manzil</span>
+                                <strong>
+                                    ${escapeHtml(
+                child.address || "-"
+            )}
+                                </strong>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    ${
+                isAdmin()
+                    ? `
+
+                        <div class="modal-actions">
+
+                            <button
+                                class="btn btn-primary"
+                                id="editChildBtn">
+                                ✏️ O‘zgartirish
+                            </button>
+
+
+                            <button
+                                class="btn ${
+                        child.active
+                            ? "btn-danger"
+                            : "btn-success"
+                    }"
+                                id="toggleChildBtn">
+
+                                ${
+                        child.active
+                            ? "Nofaol qilish"
+                            : "Faollashtirish"
+                    }
+
+                            </button>
+
+                        </div>
+
+                        `
+                    : ""
+            }
+
+                </div>
+
+            `;
+
+
+            document.body.appendChild(modal);
+
+
+            modal.querySelector(".modal-close")
+                .onclick = () => modal.remove();
+
+
+            if (isAdmin()) {
+
+                modal
+                    .querySelector("#editChildBtn")
+                    .onclick = () => {
+
+                    modal.remove();
+
+                    showEditChildModal(child);
+
+                };
+
+
+                modal
+                    .querySelector("#toggleChildBtn")
+                    .onclick = () => {
+
+                    showConfirm(
+                        child.active
+                            ? `${child.firstName} ${child.lastName} ni nofaol qilmoqchimisiz?`
+                            : `${child.firstName} ${child.lastName} ni faollashtirmoqchimisiz?`,
+                        async () => {
+
+                            /*
+                             * Backend endpoint:
+                             * PATCH/PUT children active
+                             *
+                             * Endpoint backenddan aniq
+                             * berilganda shu joy ulanadi.
+                             */
+
+                            showToast(
+                                "Status o‘zgartirish API endpointi kerak",
+                                "error"
+                            );
+
+                        }
+                    );
+
+                };
+
+            }
+
+        } catch (error) {
+
+            showToast(
+                "Bola ma'lumotlarini yuklab bo‘lmadi",
+                "error"
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       ADD CHILD
+    ===================================================== */
+
+    async function showAddChildModal() {
+
+        const groupsResponse =
+            await fetchWithAuth(API.groups);
+
+
+        const groups =
+            groupsResponse.ok
+                ? await groupsResponse.json()
+                : [];
+
+
+        const modal =
+            document.createElement("div");
+
+        modal.className =
+            "dynamic-modal";
+
+
+        modal.innerHTML = `
+
+            <div class="form-modal large-modal">
+
+                <button class="modal-close">
+                    ×
+                </button>
+
+
+                <h2>
+                    Yangi bola qo‘shish
+                </h2>
+
+                <p class="modal-subtitle">
+                    Bola ma'lumotlarini kiriting
+                </p>
+
+
+                <div class="form-grid">
+
+                    <div class="form-field">
+                        <label>Ism</label>
+                        <input id="newChildFirstName"
+                               type="text">
+                    </div>
+
+
+                    <div class="form-field">
+                        <label>Familiya</label>
+                        <input id="newChildLastName"
+                               type="text">
+                    </div>
+
+
+                    <div class="form-field">
+                        <label>Otasining ismi</label>
+                        <input id="newChildPatronymic"
+                               type="text">
+                    </div>
+
+
+                    <div class="form-field">
+                        <label>Jinsi</label>
+
+                        <select id="newChildGender">
+
+                            <option value="">
+                                Tanlang
+                            </option>
+
+                            <option value="MALE">
+                                O‘g‘il
+                            </option>
+
+                            <option value="FEMALE">
+                                Qiz
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-field">
+                        <label>Tug‘ilgan sana</label>
+
+                        <input
+                            id="newChildBirthDate"
+                            type="date">
+
+                    </div>
+
+
+                    <div class="form-field">
+                        <label>Guruh</label>
+
+                        <select id="newChildGroup">
+
+                            <option value="">
+                                Guruh tanlang
+                            </option>
+
+                            ${groups.map(group => `
+
+                                <option value="${group.id}">
+                                    ${escapeHtml(
+            group.groupName ||
+            group.name
+        )}
+                                </option>
+
+                            `).join("")}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-field">
+                        <label>Onasining ismi</label>
+
+                        <input
+                            id="newMotherFirstName"
+                            type="text">
+
+                    </div>
+
+
+                    <div class="form-field">
+                        <label>Onasining familiyasi</label>
+
+                        <input
+                            id="newMotherLastName"
+                            type="text">
+
+                    </div>
+
+
+                    <div class="form-field">
+                        <label>Onasining telefoni</label>
+
+                        <input
+                            id="newMotherPhone"
+                            type="text">
+
+                    </div>
+
+
+                    <div class="form-field">
+                        <label>Otasining ismi</label>
+
+                        <input
+                            id="newFatherFirstName"
+                            type="text">
+
+                    </div>
+
+
+                    <div class="form-field">
+                        <label>Otasining familiyasi</label>
+
+                        <input
+                            id="newFatherLastName"
+                            type="text">
+
+                    </div>
+
+
+                    <div class="form-field">
+                        <label>Otasining telefoni</label>
+
+                        <input
+                            id="newFatherPhone"
+                            type="text">
+
+                    </div>
+
+
+                    <div class="form-field full">
+                        <label>Manzil</label>
+
+                        <input
+                            id="newChildAddress"
+                            type="text">
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        class="btn btn-cancel"
+                        id="cancelChild">
+                        Bekor qilish
+                    </button>
+
+                    <button
+                        class="btn btn-primary"
+                        id="saveChild">
+                        Saqlash
+                    </button>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        document.body.appendChild(modal);
+
+
+        modal.querySelector(".modal-close")
+            .onclick = () => modal.remove();
+
+
+        modal.querySelector("#cancelChild")
+            .onclick = () => modal.remove();
+
+
+        modal.querySelector("#saveChild")
+            .onclick = async () => {
+
+            const child = {
+
+                firstName:
+                    document
+                        .getElementById(
+                            "newChildFirstName"
+                        )
+                        .value.trim(),
+
+                lastName:
+                    document
+                        .getElementById(
+                            "newChildLastName"
+                        )
+                        .value.trim(),
+
+                patronymic:
+                    document
+                        .getElementById(
+                            "newChildPatronymic"
+                        )
+                        .value.trim(),
+
+                gender:
+                document
+                    .getElementById(
+                        "newChildGender"
+                    )
+                    .value,
+
+                birthDate:
+                document
+                    .getElementById(
+                        "newChildBirthDate"
+                    )
+                    .value,
+
+                motherFirstName:
+                    document
+                        .getElementById(
+                            "newMotherFirstName"
+                        )
+                        .value.trim(),
+
+                motherLastName:
+                    document
+                        .getElementById(
+                            "newMotherLastName"
+                        )
+                        .value.trim(),
+
+                fatherFirstName:
+                    document
+                        .getElementById(
+                            "newFatherFirstName"
+                        )
+                        .value.trim(),
+
+                fatherLastName:
+                    document
+                        .getElementById(
+                            "newFatherLastName"
+                        )
+                        .value.trim(),
+
+                motherPhone:
+                    document
+                        .getElementById(
+                            "newMotherPhone"
+                        )
+                        .value.trim(),
+
+                fatherPhone:
+                    document
+                        .getElementById(
+                            "newFatherPhone"
+                        )
+                        .value.trim(),
+
+                groupId:
+                    Number(
+                        document
+                            .getElementById(
+                                "newChildGroup"
+                            )
+                            .value
+                    ),
+
+                address:
+                    document
+                        .getElementById(
+                            "newChildAddress"
+                        )
+                        .value.trim()
+
+            };
+
+
+            if (
+                !child.firstName ||
+                !child.lastName ||
+                !child.groupId
+            ) {
+
+                showToast(
+                    "Ism, familiya va guruh majburiy",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            try {
+
+                const response =
+                    await fetchWithAuth(
+                        API.children,
+                        {
+                            method: "POST",
+                            body: JSON.stringify(child)
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error();
+
+                }
+
+
+                modal.remove();
+
+                showToast(
+                    "Bola muvaffaqiyatli qo‘shildi"
+                );
+
+
+                loadChildren();
+
+            } catch (error) {
+
+                showToast(
+                    "Bolani qo‘shishda xatolik",
+                    "error"
+                );
+
+            }
+
+        };
+
+    }
+
+
+    /* =====================================================
+       EDIT CHILD
+    ===================================================== */
+
+    function showEditChildModal(child) {
+
+        const modal =
+            document.createElement("div");
+
+        modal.className =
+            "dynamic-modal";
+
+
+        modal.innerHTML = `
+
+            <div class="form-modal">
+
+                <button class="modal-close">
+                    ×
+                </button>
+
+                <h2>
+                    Bola ma'lumotlarini o‘zgartirish
+                </h2>
+
+
+                <div class="form-grid">
+
+                    <div class="form-field">
+                        <label>Ism</label>
+                        <input
+                            id="editChildFirstName"
+                            value="${escapeAttribute(
+            child.firstName
+        )}">
+                    </div>
+
+
+                    <div class="form-field">
+                        <label>Familiya</label>
+                        <input
+                            id="editChildLastName"
+                            value="${escapeAttribute(
+            child.lastName
+        )}">
+                    </div>
+
+
+                    <div class="form-field">
+                        <label>Otasining ismi</label>
+                        <input
+                            id="editChildPatronymic"
+                            value="${escapeAttribute(
+            child.patronymic || ""
+        )}">
+                    </div>
+
+
+                    <div class="form-field">
+                        <label>Manzil</label>
+                        <input
+                            id="editChildAddress"
+                            value="${escapeAttribute(
+            child.address || ""
+        )}">
+                    </div>
+
+                </div>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        class="btn btn-cancel"
+                        onclick="this.closest('.dynamic-modal').remove()">
+                        Bekor qilish
+                    </button>
+
+                    <button
+                        class="btn btn-primary"
+                        id="updateChildBtn">
+                        Saqlash
+                    </button>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        document.body.appendChild(modal);
+
+
+        modal.querySelector(".modal-close")
+            .onclick = () => modal.remove();
+
+
+        modal
+            .querySelector("#updateChildBtn")
+            .onclick = async () => {
+
+            const data = {
+
+                firstName:
+                    document
+                        .getElementById(
+                            "editChildFirstName"
+                        )
+                        .value.trim(),
+
+                lastName:
+                    document
+                        .getElementById(
+                            "editChildLastName"
+                        )
+                        .value.trim(),
+
+                patronymic:
+                    document
+                        .getElementById(
+                            "editChildPatronymic"
+                        )
+                        .value.trim(),
+
+                address:
+                    document
+                        .getElementById(
+                            "editChildAddress"
+                        )
+                        .value.trim()
+
+            };
+
+
+            try {
+
+                const response =
+                    await fetchWithAuth(
+                        `${API.children}/${child.id}`,
+                        {
+                            method: "PUT",
+                            body: JSON.stringify(data)
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error();
+
+                }
+
+
+                modal.remove();
+
+                showToast(
+                    "Ma'lumotlar o‘zgartirildi"
+                );
+
+
+                loadChildren();
+
+            } catch (error) {
+
+                showToast(
+                    "O‘zgartirishda xatolik",
+                    "error"
+                );
+
+            }
+
+        };
+
+    }
+
+
+    /* =====================================================
+       TEACHERS
+    ===================================================== */
+
+    document
+        .getElementById("teachersBtn")
+        .onclick = loadTeachers;
+
+
+    async function loadTeachers() {
+
+        currentSection = "teachers";
+
+        currentPage = 0;
+
+        setActiveMenu("teachersBtn");
+
+
+        document
+            .getElementById("mainContent")
+            .innerHTML = `
+
+            <div class="page-header">
+
+                <div>
+
+                    <span class="page-label">
+                        BOXCHA
+                    </span>
+
+                    <h1>Ustozlar</h1>
+
+                    <p>
+                        Ustozlar va shifokorlar
+                    </p>
+
+                </div>
+
+
+                ${
+            isAdmin()
+                ? `
+                    <button
+                        class="btn btn-primary"
+                        id="addTeacherBtn">
+                        + Yangi qo‘shish
+                    </button>
+                    `
+                : ""
+        }
+
+            </div>
+
+
+            <div class="filter-panel">
+
+                <div class="filter-status">
+
+                    <button
+                        class="filter-btn active"
+                        id="teacherAll">
+                        Barchasi
+                    </button>
+
+                    <button
+                        class="filter-btn"
+                        id="teacherActive">
+                        Faol
+                    </button>
+
+                    <button
+                        class="filter-btn"
+                        id="teacherInactive">
+                        Nofaol
+                    </button>
+
+                </div>
+
+
+                <div class="filter-search">
+
+                    <input
+                        id="teacherFirstName"
+                        placeholder="Ism">
+
+
+                    <input
+                        id="teacherLastName"
+                        placeholder="Familiya">
+
+
+                    <button
+                        class="btn btn-primary"
+                        id="teacherSearch">
+                        🔎 Qidirish
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="teachersTableBox"
+                class="table-container">
+
+                <div class="loading">
+                    Yuklanmoqda...
+                </div>
+
+            </div>
+
+        `;
+
+
+        attachTeacherFilters();
+
+
+        if (isAdmin()) {
+
+            document
+                .getElementById("addTeacherBtn")
+                .onclick =
+                showAddTeacherModal;
+
+        }
+
+
+        fetchTeachers();
+
+    }
+
+
+    function attachTeacherFilters() {
+
+        document
+            .getElementById("teacherAll")
+            .onclick = () =>
+            fetchTeachers();
+
+
+        document
+            .getElementById("teacherActive")
+            .onclick = () =>
+            fetchTeachers(true);
+
+
+        document
+            .getElementById("teacherInactive")
+            .onclick = () =>
+            fetchTeachers(false);
+
+
+        document
+            .getElementById("teacherSearch")
+            .onclick = () =>
+            fetchTeachers();
+
+    }
+
+
+    async function fetchTeachers(active = null) {
+
+        let url =
+            API.users;
+
+
+        const params =
+            new URLSearchParams();
+
+
+        const firstName =
+            document
+                .getElementById(
+                    "teacherFirstName"
+                )
+                ?.value
+                .trim();
+
+
+        const lastName =
+            document
+                .getElementById(
+                    "teacherLastName"
+                )
+                ?.value
+                .trim();
+
+
+        if (active !== null) {
+
+            params.append(
+                "active",
+                active
+            );
+
+        }
+
+
+        if (firstName) {
+
+            params.append(
+                "firstName",
+                firstName
+            );
+
+        }
+
+
+        if (lastName) {
+
+            params.append(
+                "lastName",
+                lastName
+            );
+
+        }
+
+
+        params.append(
+            "page",
+            currentPage
+        );
+
+
+        params.append(
+            "size",
+            pageSize
+        );
+
+
+        url += "?" + params.toString();
+
+
+        try {
+
+            const response =
+                await fetchWithAuth(url);
+
+
+            if (!response.ok) {
+
+                throw new Error();
+
+            }
+
+
+            const users =
+                await response.json();
+
+
+            renderTeachers(users);
+
+        } catch (error) {
+
+            document
+                .getElementById(
+                    "teachersTableBox"
+                )
+                .innerHTML = `
+
+                <div class="empty-state">
+
+                    <div>⚠️</div>
+
+                    <h3>
+                        Ustozlarni yuklab bo‘lmadi
+                    </h3>
+
+                </div>
+
+                `;
+
+        }
+
+    }
+
+
+    function renderTeachers(users) {
+
+        const box =
+            document.getElementById(
+                "teachersTableBox"
+            );
+
+
+        if (!users.length) {
+
+            box.innerHTML = `
+
+                <div class="empty-state">
+                    <div>👨‍🏫</div>
+                    <h3>Ustozlar topilmadi</h3>
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        box.innerHTML = `
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Ism</th>
+                            <th>Familiya</th>
+                            <th>Guruh</th>
+                            <th>Rol</th>
+                            <th>Status</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        ${users.map(user => `
+
+                            <tr
+                                class="clickable-row"
+                                data-id="${user.id}">
+
+                                <td>
+                                    <strong>
+                                        ${escapeHtml(
+            user.firstName
+        )}
+                                    </strong>
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+            user.lastName
+        )}
+                                </td>
+
+                                <td>
+                                    ${
+            user.group
+                ? escapeHtml(
+                    user.group.name
+                )
+                : "Guruh yo‘q"
+        }
+                                </td>
+
+                                <td>
+
+                                    <span class="role-badge">
+
+                                        ${
+            user.roles
+                ?.map(r =>
+                    escapeHtml(
+                        r.role
+                    )
+                )
+                .join(", ")
+            || "-"
+        }
+
+                                    </span>
+
+                                </td>
+
+                                <td>
+
+                                    <span class="
+                                        status-badge
+                                        ${user.isActive
+            ? "status-active"
+            : "status-inactive"}
+                                    ">
+
+                                        ${
+            user.isActive
+                ? "● Faol"
+                : "● Nofaol"
+        }
+
+                                    </span>
+
+                                </td>
+
+                            </tr>
+
+                        `).join("")}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <div class="pagination">
+
+                <button
+                    class="btn btn-secondary"
+                    id="teacherPrev"
+                    ${currentPage === 0
+            ? "disabled"
+            : ""}>
+                    ← Oldingi
+                </button>
+
+
+                <span>
+                    ${currentPage + 1}-sahifa
+                </span>
+
+
+                <button
+                    class="btn btn-secondary"
+                    id="teacherNext"
+                    ${users.length < pageSize
+            ? "disabled"
+            : ""}>
+                    Keyingi →
+                </button>
+
+            </div>
+
+        `;
+
+
+        document
+            .querySelectorAll(
+                "#teachersTableBox .clickable-row"
+            )
+            .forEach(row => {
+
+                row.onclick = () =>
+                    showTeacherDetails(
+                        row.dataset.id
+                    );
+
+            });
+
+
+        document
+            .getElementById("teacherPrev")
+            .onclick = () => {
+
+            currentPage--;
+
+            fetchTeachers();
+
+        };
+
+
+        document
+            .getElementById("teacherNext")
+            .onclick = () => {
+
+            currentPage++;
+
+            fetchTeachers();
+
+        };
+
+    }
+
+
+    /* =====================================================
+       TEACHER DETAILS
+    ===================================================== */
+
+    async function showTeacherDetails(id) {
+
+        try {
+
+            const response =
+                await fetchWithAuth(
+                    `${API.users}/${id}`
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error();
+
+            }
+
+
+            const user =
+                await response.json();
+
+
+            const modal =
+                document.createElement("div");
+
+            modal.className =
+                "dynamic-modal";
+
+
+            modal.innerHTML = `
+
+                <div class="detail-modal">
+
+                    <button class="modal-close">
+                        ×
+                    </button>
+
+
+                    <div class="detail-header">
+
+                        <div class="detail-avatar">
+                            👨‍🏫
+                        </div>
+
+                        <div>
+
+                            <span>USTOZ</span>
+
+                            <h2>
+                                ${escapeHtml(
+                user.firstName
+            )}
+                                ${escapeHtml(
+                user.lastName
+            )}
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail-grid">
+
+                        <div class="detail-item">
+                            <span>Ism</span>
+                            <strong>
+                                ${escapeHtml(
+                user.firstName
+            )}
+                            </strong>
+                        </div>
+
+
+                        <div class="detail-item">
+                            <span>Familiya</span>
+                            <strong>
+                                ${escapeHtml(
+                user.lastName
+            )}
+                            </strong>
+                        </div>
+
+
+                        <div class="detail-item">
+                            <span>Email</span>
+                            <strong>
+                                ${escapeHtml(
+                user.email || "-"
+            )}
+                            </strong>
+                        </div>
+
+
+                        <div class="detail-item">
+                            <span>Telefon</span>
+                            <strong>
+                                ${escapeHtml(
+                user.phone || "-"
+            )}
+                            </strong>
+                        </div>
+
+
+                        <div class="detail-item">
+                            <span>Guruh</span>
+                            <strong>
+                                ${
+                user.group
+                    ? escapeHtml(
+                        user.group.name
+                    )
+                    : "Guruh yo‘q"
+            }
+                            </strong>
+                        </div>
+
+
+                        <div class="detail-item">
+                            <span>Status</span>
+                            <strong class="${
+                user.isActive
+                    ? "text-success"
+                    : "text-danger"
+            }">
+
+                                ${
+                user.isActive
+                    ? "Faol"
+                    : "Nofaol"
+            }
+
+                            </strong>
+                        </div>
+
+
+                        <div class="detail-item full">
+
+                            <span>Rollar</span>
+
+                            <strong>
+
+                                ${
+                user.roles
+                    ?.map(r =>
+                        escapeHtml(
+                            r.role
+                        )
+                    )
+                    .join(", ")
+                || "-"
+            }
+
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    ${
+                isAdmin()
+                    ? `
+
+                        <div class="modal-actions">
+
+                            <button
+                                class="btn btn-primary"
+                                id="editTeacherBtn">
+                                ✏️ O‘zgartirish
+                            </button>
+
+
+                            <button
+                                class="btn ${
+                        user.isActive
+                            ? "btn-danger"
+                            : "btn-success"
+                    }"
+                                id="toggleTeacherBtn">
+
+                                ${
+                        user.isActive
+                            ? "Nofaol qilish"
+                            : "Faollashtirish"
+                    }
+
+                            </button>
+
+                        </div>
+
+                        `
+                    : ""
+            }
+
+                </div>
+
+            `;
+
+
+            document.body.appendChild(modal);
+
+
+            modal.querySelector(".modal-close")
+                .onclick = () => modal.remove();
+
+
+            if (isAdmin()) {
+
+                modal
+                    .querySelector("#editTeacherBtn")
+                    .onclick = () => {
+
+                    modal.remove();
+
+                    showEditTeacherModal(user);
+
+                };
+
+
+                modal
+                    .querySelector("#toggleTeacherBtn")
+                    .onclick = () => {
+
+                    showConfirm(
+                        user.isActive
+                            ? "Ustozni nofaol qilmoqchimisiz?"
+                            : "Ustozni faollashtirmoqchimisiz?",
+                        async () => {
+
+                            showToast(
+                                "Status endpointi backenddan kerak",
+                                "error"
+                            );
+
+                        }
+                    );
+
+                };
+
+            }
+
+        } catch (error) {
+
+            showToast(
+                "Ustoz ma'lumotlarini yuklab bo‘lmadi",
+                "error"
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       ADD TEACHER
+    ===================================================== */
+
+    async function showAddTeacherModal() {
+
+        const rolesResponse =
+            await fetchWithAuth(API.roles);
+
+
+        const groupsResponse =
+            await fetchWithAuth(API.groups);
+
+
+        const roles =
+            rolesResponse.ok
+                ? await rolesResponse.json()
+                : [];
+
+
+        const groups =
+            groupsResponse.ok
+                ? await groupsResponse.json()
+                : [];
+
+
+        const modal =
+            document.createElement("div");
+
+        modal.className =
+            "dynamic-modal";
+
+
+        modal.innerHTML = `
+
+            <div class="form-modal">
+
+                <button class="modal-close">
+                    ×
+                </button>
+
+
+                <h2>
+                    Yangi ustoz qo‘shish
+                </h2>
+
+
+                <div class="form-grid">
+
+                    <div class="form-field">
+                        <label>Ism</label>
+                        <input
+                            id="newTeacherFirstName">
+                    </div>
+
+
+                    <div class="form-field">
+                        <label>Familiya</label>
+                        <input
+                            id="newTeacherLastName">
+                    </div>
+
+
+                    <div class="form-field">
+                        <label>Email</label>
+                        <input
+                            id="newTeacherEmail"
+                            type="email">
+                    </div>
+
+
+                    <div class="form-field">
+                        <label>Telefon</label>
+                        <input
+                            id="newTeacherPhone">
+                    </div>
+
+
+                    <div class="form-field">
+                        <label>Rol</label>
+
+                        <select
+                            id="newTeacherRole">
+
+                            ${roles.map(role => `
+
+                                <option value="${role.id}">
+                                    ${escapeHtml(
+            role.role
+        )}
+                                </option>
+
+                            `).join("")}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-field">
+                        <label>Guruh</label>
+
+                        <select
+                            id="newTeacherGroup">
+
+                            <option value="">
+                                Guruh yo‘q
+                            </option>
+
+                            ${groups.map(group => `
+
+                                <option value="${group.id}">
+                                    ${escapeHtml(
+            group.groupName ||
+            group.name
+        )}
+                                </option>
+
+                            `).join("")}
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        class="btn btn-cancel"
+                        onclick="this.closest('.dynamic-modal').remove()">
+                        Bekor qilish
+                    </button>
+
+
+                    <button
+                        class="btn btn-primary"
+                        id="saveTeacher">
+                        Saqlash
+                    </button>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        document.body.appendChild(modal);
+
+
+        modal.querySelector(".modal-close")
+            .onclick = () => modal.remove();
+
+
+        modal.querySelector("#saveTeacher")
+            .onclick = async () => {
+
+            const teacher = {
+
+                firstName:
+                    document
+                        .getElementById(
+                            "newTeacherFirstName"
+                        )
+                        .value.trim(),
+
+                lastName:
+                    document
+                        .getElementById(
+                            "newTeacherLastName"
+                        )
+                        .value.trim(),
+
+                email:
+                    document
+                        .getElementById(
+                            "newTeacherEmail"
+                        )
+                        .value.trim(),
+
+                phone:
+                    document
+                        .getElementById(
+                            "newTeacherPhone"
+                        )
+                        .value.trim(),
+
+                roleId:
+                    Number(
+                        document
+                            .getElementById(
+                                "newTeacherRole"
+                            )
+                            .value
+                    ),
+
+                groupId:
+                    document
+                        .getElementById(
+                            "newTeacherGroup"
+                        )
+                        .value
+                        ? Number(
+                            document
+                                .getElementById(
+                                    "newTeacherGroup"
+                                )
+                                .value
+                        )
+                        : null
+
+            };
+
+
+            try {
+
+                const response =
+                    await fetchWithAuth(
+                        `${API.users}/add`,
+                        {
+                            method: "POST",
+                            body: JSON.stringify(teacher)
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error();
+
+                }
+
+
+                modal.remove();
+
+                showToast(
+                    "Ustoz muvaffaqiyatli qo‘shildi"
+                );
+
+
+                loadTeachers();
+
+            } catch (error) {
+
+                showToast(
+                    "Ustozni qo‘shishda xatolik",
+                    "error"
+                );
+
+            }
+
+        };
+
+    }
+
+
+    /* =====================================================
+       EDIT TEACHER
+    ===================================================== */
+
+    function showEditTeacherModal(user) {
+
+        const modal =
+            document.createElement("div");
+
+        modal.className =
+            "dynamic-modal";
+
+
+        modal.innerHTML = `
+
+            <div class="form-modal">
+
+                <button class="modal-close">
+                    ×
+                </button>
+
+
+                <h2>
+                    Ustozni o‘zgartirish
+                </h2>
+
+
+                <div class="form-grid">
+
+                    <div class="form-field">
+
+                        <label>
+                            Ism
+                        </label>
+
+                        <input
+                            id="editTeacherFirstName"
+                            value="${escapeAttribute(
+            user.firstName
+        )}">
+
+                    </div>
+
+
+                    <div class="form-field">
+
+                        <label>
+                            Familiya
+                        </label>
+
+                        <input
+                            id="editTeacherLastName"
+                            value="${escapeAttribute(
+            user.lastName
+        )}">
+
+                    </div>
+
+
+                    <div class="form-field">
+
+                        <label>
+                            Email
+                        </label>
+
+                        <input
+                            id="editTeacherEmail"
+                            type="email"
+                            value="${escapeAttribute(
+            user.email || ""
+        )}">
+
+                    </div>
+
+
+                    <div class="form-field">
+
+                        <label>
+                            Telefon
+                        </label>
+
+                        <input
+                            id="editTeacherPhone"
+                            value="${escapeAttribute(
+            user.phone || ""
+        )}">
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        class="btn btn-cancel"
+                        onclick="this.closest('.dynamic-modal').remove()">
+                        Bekor qilish
+                    </button>
+
+
+                    <button
+                        class="btn btn-primary"
+                        id="updateTeacher">
+                        Saqlash
+                    </button>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        document.body.appendChild(modal);
+
+
+        modal.querySelector(".modal-close")
+            .onclick = () => modal.remove();
+
+
+        modal
+            .querySelector("#updateTeacher")
+            .onclick = async () => {
+
+            const data = {
+
+                firstName:
+                    document
+                        .getElementById(
+                            "editTeacherFirstName"
+                        )
+                        .value.trim(),
+
+                lastName:
+                    document
+                        .getElementById(
+                            "editTeacherLastName"
+                        )
+                        .value.trim(),
+
+                email:
+                    document
+                        .getElementById(
+                            "editTeacherEmail"
+                        )
+                        .value.trim(),
+
+                phone:
+                    document
+                        .getElementById(
+                            "editTeacherPhone"
+                        )
+                        .value.trim()
+
+            };
+
+
+            try {
+
+                const response =
+                    await fetchWithAuth(
+                        `${API.users}/${user.id}`,
+                        {
+                            method: "PUT",
+                            body: JSON.stringify(data)
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error();
+
+                }
+
+
+                modal.remove();
+
+                showToast(
+                    "Ma'lumotlar o‘zgartirildi"
+                );
+
+
+                loadTeachers();
+
+            } catch (error) {
+
+                showToast(
+                    "O‘zgartirishda xatolik",
+                    "error"
+                );
+
+            }
+
+        };
+
+    }
+
+
+    /* =====================================================
+       OTHERS
+    ===================================================== */
+
+    document
+        .getElementById("othersBtn")
+        .onclick = loadOthers;
+
+
+    async function loadOthers() {
+
+        currentSection = "others";
+
+        currentPage = 0;
+
+        setActiveMenu("othersBtn");
+
+
+        document
+            .getElementById("mainContent")
+            .innerHTML = `
+
+            <div class="page-header">
+
+                <div>
+
+                    <span class="page-label">
+                        BOXCHA
+                    </span>
+
+                    <h1>Boshqalar</h1>
+
+                    <p>
+                        Markazning boshqa xodimlari
+                    </p>
+
+                </div>
+
+
+                ${
+            isAdmin()
+                ? `
+                    <button
+                        class="btn btn-primary"
+                        id="addOtherBtn">
+                        + Yangi qo‘shish
+                    </button>
+                    `
+                : ""
+        }
+
+            </div>
+
+
+            <div class="filter-panel">
+
+                <div class="filter-status">
+
+                    <button
+                        class="filter-btn active"
+                        id="otherAll">
+                        Barchasi
+                    </button>
+
+                    <button
+                        class="filter-btn"
+                        id="otherActive">
+                        Faol
+                    </button>
+
+                    <button
+                        class="filter-btn"
+                        id="otherInactive">
+                        Nofaol
+                    </button>
+
+                </div>
+
+
+                <div class="filter-search">
+
+                    <input
+                        id="otherFirstName"
+                        placeholder="Ism">
+
+
+                    <input
+                        id="otherLastName"
+                        placeholder="Familiya">
+
+
+                    <button
+                        class="btn btn-primary"
+                        id="otherSearch">
+                        🔎 Qidirish
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="othersTableBox"
+                class="table-container">
+
+                <div class="loading">
+                    Yuklanmoqda...
+                </div>
+
+            </div>
+
+        `;
+
+
+        attachOtherFilters();
+
+
+        if (isAdmin()) {
+
+            document
+                .getElementById("addOtherBtn")
+                .onclick =
+                showAddOtherModal;
+
+        }
+
+
+        fetchOthers();
+
+    }
+
+
+    function attachOtherFilters() {
+
+        document
+            .getElementById("otherAll")
+            .onclick = () =>
+            fetchOthers();
+
+
+        document
+            .getElementById("otherActive")
+            .onclick = () =>
+            fetchOthers(true);
+
+
+        document
+            .getElementById("otherInactive")
+            .onclick = () =>
+            fetchOthers(false);
+
+
+        document
+            .getElementById("otherSearch")
+            .onclick = () =>
+            fetchOthers();
+
+    }
+
+
+    async function fetchOthers(active = null) {
+
+        let url =
+            API.others;
+
+
+        const params =
+            new URLSearchParams();
+
+
+        const firstName =
+            document
+                .getElementById(
+                    "otherFirstName"
+                )
+                ?.value
+                .trim();
+
+
+        const lastName =
+            document
+                .getElementById(
+                    "otherLastName"
+                )
+                ?.value
+                .trim();
+
+
+        if (active !== null) {
+
+            params.append(
+                "active",
+                active
+            );
+
+        }
+
+
+        if (firstName) {
+
+            params.append(
+                "firstName",
+                firstName
+            );
+
+        }
+
+
+        if (lastName) {
+
+            params.append(
+                "lastName",
+                lastName
+            );
+
+        }
+
+
+        params.append(
+            "page",
+            currentPage
+        );
+
+
+        params.append(
+            "size",
+            pageSize
+        );
+
+
+        url += "?" + params.toString();
+
+
+        try {
+
+            const response =
+                await fetchWithAuth(url);
+
+
+            if (!response.ok) {
+
+                throw new Error();
+
+            }
+
+
+            const others =
+                await response.json();
+
+
+            renderOthers(others);
+
+        } catch (error) {
+
+            document
+                .getElementById(
+                    "othersTableBox"
+                )
+                .innerHTML = `
+
+                <div class="empty-state">
+                    <div>⚠️</div>
+                    <h3>
+                        Ma'lumotlarni yuklab bo‘lmadi
+                    </h3>
+                </div>
+
+                `;
+
+        }
+
+    }
+
+
+    function renderOthers(others) {
+
+        const box =
+            document.getElementById(
+                "othersTableBox"
+            );
+
+
+        if (!others.length) {
+
+            box.innerHTML = `
+
+                <div class="empty-state">
+
+                    <div>👤</div>
+
+                    <h3>
+                        Xodimlar topilmadi
+                    </h3>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        box.innerHTML = `
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Ism</th>
+                            <th>Familiya</th>
+                            <th>Kasbi</th>
+                            <th>Status</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        ${others.map(other => `
+
+                            <tr
+                                class="clickable-row"
+                                data-id="${other.id}">
+
+                                <td>
+                                    <strong>
+                                        ${escapeHtml(
+            other.firstName
+        )}
+                                    </strong>
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+            other.lastName
+        )}
+                                </td>
+
+                                <td>
+                                    <span class="role-badge">
+                                        ${escapeHtml(
+            other.profession ||
+            "-"
+        )}
+                                    </span>
+                                </td>
+
+                                <td>
+
+                                    <span class="
+                                        status-badge
+                                        ${
+            other.isActive
+            ?? other.active
+                ? "status-active"
+                : "status-inactive"
+        }
+                                    ">
+
+                                        ${
+            other.isActive
+            ?? other.active
+                ? "● Faol"
+                : "● Nofaol"
+        }
+
+                                    </span>
+
+                                </td>
+
+                            </tr>
+
+                        `).join("")}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <div class="pagination">
+
+                <button
+                    class="btn btn-secondary"
+                    id="otherPrev"
+                    ${currentPage === 0
+            ? "disabled"
+            : ""}>
+                    ← Oldingi
+                </button>
+
+
+                <span>
+                    ${currentPage + 1}-sahifa
+                </span>
+
+
+                <button
+                    class="btn btn-secondary"
+                    id="otherNext"
+                    ${others.length < pageSize
+            ? "disabled"
+            : ""}>
+                    Keyingi →
+                </button>
+
+            </div>
+
+        `;
+
+
+        document
+            .querySelectorAll(
+                "#othersTableBox .clickable-row"
+            )
+            .forEach(row => {
+
+                row.onclick = () =>
+                    showOtherDetails(
+                        row.dataset.id
+                    );
+
+            });
+
+
+        document
+            .getElementById("otherPrev")
+            .onclick = () => {
+
+            currentPage--;
+
+            fetchOthers();
+
+        };
+
+
+        document
+            .getElementById("otherNext")
+            .onclick = () => {
+
+            currentPage++;
+
+            fetchOthers();
+
+        };
+
+    }
+
+
+    /* =====================================================
+       OTHER DETAILS
+    ===================================================== */
+
+    async function showOtherDetails(id) {
+
+        try {
+
+            const response =
+                await fetchWithAuth(
+                    `${API.others}/${id}`
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error();
+
+            }
+
+
+            const other =
+                await response.json();
+
+
+            const active =
+                other.isActive ??
+                other.active ??
+                false;
+
+
+            const modal =
+                document.createElement("div");
+
+            modal.className =
+                "dynamic-modal";
+
+
+            modal.innerHTML = `
+
+                <div class="detail-modal">
+
+                    <button class="modal-close">
+                        ×
+                    </button>
+
+
+                    <div class="detail-header">
+
+                        <div class="detail-avatar">
+                            👤
+                        </div>
+
+                        <div>
+
+                            <span>XODIM</span>
+
+                            <h2>
+                                ${escapeHtml(
+                other.firstName
+            )}
+                                ${escapeHtml(
+                other.lastName
+            )}
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail-grid">
+
+                        <div class="detail-item">
+
+                            <span>
+                                Ism
+                            </span>
+
+                            <strong>
+                                ${escapeHtml(
+                other.firstName
+            )}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <span>
+                                Familiya
+                            </span>
+
+                            <strong>
+                                ${escapeHtml(
+                other.lastName
+            )}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <span>
+                                Telefon
+                            </span>
+
+                            <strong>
+                                ${escapeHtml(
+                other.phone || "-"
+            )}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <span>
+                                Kasbi
+                            </span>
+
+                            <strong>
+                                ${escapeHtml(
+                other.profession || "-"
+            )}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <span>
+                                Tug‘ilgan sana
+                            </span>
+
+                            <strong>
+                                ${other.dateOfBirth || "-"}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <span>
+                                Ish boshlagan sana
+                            </span>
+
+                            <strong>
+                                ${other.startDate || "-"}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <span>
+                                Ish tugagan sana
+                            </span>
+
+                            <strong>
+                                ${other.endDate || "-"}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <span>
+                                Status
+                            </span>
+
+                            <strong class="${
+                active
+                    ? "text-success"
+                    : "text-danger"
+            }">
+
+                                ${
+                active
+                    ? "Faol"
+                    : "Nofaol"
+            }
+
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    ${
+                isAdmin()
+                    ? `
+
+                        <div class="modal-actions">
+
+                            <button
+                                class="btn btn-primary"
+                                id="editOtherBtn">
+                                ✏️ O‘zgartirish
+                            </button>
+
+
+                            <button
+                                class="btn ${
+                        active
+                            ? "btn-danger"
+                            : "btn-success"
+                    }"
+                                id="toggleOtherBtn">
+
+                                ${
+                        active
+                            ? "Nofaol qilish"
+                            : "Faollashtirish"
+                    }
+
+                            </button>
+
+                        </div>
+
+                        `
+                    : ""
+            }
+
+                </div>
+
+            `;
+
+
+            document.body.appendChild(modal);
+
+
+            modal.querySelector(".modal-close")
+                .onclick = () => modal.remove();
+
+
+            if (isAdmin()) {
+
+                modal
+                    .querySelector("#editOtherBtn")
+                    .onclick = () => {
+
+                    modal.remove();
+
+                    showEditOtherModal(other);
+
+                };
+
+
+                modal
+                    .querySelector("#toggleOtherBtn")
+                    .onclick = () => {
+
+                    showConfirm(
+                        active
+                            ? "Xodimni nofaol qilmoqchimisiz?"
+                            : "Xodimni faollashtirmoqchimisiz?",
+                        async () => {
+
+                            showToast(
+                                "Status endpointi backenddan kerak",
+                                "error"
+                            );
+
+                        }
+                    );
+
+                };
+
+            }
+
+        } catch (error) {
+
+            showToast(
+                "Xodim ma'lumotlarini yuklab bo‘lmadi",
+                "error"
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       ADD OTHER
+    ===================================================== */
+
+    function showAddOtherModal() {
+
+        const modal =
+            document.createElement("div");
+
+        modal.className =
+            "dynamic-modal";
+
+
+        modal.innerHTML = `
+
+            <div class="form-modal">
+
+                <button class="modal-close">
+                    ×
+                </button>
+
+
+                <h2>
+                    Yangi xodim qo‘shish
+                </h2>
+
+
+                <div class="form-grid">
+
+                    <div class="form-field">
+
+                        <label>
+                            Ism
+                        </label>
+
+                        <input
+                            id="newOtherFirstName">
+
+                    </div>
+
+
+                    <div class="form-field">
+
+                        <label>
+                            Familiya
+                        </label>
+
+                        <input
+                            id="newOtherLastName">
+
+                    </div>
+
+
+                    <div class="form-field">
+
+                        <label>
+                            Telefon
+                        </label>
+
+                        <input
+                            id="newOtherPhone">
+
+                    </div>
+
+
+                    <div class="form-field">
+
+                        <label>
+                            Kasbi
+                        </label>
+
+                        <input
+                            id="newOtherProfession">
+
+                    </div>
+
+
+                    <div class="form-field">
+
+                        <label>
+                            Tug‘ilgan sana
+                        </label>
+
+                        <input
+                            id="newOtherBirthDate"
+                            type="date">
+
+                    </div>
+
+
+                    <div class="form-field">
+
+                        <label>
+                            Ish boshlagan sana
+                        </label>
+
+                        <input
+                            id="newOtherStartDate"
+                            type="date">
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        class="btn btn-cancel"
+                        onclick="this.closest('.dynamic-modal').remove()">
+                        Bekor qilish
+                    </button>
+
+
+                    <button
+                        class="btn btn-primary"
+                        id="saveOtherBtn">
+                        Saqlash
+                    </button>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        document.body.appendChild(modal);
+
+
+        modal.querySelector(".modal-close")
+            .onclick = () => modal.remove();
+
+
+        modal
+            .querySelector("#saveOtherBtn")
+            .onclick = async () => {
+
+            const data = {
+
+                firstName:
+                    document
+                        .getElementById(
+                            "newOtherFirstName"
+                        )
+                        .value.trim(),
+
+                lastName:
+                    document
+                        .getElementById(
+                            "newOtherLastName"
+                        )
+                        .value.trim(),
+
+                phone:
+                    document
+                        .getElementById(
+                            "newOtherPhone"
+                        )
+                        .value.trim(),
+
+                profession:
+                    document
+                        .getElementById(
+                            "newOtherProfession"
+                        )
+                        .value.trim(),
+
+                dateOfBirth:
+                document
+                    .getElementById(
+                        "newOtherBirthDate"
+                    )
+                    .value,
+
+                startDate:
+                document
+                    .getElementById(
+                        "newOtherStartDate"
+                    )
+                    .value
+
+            };
+
+
+            try {
+
+                const response =
+                    await fetchWithAuth(
+                        API.others,
+                        {
+                            method: "POST",
+                            body: JSON.stringify(data)
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error();
+
+                }
+
+
+                modal.remove();
+
+                showToast(
+                    "Xodim muvaffaqiyatli qo‘shildi"
+                );
+
+
+                loadOthers();
+
+            } catch (error) {
+
+                showToast(
+                    "Xodimni qo‘shishda xatolik",
+                    "error"
+                );
+
+            }
+
+        };
+
+    }
+
+
+    /* =====================================================
+       EDIT OTHER
+    ===================================================== */
+
+    function showEditOtherModal(other) {
+
+        const modal =
+            document.createElement("div");
+
+        modal.className =
+            "dynamic-modal";
+
+
+        modal.innerHTML = `
+
+            <div class="form-modal">
+
+                <button class="modal-close">
+                    ×
+                </button>
+
+
+                <h2>
+                    Xodimni o‘zgartirish
+                </h2>
+
+
+                <div class="form-grid">
+
+                    <div class="form-field">
+
+                        <label>
+                            Ism
+                        </label>
+
+                        <input
+                            id="editOtherFirstName"
+                            value="${escapeAttribute(
+            other.firstName
+        )}">
+
+                    </div>
+
+
+                    <div class="form-field">
+
+                        <label>
+                            Familiya
+                        </label>
+
+                        <input
+                            id="editOtherLastName"
+                            value="${escapeAttribute(
+            other.lastName
+        )}">
+
+                    </div>
+
+
+                    <div class="form-field">
+
+                        <label>
+                            Telefon
+                        </label>
+
+                        <input
+                            id="editOtherPhone"
+                            value="${escapeAttribute(
+            other.phone || ""
+        )}">
+
+                    </div>
+
+
+                    <div class="form-field">
+
+                        <label>
+                            Kasbi
+                        </label>
+
+                        <input
+                            id="editOtherProfession"
+                            value="${escapeAttribute(
+            other.profession || ""
+        )}">
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        class="btn btn-cancel"
+                        onclick="this.closest('.dynamic-modal').remove()">
+                        Bekor qilish
+                    </button>
+
+
+                    <button
+                        class="btn btn-primary"
+                        id="updateOtherBtn">
+                        Saqlash
+                    </button>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        document.body.appendChild(modal);
+
+
+        modal.querySelector(".modal-close")
+            .onclick = () => modal.remove();
+
+
+        modal
+            .querySelector("#updateOtherBtn")
+            .onclick = async () => {
+
+            const data = {
+
+                firstName:
+                    document
+                        .getElementById(
+                            "editOtherFirstName"
+                        )
+                        .value.trim(),
+
+                lastName:
+                    document
+                        .getElementById(
+                            "editOtherLastName"
+                        )
+                        .value.trim(),
+
+                phone:
+                    document
+                        .getElementById(
+                            "editOtherPhone"
+                        )
+                        .value.trim(),
+
+                profession:
+                    document
+                        .getElementById(
+                            "editOtherProfession"
+                        )
+                        .value.trim()
+
+            };
+
+
+            try {
+
+                const response =
+                    await fetchWithAuth(
+                        `${API.others}/${other.id}`,
+                        {
+                            method: "PUT",
+                            body: JSON.stringify(data)
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error();
+
+                }
+
+
+                modal.remove();
+
+                showToast(
+                    "Ma'lumotlar o‘zgartirildi"
+                );
+
+
+                loadOthers();
+
+            } catch (error) {
+
+                showToast(
+                    "O‘zgartirishda xatolik",
+                    "error"
+                );
+
+            }
+
+        };
+
+    }
+
+
+    /* =====================================================
+       ESCAPE HTML
+    ===================================================== */
+
+    function escapeHtml(value) {
+
+        if (value === null ||
+            value === undefined) {
+
+            return "";
+
+        }
+
+
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+    }
+
+
+    function escapeAttribute(value) {
+
+        return escapeHtml(value);
+
+    }
+
+
+    /* =====================================================
+       QUICK BUTTONS
+    ===================================================== */
+
+    document
+        .getElementById("quickGroups")
+        .onclick = loadGroups;
+
+
+    document
+        .getElementById("quickChildren")
+        .onclick = loadChildren;
+
+
+    document
+        .getElementById("quickTeachers")
+        .onclick = loadTeachers;
+
+
+    document
+        .getElementById("quickOthers")
+        .onclick = loadOthers;
+
+
+</script>
+
+</body>
+</html>

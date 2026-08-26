@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Boxcha — Bolajonlar uchun baxtli maskan</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: #202040;
+      background: #ffffff;
+      overflow-x: hidden;
+    }
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+
+      height: 76px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding: 0 6%;
+
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(15px);
+
+      border-bottom: 1px solid rgba(100, 80, 200, 0.08);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      font-size: 25px;
+      font-weight: 800;
+
+      color: #5435d6;
+    }
+
+    .logo-icon {
+      width: 42px;
+      height: 42px;
+
+      border-radius: 13px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: #eee9ff;
+
+      font-size: 23px;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 35px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #55556d;
+
+      font-size: 15px;
+      font-weight: 600;
+
+      transition: 0.25s;
+    }
+
+    nav a:hover {
+      color: #5b3ee4;
+    }
+
+    .login-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+
+      text-decoration: none;
+
+      padding: 12px 24px;
+
+      border-radius: 13px;
+
+      background: linear-gradient(
+              135deg,
+              #6847e8,
+              #5431cf
+      );
+
+      color: white;
+
+      font-weight: 700;
+
+      box-shadow:
+              0 8px 20px rgba(91, 62, 220, 0.25);
+
+      transition: 0.3s;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+
+      box-shadow:
+              0 12px 25px rgba(91, 62, 220, 0.32);
+    }
+
+    /* =========================
+       HERO
+    ========================= */
+
+    .hero {
+      min-height: 620px;
+
+      padding: 70px 6% 55px;
+
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+
+      align-items: center;
+      gap: 50px;
+
+      background:
+              radial-gradient(
+                      circle at 5% 20%,
+                      #eee9ff 0,
+                      transparent 25%
+              ),
+              radial-gradient(
+                      circle at 90% 10%,
+                      #fff4d9 0,
+                      transparent 20%
+              ),
+              #ffffff;
+    }
+
+    .hero-content {
+      max-width: 600px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+
+      padding: 9px 15px;
+
+      border-radius: 30px;
+
+      background: #f1edff;
+
+      color: #6545db;
+
+      font-size: 14px;
+      font-weight: 700;
+
+      margin-bottom: 22px;
+    }
+
+    .hero h1 {
+      font-size: clamp(40px, 5vw, 62px);
+
+      line-height: 1.08;
+
+      letter-spacing: -2px;
+
+      color: #202040;
+
+      margin-bottom: 22px;
+    }
+
+    .hero h1 span {
+      color: #6543df;
+    }
+
+    .hero-text {
+      font-size: 18px;
+
+      line-height: 1.7;
+
+      color: #68687d;
+
+      max-width: 570px;
+
+      margin-bottom: 30px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+
+      flex-wrap: wrap;
+    }
+
+    .primary-btn,
+    .secondary-btn {
+      text-decoration: none;
+
+      padding: 14px 23px;
+
+      border-radius: 14px;
+
+      font-weight: 700;
+
+      transition: 0.3s;
+    }
+
+    .primary-btn {
+      background: #6543df;
+      color: white;
+
+      box-shadow:
+              0 8px 20px rgba(101, 67, 223, 0.25);
+    }
+
+    .primary-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .secondary-btn {
+      border: 1.5px solid #d8d2f7;
+      color: #6543df;
+      background: white;
+    }
+
+    .secondary-btn:hover {
+      background: #f7f5ff;
+    }
+
+    /* =========================
+       BUILDING IMAGE
+    ========================= */
+
+    .hero-image {
+      position: relative;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-image::before {
+      content: "";
+
+      position: absolute;
+
+      width: 85%;
+      height: 85%;
+
+      background: #eee9ff;
+
+      border-radius: 50%;
+
+      filter: blur(5px);
+
+      z-index: 0;
+    }
+
+    .building {
+      position: relative;
+
+      z-index: 1;
+
+      width: 100%;
+      max-width: 700px;
+
+      border-radius: 35px;
+
+      display: block;
+
+      filter:
+              drop-shadow(
+                      0 25px 35px rgba(70, 50, 150, 0.18)
+              );
+
+      transition: 0.4s;
+    }
+
+    .building:hover {
+      transform: translateY(-5px);
+    }
+
+    /* =========================
+       FEATURES
+    ========================= */
+
+    .features {
+      padding: 80px 6%;
+
+      background: #faf9ff;
+
+      text-align: center;
+    }
+
+    .section-title {
+      font-size: 35px;
+
+      color: #252542;
+
+      margin-bottom: 12px;
+    }
+
+    .section-subtitle {
+      color: #77778a;
+
+      font-size: 16px;
+
+      margin-bottom: 45px;
+    }
+
+    .feature-grid {
+      max-width: 1250px;
+
+      margin: auto;
+
+      display: grid;
+
+      grid-template-columns:
+                repeat(6, 1fr);
+
+      gap: 18px;
+    }
+
+    .feature-card {
+      background: white;
+
+      border-radius: 20px;
+
+      padding: 27px 15px;
+
+      border: 1px solid #eeeafc;
+
+      box-shadow:
+              0 8px 25px rgba(40, 30, 100, 0.04);
+
+      transition: 0.3s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+
+      box-shadow:
+              0 15px 30px rgba(40, 30, 100, 0.08);
+    }
+
+    .feature-icon {
+      width: 55px;
+      height: 55px;
+
+      margin: 0 auto 15px;
+
+      border-radius: 17px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: #f0ecff;
+
+      font-size: 25px;
+    }
+
+    .feature-card h3 {
+      font-size: 16px;
+
+      margin-bottom: 8px;
+
+      color: #33334e;
+    }
+
+    .feature-card p {
+      font-size: 13px;
+
+      line-height: 1.5;
+
+      color: #858598;
+    }
+
+    /* =========================
+       ABOUT
+    ========================= */
+
+    .about {
+      padding: 90px 6%;
+
+      background: white;
+    }
+
+    .about-grid {
+      max-width: 1250px;
+
+      margin: auto;
+
+      display: grid;
+
+      grid-template-columns:
+                1fr 1fr 1fr;
+
+      gap: 25px;
+    }
+
+    .about-card {
+      padding: 35px;
+
+      border-radius: 25px;
+
+      background: #fbfaff;
+
+      border: 1px solid #eeeafd;
+    }
+
+    .about-card h2 {
+      color: #5435d6;
+
+      font-size: 24px;
+
+      margin-bottom: 18px;
+    }
+
+    .about-card p {
+      color: #717187;
+
+      line-height: 1.7;
+
+      font-size: 15px;
+    }
+
+    .about-list {
+      list-style: none;
+
+      margin-top: 20px;
+    }
+
+    .about-list li {
+      margin-bottom: 12px;
+
+      color: #5f5f75;
+
+      font-size: 14px;
+    }
+
+    .about-list li::before {
+      content: "✓";
+
+      display: inline-flex;
+
+      align-items: center;
+      justify-content: center;
+
+      width: 22px;
+      height: 22px;
+
+      margin-right: 8px;
+
+      border-radius: 50%;
+
+      background: #e9e4ff;
+
+      color: #6040d8;
+
+      font-weight: bold;
+    }
+
+    .contact-box {
+      margin-top: 20px;
+
+      padding: 16px;
+
+      border-radius: 15px;
+
+      background: white;
+
+      border: 1px solid #eeeaf8;
+    }
+
+    .contact-box strong {
+      display: block;
+
+      color: #33334e;
+
+      margin-bottom: 5px;
+    }
+
+    .contact-box span {
+      color: #6f6f83;
+
+      font-size: 14px;
+    }
+
+    /* =========================
+       BEAR SECTION
+    ========================= */
+
+    .bear-section {
+      padding: 70px 6%;
+
+      background:
+              linear-gradient(
+                      135deg,
+                      #f2efff,
+                      #fffaf0
+              );
+
+      display: flex;
+
+      justify-content: center;
+
+      align-items: center;
+    }
+
+    .bear-container {
+      max-width: 1100px;
+
+      width: 100%;
+
+      display: grid;
+
+      grid-template-columns: 1fr 400px;
+
+      align-items: center;
+
+      gap: 50px;
+    }
+
+    .bear-text h2 {
+      font-size: 38px;
+
+      color: #29294a;
+
+      margin-bottom: 18px;
+    }
+
+    .bear-text h2 span {
+      color: #6543df;
+    }
+
+    .bear-text p {
+      color: #727286;
+
+      font-size: 17px;
+
+      line-height: 1.7;
+
+      margin-bottom: 25px;
+    }
+
+    .bear {
+      width: 100%;
+
+      max-width: 380px;
+
+      display: block;
+
+      margin: auto;
+
+      filter:
+              drop-shadow(
+                      0 20px 25px rgba(70, 50, 150, 0.15)
+              );
+
+      animation: bearFloat 4s ease-in-out infinite;
+    }
+
+    @keyframes bearFloat {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    footer {
+      padding: 30px 6%;
+
+      background: #272446;
+
+      color: #aaa7bd;
+
+      text-align: center;
+
+      font-size: 14px;
+    }
+
+    footer strong {
+      color: white;
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 1000px) {
+
+      nav {
+        display: none;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+
+        text-align: center;
+
+        padding-top: 50px;
+      }
+
+      .hero-content {
+        margin: auto;
+      }
+
+      .hero-text {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hero-buttons {
+        justify-content: center;
+      }
+
+      .feature-grid {
+        grid-template-columns:
+                    repeat(3, 1fr);
+      }
+
+      .about-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .bear-container {
+        grid-template-columns: 1fr;
+
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 600px) {
+
+      header {
+        padding: 0 20px;
+      }
+
+      .logo {
+        font-size: 21px;
+      }
+
+      .login-btn {
+        padding: 10px 17px;
+
+        font-size: 14px;
+      }
+
+      .hero {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .hero h1 {
+        font-size: 38px;
+      }
+
+      .hero-text {
+        font-size: 16px;
+      }
+
+      .feature-grid {
+        grid-template-columns:
+                    repeat(2, 1fr);
+      }
+
+      .features,
+      .about,
+      .bear-section {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .section-title {
+        font-size: 29px;
+      }
+
+      .bear-text h2 {
+        font-size: 30px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header>
+
+  <div class="logo">
+    <div class="logo-icon">
+      🧸
+    </div>
+
+    Boxcha
+  </div>
+
+  <nav>
+    <a href="#home">Bosh sahifa</a>
+    <a href="#about">Biz haqimizda</a>
+    <a href="#features">Xizmatlar</a>
+    <a href="#contact">Aloqa</a>
+  </nav>
+
+  <!-- Sening login URL'ing -->
+  <a href="auth/login.html" class="login-btn">
+    Kirish →
+  </a>
+
+</header>
+
+
+<!-- =========================
+     HERO
+========================= -->
+
+<section class="hero" id="home">
+
+  <div class="hero-content">
+
+    <div class="badge">
+      🧸 Bolajonlar uchun eng yaxshi muhit
+    </div>
+
+    <h1>
+      Boxcha —
+      <span>bolajonlar uchun baxtli maskan!</span>
+    </h1>
+
+    <p class="hero-text">
+      Farzandingizning xavfsizligi, ta'limi va
+      quvonchi biz uchun eng muhim.
+      Boxcha'da har bir bola mehr, e'tibor va
+      rivojlanish uchun qulay muhitga ega bo'ladi.
+    </p>
+
+    <div class="hero-buttons">
+
+      <a href="auth/login.html"
+         class="primary-btn">
+        Boxcha'ga kirish →
+      </a>
+
+      <a href="#contact"
+         class="secondary-btn">
+        Biz bilan bog'lanish
+      </a>
+
+    </div>
+
+  </div>
+
+
+  <div class="hero-image">
+
+    <img
+            src="/images/boxcha-building.png"
+            alt="Boxcha binosi"
+            class="building"
+    />
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     FEATURES
+========================= -->
+
+<section class="features" id="features">
+
+  <h2 class="section-title">
+    Nega aynan Boxcha?
+  </h2>
+
+  <p class="section-subtitle">
+    Farzandingiz uchun kerak bo'lgan barcha sharoitlar
+  </p>
+
+
+  <div class="feature-grid">
+
+    <div class="feature-card">
+
+      <div class="feature-icon">
+        🛡️
+      </div>
+
+      <h3>
+        Xavfsizlik
+      </h3>
+
+      <p>
+        Bolalar uchun xavfsiz va nazorat qilinadigan muhit.
+      </p>
+
+    </div>
+
+
+    <div class="feature-card">
+
+      <div class="feature-icon">
+        ❤️
+      </div>
+
+      <h3>
+        G'amxo'rlik
+      </h3>
+
+      <p>
+        Har bir bolaga mehr va individual e'tibor.
+      </p>
+
+    </div>
+
+
+    <div class="feature-card">
+
+      <div class="feature-icon">
+        📚
+      </div>
+
+      <h3>
+        Ta'lim
+      </h3>
+
+      <p>
+        Zamonaviy va qiziqarli ta'lim dasturlari.
+      </p>
+
+    </div>
+
+
+    <div class="feature-card">
+
+      <div class="feature-icon">
+        🎨
+      </div>
+
+      <h3>
+        Ijodkorlik
+      </h3>
+
+      <p>
+        Rasm, musiqa va ijodiy mashg'ulotlar.
+      </p>
+
+    </div>
+
+
+    <div class="feature-card">
+
+      <div class="feature-icon">
+        👩‍🏫
+      </div>
+
+      <h3>
+        Tajribali jamoa
+      </h3>
+
+      <p>
+        Malakali va mehribon tarbiyachilar.
+      </p>
+
+    </div>
+
+
+    <div class="feature-card">
+
+      <div class="feature-icon">
+        👀
+      </div>
+
+      <h3>
+        Kuzatuv
+      </h3>
+
+      <p>
+        Ota-onalar uchun farzand faoliyati haqida ma'lumot.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     ABOUT
+========================= -->
+
+<section class="about" id="about">
+
+  <div class="about-grid">
+
+
+    <div class="about-card">
+
+      <h2>
+        Biz haqimizda
+      </h2>
+
+      <p>
+        Boxcha — bolalarning sog'lom,
+        bilimli va baxtli ulg'ayishi uchun
+        yaratilgan zamonaviy bolalar markazi.
+      </p>
+
+      <ul class="about-list">
+
+        <li>
+          3 yoshdan 7 yoshgacha bo'lgan bolalar
+        </li>
+
+        <li>
+          Qiziqarli o'yin orqali ta'lim
+        </li>
+
+        <li>
+          Sog'lom ovqatlanish
+        </li>
+
+        <li>
+          Tibbiy nazorat
+        </li>
+
+        <li>
+          Toza va qulay muhit
+        </li>
+
+      </ul>
+
+    </div>
+
+
+    <div class="about-card">
+
+      <h2>
+        📍 Manzilimiz
+      </h2>
+
+      <p>
+        Toshkent shahri,
+        Yashnobod tumani
+      </p>
+
+      <div class="contact-box">
+
+        <strong>
+          Ish vaqti
+        </strong>
+
+        <span>
+                    Dushanba — Shanba
+                    <br>
+                    07:30 — 18:30
+                </span>
+
+      </div>
+
+    </div>
+
+
+    <div class="about-card" id="contact">
+
+      <h2>
+        📞 Aloqa
+      </h2>
+
+      <p>
+        Savollaringiz bo'lsa,
+        biz bilan bog'lanishingiz mumkin.
+      </p>
+
+      <div class="contact-box">
+
+        <strong>
+          Telefon
+        </strong>
+
+        <span>
+                    +998 90 123 45 67
+                </span>
+
+      </div>
+
+      <div class="contact-box">
+
+        <strong>
+          Telegram
+        </strong>
+
+        <span>
+                    @boxcha_uz
+                </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     BEAR SECTION
+========================= -->
+
+<section class="bear-section">
+
+  <div class="bear-container">
+
+    <div class="bear-text">
+
+      <h2>
+        Har bir bola —
+        <span>alohida e'tibor</span>ga loyiq ❤️
+      </h2>
+
+      <p>
+        Boxcha jamoasi har bir bolaning
+        qiziqishi, qobiliyati va rivojlanishiga
+        alohida e'tibor beradi.
+      </p>
+
+      <a href="auth/login.html"
+         class="primary-btn">
+        Boxcha'ga kirish →
+      </a>
+
+    </div>
+
+
+    <div>
+
+      <img
+              src="/images/boxcha-bear.png"
+              alt="Boxcha ayiqcha"
+              class="bear"
+      />
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer>
+
+  © 2026
+  <strong>Boxcha</strong>.
+  Barcha huquqlar himoyalangan.
+
+</footer>
+
+
+</body>
+</html>
