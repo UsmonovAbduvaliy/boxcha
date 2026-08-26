@@ -42,6 +42,7 @@ public class SecurityConfig {
                                 "/auth/login.html",
                                 "/images/**",
                                 "/css/**",
+                                "/js/**",
                                 "/cabinet.html"
                         ).permitAll()
                         .requestMatchers("/api/user/login" , "/api/token").permitAll()
