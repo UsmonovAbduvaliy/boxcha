@@ -1,15 +1,19 @@
 package com.example.boxcha.service.impl;
 
+import com.example.boxcha.dto.request.UpdateGroupTeacher;
 import com.example.boxcha.dto.response.GetAllChildrenResponse;
 import com.example.boxcha.dto.response.GetAllGroupsResponse;
 import com.example.boxcha.dto.response.GetGroupByIdResponse;
+import com.example.boxcha.dto.response.UpdateGroupTeacherResponse;
 import com.example.boxcha.entity.Children;
 import com.example.boxcha.entity.Group;
 import com.example.boxcha.entity.User;
 import com.example.boxcha.repo.ChildrenRepository;
 import com.example.boxcha.repo.GroupRepository;
+import com.example.boxcha.repo.UserRepository;
 import com.example.boxcha.service.interfaces.GroupService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +27,7 @@ public class GroupServiceImpl implements GroupService {
 
     private final GroupRepository groupRepository;
     private final ChildrenRepository childrenRepository;
+    private final UserRepository userRepository;
 
     @Override
     public List<GetAllGroupsResponse> getAllGroups() {
@@ -56,6 +61,29 @@ public class GroupServiceImpl implements GroupService {
             ));
         });
 
-        return new GetGroupByIdResponse(group.getId(), group.getName(), teacher.getId(), teacher.getFirstName(), teacher.getLastName(), childrenResponses);
+        return new GetGroupByIdResponse(
+                group.getId(),
+                group.getName(),
+                teacher != null ? teacher.getId() : null,
+                teacher != null ? teacher.getFirstName() : null,
+                teacher != null ? teacher.getLastName() : null,
+                childrenResponses
+        );
+    }
+
+    @Override
+    public UpdateGroupTeacherResponse updateGroupTeacher(Long id, UpdateGroupTeacher teacher) {
+        Optional<Group> byId = groupRepository.findById(id);
+        if (byId.isEmpty()) {
+            return null;
+        }
+        Group group = byId.get();
+        Optional<User> byId1 = userRepository.findById(teacher.getTeacherId());
+        if (byId1.isEmpty()) {
+            return null;
+        }
+        group.setTeacher(byId1.get());
+        groupRepository.save(group);
+        return new UpdateGroupTeacherResponse(group.getId());
     }
 }

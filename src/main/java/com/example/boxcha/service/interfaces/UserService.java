@@ -3,10 +3,7 @@ package com.example.boxcha.service.interfaces;
 import com.example.boxcha.dto.request.AddNewUserRequest;
 import com.example.boxcha.dto.request.LoginRequest;
 import com.example.boxcha.dto.request.UpdateUserRequest;
-import com.example.boxcha.dto.response.AddNewUserResponse;
-import com.example.boxcha.dto.response.GetAllUsersResponse;
-import com.example.boxcha.dto.response.UpdateUserResponse;
-import com.example.boxcha.dto.response.UserResponse;
+import com.example.boxcha.dto.response.*;
 import com.example.boxcha.entity.User;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,7 +20,7 @@ public interface UserService {
 
     List<GetAllUsersResponse> getAllByActiveUsers(Boolean active,Pageable pageable);
 
-    Optional<User> getOneUser(Long id);
+    GetOneUserResponse getOneUser(Long id);
 
     AddNewUserResponse addNewUser(AddNewUserRequest request);
 

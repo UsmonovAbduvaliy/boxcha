@@ -139,10 +139,38 @@
         </section>
 
         <section id="page-groups" class="page">
-            <div class="section-toolbar">
-                <div><h2>Guruhlar</h2><p>Barcha guruhlar va ulardagi faol bolalar</p></div>
+
+            <!-- GROUP LIST -->
+
+            <div id="groupsListView">
+
+                <div class="section-toolbar">
+
+                    <div>
+                        <h2>Guruhlar</h2>
+                        <p>
+                            Barcha guruhlar va ulardagi faol bolalar
+                        </p>
+                    </div>
+
+                </div>
+
+                <div id="groupsPage" class="cards-grid"></div>
+
             </div>
-            <div id="groupsPage" class="cards-grid"></div>
+
+
+            <!-- GROUP DETAILS -->
+
+            <div
+                    id="groupDetailsPage"
+                    style="display:none;"
+            >
+
+                <div id="groupDetailsContent"></div>
+
+            </div>
+
         </section>
 
         <section id="page-children" class="page">
@@ -276,6 +304,6 @@
     </div>
 </div>
 
-<script src="/js/CabinetPage.js"></script>
+<script type="module" src="/js/CabinetPage.js"></script>
 </body>
 </html>

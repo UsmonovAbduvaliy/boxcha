@@ -3,10 +3,7 @@ package com.example.boxcha.service.impl;
 import com.example.boxcha.dto.request.AddNewUserRequest;
 import com.example.boxcha.dto.request.LoginRequest;
 import com.example.boxcha.dto.request.UpdateUserRequest;
-import com.example.boxcha.dto.response.AddNewUserResponse;
-import com.example.boxcha.dto.response.GetAllUsersResponse;
-import com.example.boxcha.dto.response.UpdateUserResponse;
-import com.example.boxcha.dto.response.UserResponse;
+import com.example.boxcha.dto.response.*;
 import com.example.boxcha.entity.Group;
 import com.example.boxcha.entity.Role;
 import com.example.boxcha.entity.User;
@@ -102,8 +99,15 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public Optional<User> getOneUser(Long id) {
-        return userRepository.findById(id);
+    public GetOneUserResponse getOneUser(Long id) {
+        Optional<User> byId = userRepository.findById(id);
+        if (byId.isEmpty()) {
+            return null;
+        }
+        User user = byId.get();
+        Optional<Group> groupById = groupRepository.findGroupByTeacherId(user.getId());
+        Group group = groupById.orElse(null);
+        return new GetOneUserResponse(user, group);
     }
 
     @Override
@@ -153,17 +157,33 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UpdateUserResponse updateUser(Long id, UpdateUserRequest request) {
+        System.out.println(request.getRoleId());
+        System.out.println(request.getGroupId());
+        System.out.println(id);
         Optional<User> byId = userRepository.findById(id);
         if (byId.isEmpty()) {
             return null;
         }
+        Optional<Group> opGroup = groupRepository.findById(request.getGroupId());
+        if (opGroup.isEmpty()) {
+            return null;
+        }
+        Group group = opGroup.get();
         User user = byId.get();
         user.setFirstName(request.getFirstName()!=null? request.getFirstName(): user.getFirstName());
         user.setLastName(request.getLastName()!= null?request.getLastName(): user.getLastName());
         user.setEmail(request.getEmail()!=null? request.getEmail(): user.getEmail());
         user.setPhone(request.getPhone()!=null? request.getPhone(): user.getPhone());
-        userRepository.save(user);
-        return new UpdateUserResponse(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhone());
+        Optional<Role> roleById = roleRepository.getRoleById(request.getRoleId());
+        if (roleById.isEmpty()) {
+            user.setRoles(null);
+        }else {
+            user.setRoles(List.of(roleById.get()));
+        }
+        User savedUser = userRepository.save(user);
+        group.setTeacher(savedUser);
+        groupRepository.save(group);
+        return new UpdateUserResponse(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhone(),group,user.getRoles());
     }
 
     @Override

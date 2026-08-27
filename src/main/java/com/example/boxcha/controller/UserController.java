@@ -3,10 +3,7 @@ package com.example.boxcha.controller;
 import com.example.boxcha.dto.request.AddNewUserRequest;
 import com.example.boxcha.dto.request.LoginRequest;
 import com.example.boxcha.dto.request.UpdateUserRequest;
-import com.example.boxcha.dto.response.AddNewUserResponse;
-import com.example.boxcha.dto.response.GetAllUsersResponse;
-import com.example.boxcha.dto.response.UpdateUserResponse;
-import com.example.boxcha.dto.response.UserResponse;
+import com.example.boxcha.dto.response.*;
 import com.example.boxcha.entity.User;
 import com.example.boxcha.service.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
@@ -57,11 +54,8 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable Long id) {
-       Optional<User> user =  userService.getOneUser(id);
-       if(user.isPresent()) {
-           return ResponseEntity.ok(user.get());
-       }
-       return ResponseEntity.badRequest().build();
+       GetOneUserResponse user =  userService.getOneUser(id);
+       return ResponseEntity.ok(user);
     }
 
     @PostMapping("/add")

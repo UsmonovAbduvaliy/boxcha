@@ -1,6 +1,10 @@
 package com.example.boxcha.dto.response;
 
+import com.example.boxcha.entity.Group;
+import com.example.boxcha.entity.Role;
 import lombok.Value;
+
+import java.util.List;
 
 @Value
 public class UpdateUserResponse {
@@ -9,4 +13,6 @@ public class UpdateUserResponse {
     String firstName;
     String lastName;
     String phone;
+    Group group;
+    List<Role> roles;
 }

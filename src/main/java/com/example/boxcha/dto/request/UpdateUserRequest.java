@@ -8,4 +8,6 @@ public class UpdateUserRequest {
     String firstName;
     String lastName;
     String phone;
+    Long groupId;
+    Long roleId;
 }
