@@ -1,10 +1,21 @@
 import { api } from "./api.js";
+
 import {
     $,
     escapeHtml,
     initials,
     showToast
 } from "./utils.js";
+
+import {
+    openModal,
+    closeModal
+} from "./modals.js";
+
+import {
+    editChild
+} from "./children.js";
+
 
 export async function loadGroupsPage(state) {
 
@@ -31,6 +42,7 @@ export async function loadGroupsPage(state) {
                     x
                 ])
             );
+
 
         el.innerHTML =
             state.groups.length
@@ -59,13 +71,16 @@ export async function loadGroupsPage(state) {
 
                             </div>
 
+
                             <h3>
                                 ${escapeHtml(g.name)}
                             </h3>
 
+
                             <p>
                                 Guruh ID: ${g.id}
                             </p>
+
 
                             <div class="group-card-footer">
 
@@ -79,6 +94,7 @@ export async function loadGroupsPage(state) {
 
                             </div>
 
+
                             <div class="group-open-hint">
                                 Guruhni ko‘rish →
                             </div>
@@ -87,31 +103,48 @@ export async function loadGroupsPage(state) {
                     `;
 
                 }).join("")
+
                 : `
                     <div class="empty-state">
                         Guruhlar mavjud emas.
                     </div>
                 `;
 
-        // Guruh card click
+
+        // ================================
+        // GROUP CARD CLICK
+        // ================================
+
         document
             .querySelectorAll("[data-group-id]")
             .forEach(card => {
 
-                card.addEventListener("click", () => {
+                card.addEventListener(
+                    "click",
+                    () => {
 
-                    const id =
-                        Number(card.dataset.groupId);
+                        const id =
+                            Number(
+                                card.dataset.groupId
+                            );
 
-                    openGroup(id, state);
+                        openGroup(
+                            id,
+                            state
+                        );
 
-                });
+                    }
+                );
 
             });
 
+
     } catch (e) {
 
-        console.error("Groups error:", e);
+        console.error(
+            "Groups error:",
+            e
+        );
 
         el.innerHTML = `
             <div class="empty-state">
@@ -122,7 +155,14 @@ export async function loadGroupsPage(state) {
 }
 
 
-export async function openGroup(groupId, state) {
+// ========================================
+// OPEN GROUP
+// ========================================
+
+export async function openGroup(
+    groupId,
+    state
+) {
 
     const groupsPage =
         $("#groupsPage");
@@ -130,16 +170,23 @@ export async function openGroup(groupId, state) {
     const groupDetailsPage =
         $("#groupDetailsPage");
 
+
     if (!groupDetailsPage) {
+
         console.error(
             "groupDetailsPage topilmadi"
         );
+
         return;
     }
 
-    groupsPage.style.display = "none";
 
-    groupDetailsPage.style.display = "block";
+    groupsPage.style.display =
+        "none";
+
+    groupDetailsPage.style.display =
+        "block";
+
 
     $("#groupDetailsContent").innerHTML = `
         <div class="empty-state">
@@ -147,18 +194,29 @@ export async function openGroup(groupId, state) {
         </div>
     `;
 
+
     try {
 
         const group =
-            await api(`/api/group/${groupId}`);
+            await api(
+                `/api/group/${groupId}`
+            );
+
 
         if (!group) {
+
             throw new Error(
                 "Guruh topilmadi"
             );
+
         }
 
-        renderGroupDetails(group, state);
+
+        renderGroupDetails(
+            group,
+            state
+        );
+
 
     } catch (e) {
 
@@ -167,25 +225,36 @@ export async function openGroup(groupId, state) {
             e
         );
 
+
         $("#groupDetailsContent").innerHTML = `
             <div class="empty-state">
                 Guruh ma'lumotlarini olishda xatolik.
             </div>
         `;
+
     }
 }
 
 
-export function renderGroupDetails(group, state) {
+// ========================================
+// RENDER GROUP DETAILS
+// ========================================
+
+export function renderGroupDetails(
+    group,
+    state
+) {
 
     const teacherName =
         `${group.teacherFirstname || ""} ${group.teacherLastname || ""}`
             .trim();
 
+
     const children =
         Array.isArray(group.children)
             ? group.children
             : [];
+
 
     $("#groupDetailsContent").innerHTML = `
 
@@ -200,11 +269,14 @@ export function renderGroupDetails(group, state) {
                     ← Guruhlarga qaytish
                 </button>
 
+
                 <h2>
                     ${escapeHtml(
-        group.groupName || "Guruh"
+        group.groupName ||
+        "Guruh"
     )}
                 </h2>
+
 
                 <p>
                     Guruh ID: ${group.id}
@@ -218,9 +290,13 @@ export function renderGroupDetails(group, state) {
         <div class="group-detail-grid">
 
 
+            <!-- ================================= -->
             <!-- TEACHER -->
+            <!-- ================================= -->
 
-            <section class="panel group-teacher-card">
+            <section
+                class="panel group-teacher-card"
+            >
 
                 <div class="panel-head">
 
@@ -254,15 +330,20 @@ export function renderGroupDetails(group, state) {
                     <div>
 
                         <h3>
+
                             ${escapeHtml(
         teacherName ||
         "Ustoz biriktirilmagan"
     )}
+
                         </h3>
 
+
                         <p>
+
                             ID:
                             ${group.teacherId ?? "—"}
+
                         </p>
 
                     </div>
@@ -281,9 +362,13 @@ export function renderGroupDetails(group, state) {
             </section>
 
 
+            <!-- ================================= -->
             <!-- CHILDREN -->
+            <!-- ================================= -->
 
-            <section class="panel group-children-card">
+            <section
+                class="panel group-children-card"
+            >
 
                 <div class="panel-head">
 
@@ -299,8 +384,12 @@ export function renderGroupDetails(group, state) {
 
                     </div>
 
+
                     <span class="status">
-                        ${children.length} bola
+
+                        ${children.length}
+                        bola
+
                     </span>
 
                 </div>
@@ -310,7 +399,9 @@ export function renderGroupDetails(group, state) {
 
                     ${
         children.length
-            ? children.map(child => `
+
+            ? children.map(
+                child => `
 
                                 <div
                                     class="group-child-item"
@@ -318,66 +409,112 @@ export function renderGroupDetails(group, state) {
                                     style="cursor:pointer;"
                                 >
 
+
+                                    <!-- AVATAR -->
+
                                     <div class="child-avatar">
 
                                         ${initials(
-                child.firstName,
-                child.lastName
-            )}
+                    child.firstName,
+                    child.lastName
+                )}
 
                                     </div>
 
 
-                                    <div class="group-child-info">
+                                    <!-- NAME -->
+
+                                    <div
+                                        class="group-child-info"
+                                    >
 
                                         <strong>
+
                                             ${escapeHtml(
-                `${child.firstName || ""} ${child.lastName || ""}`
-                    .trim()
-            )}
+                    `${child.firstName || ""} ${child.lastName || ""}`
+                        .trim()
+                )}
+
                                         </strong>
 
+
                                         <span>
+
                                             ${escapeHtml(
-                child.patronymic || ""
-            )}
+                    child.patronymic || ""
+                )}
+
                                         </span>
 
                                     </div>
 
 
-                                    <div class="group-child-meta">
+                                    <!-- META -->
+
+                                    <div
+                                        class="group-child-meta"
+                                    >
 
                                         <span>
+
                                             ${child.age ?? "—"}
                                             yosh
+
                                         </span>
+
 
                                         <span>
+
                                             ${escapeHtml(
-                child.gender || "—"
-            )}
+                    child.gender || "—"
+                )}
+
                                         </span>
 
-                                        <span class="status">
-                                            Faol
+
+                                        <span
+                                            class="status ${
+                    child.active
+                        ? ""
+                        : "off"
+                }"
+                                        >
+
+                                            ${
+                    child.active
+                        ? "Faol"
+                        : "Faol emas"
+                }
+
                                         </span>
 
                                     </div>
 
 
-                                    <div class="group-child-arrow">
+                                    <!-- ARROW -->
+
+                                    <div
+                                        class="group-child-arrow"
+                                    >
                                         →
                                     </div>
 
+
                                 </div>
 
-                            `).join("")
+                            `
+            ).join("")
+
 
             : `
-                                <div class="empty-state">
-                                    Bu guruhda faol bolalar yo‘q.
+
+                                <div
+                                    class="empty-state"
+                                >
+                                    Bu guruhda faol
+                                    bolalar yo‘q.
                                 </div>
+
                             `
     }
 
@@ -389,7 +526,10 @@ export function renderGroupDetails(group, state) {
     `;
 
 
-    // Back
+    // ========================================
+    // BACK
+    // ========================================
+
     $("#backToGroupsBtn")
         ?.addEventListener(
             "click",
@@ -397,17 +537,27 @@ export function renderGroupDetails(group, state) {
         );
 
 
-    // Teacher
+    // ========================================
+    // CHANGE TEACHER
+    // ========================================
+
     $("#changeGroupTeacherBtn")
         ?.addEventListener(
             "click",
             () => {
-                changeGroupTeacher(group.id);
+
+                changeGroupTeacher(
+                    group.id
+                );
+
             }
         );
 
 
-    // Children
+    // ========================================
+    // CHILD CLICK
+    // ========================================
+
     document
         .querySelectorAll("[data-child-id]")
         .forEach(item => {
@@ -416,33 +566,52 @@ export function renderGroupDetails(group, state) {
                 "click",
                 () => {
 
-                    openGroupChild(
+                    const childId =
                         Number(
                             item.dataset.childId
-                        )
+                        );
+
+
+                    openGroupChild(
+                        childId,
+                        state
                     );
 
                 }
             );
 
         });
+
 }
 
+
+// ========================================
+// CLOSE GROUP DETAILS
+// ========================================
 
 export function closeGroupDetails() {
 
     $("#groupDetailsPage").style.display =
         "none";
 
-    $("#groupsPage").style.display = "";
+
+    $("#groupsPage").style.display =
+        "";
+
 
     $("#groupDetailsContent").innerHTML =
         "";
+
 }
 
 
-// Hozircha backend endpoint aniqlanmagan
-export async function changeGroupTeacher(groupId) {
+// ========================================
+// CHANGE GROUP TEACHER
+// ========================================
+
+export async function changeGroupTeacher(
+    groupId
+) {
 
     showToast(
         `Guruh #${groupId} uchun ustozni almashtirish funksiyasi hali backend endpointga bog‘lanmagan.`
@@ -451,30 +620,213 @@ export async function changeGroupTeacher(groupId) {
 }
 
 
-// Guruh ichidagi bolani ko‘rish
-export async function openGroupChild(childId) {
+// ========================================
+// OPEN CHILD
+// ========================================
+
+export async function openGroupChild(
+    childId,
+    state
+) {
 
     try {
 
         const child =
-            await api(`/api/children/${childId}`);
+            await api(
+                `/api/children/${childId}`
+            );
+
 
         if (!child) {
+
             throw new Error(
                 "Bola topilmadi"
             );
+
         }
 
-        alert(
-            `Bola: ${child.firstName || ""} ${child.lastName || ""}`
+
+        // ==================================
+        // AVATAR
+        // ==================================
+
+        $("#viewChildAvatar").textContent =
+            initials(
+                child.firstName,
+                child.lastName
+            );
+
+
+        // ==================================
+        // NAME
+        // ==================================
+
+        $("#viewChildName").textContent =
+            `${child.firstName || ""} ${child.lastName || ""}`
+                .trim();
+
+
+        // ==================================
+        // BIRTH DATE
+        // ==================================
+
+        $("#viewChildBirthDate").textContent =
+            child.birthDate || "—";
+
+
+        // ==================================
+        // AGE
+        // ==================================
+
+        $("#viewChildAge").textContent =
+            child.age != null
+                ? `${child.age} yosh`
+                : "—";
+
+
+        // ==================================
+        // GENDER
+        // ==================================
+
+        $("#viewChildGender").textContent =
+            child.gender || "—";
+
+
+        // ==================================
+        // GROUP
+        // ==================================
+
+        $("#viewChildGroup").textContent =
+            child.groupName ||
+            child.group ||
+            "—";
+
+
+        // ==================================
+        // MOTHER
+        // ==================================
+
+        $("#viewChildMother").textContent =
+            `${child.motherFirstName || ""} ${child.motherLastName || ""}`
+                .trim() || "—";
+
+
+        // ==================================
+        // FATHER
+        // ==================================
+
+        $("#viewChildFather").textContent =
+            `${child.fatherFirstName || ""} ${child.fatherLastName || ""}`
+                .trim() || "—";
+
+
+        // ==================================
+        // MOTHER PHONE
+        // ==================================
+
+        $("#viewChildMotherPhone").textContent =
+            child.motherPhone || "—";
+
+
+        // ==================================
+        // FATHER PHONE
+        // ==================================
+
+        $("#viewChildFatherPhone").textContent =
+            child.fatherPhone || "—";
+
+
+        // ==================================
+        // ADDRESS
+        // ==================================
+
+        $("#viewChildAddress").textContent =
+            child.address || "—";
+
+
+        // ==================================
+        // STATUS
+        // ==================================
+
+        const status =
+            $("#viewChildStatus");
+
+
+        status.textContent =
+            child.active
+                ? "Faol"
+                : "Faol emas";
+
+
+        status.classList.toggle(
+            "off",
+            !child.active
         );
+
+
+        // ==================================
+        // EDIT BUTTON
+        // ==================================
+
+        const editButton =
+            $("#viewChildEditBtn");
+
+
+        if (editButton) {
+
+            // Old eventlarni olib tashlash uchun
+            // yangi button clone qilamiz
+
+            const newButton =
+                editButton.cloneNode(true);
+
+
+            editButton.replaceWith(
+                newButton
+            );
+
+
+            newButton.addEventListener(
+                "click",
+                async () => {
+
+                    closeModal(
+                        "viewChildModal"
+                    );
+
+
+                    await editChild(
+                        childId,
+                        state
+                    );
+
+                }
+            );
+
+        }
+
+
+        // ==================================
+        // OPEN MODAL
+        // ==================================
+
+        openModal(
+            "viewChildModal"
+        );
+
 
     } catch (e) {
 
-        console.error(e);
+        console.error(
+            "Open child error:",
+            e
+        );
+
 
         showToast(
             "Bola ma'lumotini olishda xatolik."
         );
+
     }
+
 }

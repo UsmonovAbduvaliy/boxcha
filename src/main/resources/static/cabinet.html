@@ -268,6 +268,244 @@
     </div>
 </div>
 
+<!-- VIEW CHILD MODAL -->
+
+<div class="modal" id="viewChildModal">
+
+    <div class="modal-box">
+
+        <button
+                type="button"
+                class="modal-close"
+                data-close="viewChildModal"
+        >
+            ×
+        </button>
+
+        <h2>Bola ma'lumotlari</h2>
+
+        <p>
+            Bola haqidagi asosiy ma'lumotlar
+        </p>
+
+
+        <!-- CHILD HEADER -->
+
+        <div class="teacher-view-header">
+
+            <div class="teacher-view-avatar">
+                <span id="viewChildAvatar">
+                    B
+                </span>
+            </div>
+
+            <div class="teacher-view-title">
+
+                <h3 id="viewChildName">
+                    —
+                </h3>
+
+                <p id="viewChildPatronymic">
+                    —
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- CHILD INFORMATION -->
+
+        <div class="teacher-view-info">
+
+            <div class="teacher-info-item">
+
+                <span class="teacher-info-label">
+                    Tug‘ilgan sana
+                </span>
+
+                <strong
+                        class="teacher-info-value"
+                        id="viewChildBirthDate"
+                >
+                    —
+                </strong>
+
+            </div>
+
+
+            <div class="teacher-info-item">
+
+                <span class="teacher-info-label">
+                    Yosh
+                </span>
+
+                <strong
+                        class="teacher-info-value"
+                        id="viewChildAge"
+                >
+                    —
+                </strong>
+
+            </div>
+
+
+            <div class="teacher-info-item">
+
+                <span class="teacher-info-label">
+                    Jins
+                </span>
+
+                <strong
+                        class="teacher-info-value"
+                        id="viewChildGender"
+                >
+                    —
+                </strong>
+
+            </div>
+
+
+            <div class="teacher-info-item">
+
+                <span class="teacher-info-label">
+                    Guruh
+                </span>
+
+                <strong
+                        class="teacher-info-value"
+                        id="viewChildGroup"
+                >
+                    —
+                </strong>
+
+            </div>
+
+
+            <div class="teacher-info-item">
+
+                <span class="teacher-info-label">
+                    Onasi
+                </span>
+
+                <strong
+                        class="teacher-info-value"
+                        id="viewChildMother"
+                >
+                    —
+                </strong>
+
+            </div>
+
+
+            <div class="teacher-info-item">
+
+                <span class="teacher-info-label">
+                    Onasi telefoni
+                </span>
+
+                <strong
+                        class="teacher-info-value"
+                        id="viewChildMotherPhone"
+                >
+                    —
+                </strong>
+
+            </div>
+
+
+            <div class="teacher-info-item">
+
+                <span class="teacher-info-label">
+                    Otasi
+                </span>
+
+                <strong
+                        class="teacher-info-value"
+                        id="viewChildFather"
+                >
+                    —
+                </strong>
+
+            </div>
+
+
+            <div class="teacher-info-item">
+
+                <span class="teacher-info-label">
+                    Otasi telefoni
+                </span>
+
+                <strong
+                        class="teacher-info-value"
+                        id="viewChildFatherPhone"
+                >
+                    —
+                </strong>
+
+            </div>
+
+
+            <div class="teacher-info-item full">
+
+                <span class="teacher-info-label">
+                    Manzil
+                </span>
+
+                <strong
+                        class="teacher-info-value"
+                        id="viewChildAddress"
+                >
+                    —
+                </strong>
+
+            </div>
+
+
+            <div class="teacher-info-item full">
+
+                <span class="teacher-info-label">
+                    Holati
+                </span>
+
+                <span
+                        class="teacher-view-status"
+                        id="viewChildStatus"
+                >
+                    Faol
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- ACTIONS -->
+
+        <div class="teacher-view-actions">
+
+            <button
+                    type="button"
+                    class="secondary-btn"
+                    data-close="viewChildModal"
+            >
+                Yopish
+            </button>
+
+            <button
+                    type="button"
+                    class="primary-btn"
+                    id="viewChildEditBtn"
+            >
+                Tahrirlash
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
 <!-- TEACHER MODAL -->
 <div class="modal" id="teacherModal">
     <div class="modal-box">
@@ -285,6 +523,167 @@
             <div class="form-actions full"><button type="button" class="secondary-btn" data-close="teacherModal">Bekor qilish</button><button class="primary-btn">Saqlash</button></div>
         </form>
     </div>
+</div>
+
+<div class="modal" id="viewTeacherModal">
+
+    <div class="modal-box">
+
+        <button
+                type="button"
+                class="modal-close"
+                data-close-modal="viewTeacherModal"
+        >
+            ×
+        </button>
+
+
+        <h2>Ustoz ma'lumotlari</h2>
+
+        <p>
+            Ustoz haqidagi asosiy ma'lumotlar
+        </p>
+
+
+        <!-- TEACHER HEADER -->
+
+        <div class="teacher-view-header">
+
+            <div class="teacher-view-avatar">
+                <span id="viewTeacherAvatar">
+                    U
+                </span>
+            </div>
+
+
+            <div class="teacher-view-title">
+
+                <h3 id="viewTeacherName">
+                    —
+                </h3>
+
+                <p>
+                    Ustoz profili
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- TEACHER INFORMATION -->
+
+        <div class="teacher-view-info">
+
+
+            <div class="teacher-info-item">
+
+                <span class="teacher-info-label">
+                    Email
+                </span>
+
+                <strong
+                        class="teacher-info-value"
+                        id="viewTeacherEmail"
+                >
+                    —
+                </strong>
+
+            </div>
+
+
+            <div class="teacher-info-item">
+
+                <span class="teacher-info-label">
+                    Telefon
+                </span>
+
+                <strong
+                        class="teacher-info-value"
+                        id="viewTeacherPhone"
+                >
+                    —
+                </strong>
+
+            </div>
+
+
+            <div class="teacher-info-item">
+
+                <span class="teacher-info-label">
+                    Guruh
+                </span>
+
+                <strong
+                        class="teacher-info-value"
+                        id="viewTeacherGroup"
+                >
+                    —
+                </strong>
+
+            </div>
+
+
+            <div class="teacher-info-item">
+
+                <span class="teacher-info-label">
+                    Rol
+                </span>
+
+                <strong
+                        class="teacher-info-value"
+                        id="viewTeacherRole"
+                >
+                    —
+                </strong>
+
+            </div>
+
+
+            <div class="teacher-info-item full">
+
+                <span class="teacher-info-label">
+                    Holati
+                </span>
+
+                <span
+                        class="teacher-view-status"
+                        id="viewTeacherStatus"
+                >
+                    Faol
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- ACTIONS -->
+
+        <div class="teacher-view-actions">
+
+            <button
+                    type="button"
+                    class="secondary-btn"
+                    data-close-modal="viewTeacherModal"
+            >
+                Yopish
+            </button>
+
+
+            <button
+                    type="button"
+                    class="primary-btn"
+                    id="viewTeacherEditBtn"
+            >
+                Tahrirlash
+            </button>
+
+        </div>
+
+    </div>
+
 </div>
 
 <!-- OTHER MODAL -->

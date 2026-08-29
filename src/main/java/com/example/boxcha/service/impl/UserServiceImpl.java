@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -178,7 +179,7 @@ public class UserServiceImpl implements UserService {
         if (roleById.isEmpty()) {
             user.setRoles(null);
         }else {
-            user.setRoles(List.of(roleById.get()));
+            user.setRoles(new ArrayList<>(List.of(roleById.get())));
         }
         User savedUser = userRepository.save(user);
         group.setTeacher(savedUser);

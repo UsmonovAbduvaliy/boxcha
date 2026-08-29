@@ -1323,3 +1323,156 @@ td:first-child {
         display: none;
     }
 }
+
+/* =========================================
+   TEACHER VIEW MODAL
+   ========================================= */
+
+.teacher-view {
+    padding-top: 8px;
+}
+
+
+/* Header */
+
+.teacher-view-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 22px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #eef2f0;
+}
+
+
+.teacher-view-avatar {
+    width: 58px;
+    height: 58px;
+    border-radius: 17px;
+    background: #e7f5f1;
+    color: #338f83;
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+    font-weight: 800;
+    flex: 0 0 auto;
+}
+
+
+.teacher-view-title {
+    min-width: 0;
+}
+
+
+.teacher-view-title h3 {
+    margin: 0;
+    font-size: 17px;
+    color: #18202b;
+}
+
+
+.teacher-view-title p {
+    margin: 5px 0 0;
+    color: #9aa39f;
+    font-size: 10px;
+}
+
+
+/* Information */
+
+.teacher-view-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+
+.teacher-info-item {
+    background: #f8faf9;
+    border: 1px solid #edf1ef;
+    border-radius: 13px;
+    padding: 13px;
+    min-width: 0;
+}
+
+
+.teacher-info-item.full {
+    grid-column: 1 / -1;
+}
+
+
+.teacher-info-label {
+    display: block;
+    color: #9aa39f;
+    font-size: 9px;
+    margin-bottom: 6px;
+}
+
+
+.teacher-info-value {
+    display: block;
+    color: #35403e;
+    font-size: 11px;
+    font-weight: 700;
+    word-break: break-word;
+}
+
+
+/* Status */
+
+.teacher-view-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 5px 9px;
+    border-radius: 20px;
+    background: #e8f6ef;
+    color: #41986f;
+}
+
+
+.teacher-view-status.off {
+    background: #f6eeee;
+    color: #b16b6b;
+}
+
+
+/* Bottom buttons */
+
+.teacher-view-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #eef2f0;
+}
+
+
+/* Mobile */
+
+@media (max-width: 680px) {
+
+    .teacher-view-info {
+        grid-template-columns: 1fr;
+    }
+
+    .teacher-info-item.full {
+        grid-column: auto;
+    }
+
+    .teacher-view-header {
+        align-items: flex-start;
+    }
+
+    .teacher-view-actions {
+        flex-direction: column;
+    }
+
+    .teacher-view-actions button {
+        width: 100%;
+    }
+
+}

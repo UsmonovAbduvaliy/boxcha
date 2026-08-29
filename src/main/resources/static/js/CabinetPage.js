@@ -28,7 +28,8 @@ import {
     loadUsers,
     renderUsers,
     openNewTeacher,
-    initTeacherForm
+    initTeacherForm,
+    initTeacherView
 } from "./teachers.js";
 
 import {
@@ -549,6 +550,8 @@ async function init() {
     initChildForm(state);
 
     initTeacherForm(state);
+
+    initTeacherView(state);
 
     initOtherForm(state);
 

@@ -10,6 +10,7 @@ import {
     closeModal
 } from "./modals.js";
 
+
 export async function loadChildren(
     state,
     silent = false
@@ -18,12 +19,12 @@ export async function loadChildren(
     if (!silent) {
 
         $("#childrenTable").innerHTML = `
-            <tr>
-                <td colspan="5" class="loading-row">
-                    Yuklanmoqda...
-                </td>
-            </tr>
-        `;
+<tr>
+<td colspan="5" class="loading-row">
+    Yuklanmoqda...
+</td>
+</tr>
+`;
 
     }
 
@@ -36,7 +37,6 @@ export async function loadChildren(
             renderChildren(state);
         }
 
-        // attendance.js bundan foydalanadi
         document.dispatchEvent(
             new CustomEvent("childrenLoaded")
         );
@@ -51,15 +51,15 @@ export async function loadChildren(
         if (!silent) {
 
             $("#childrenTable").innerHTML = `
-                <tr>
-                    <td
-                        colspan="5"
-                        class="loading-row"
-                    >
-                        Ma'lumotni olishda xatolik.
-                    </td>
-                </tr>
-            `;
+<tr>
+<td
+colspan="5"
+class="loading-row"
+    >
+    Ma'lumotni olishda xatolik.
+</td>
+</tr>
+`;
 
         }
     }
@@ -78,14 +78,14 @@ export function renderChildren(state) {
 
             if (
                 state.childFilter === "active" &&
-                !c.isActive
+                !c.active
             ) {
                 return false;
             }
 
             if (
                 state.childFilter === "inactive" &&
-                c.isActive
+                c.active
             ) {
                 return false;
             }
@@ -106,94 +106,141 @@ export function renderChildren(state) {
         arr.length
             ? arr.map(c => `
 
-                <tr>
+<tr>
 
-                    <td>
+<td>
 
-                        <div class="child-name">
+<div class="child-name">
 
-                            <div class="child-avatar">
-                                ${initials(
-                c.firstName,
-                c.lastName
-            )}
-                            </div>
+    <div class="child-avatar">
+    ${initials(
+    c.firstName,
+    c.lastName
+)}
+</div>
 
-                            ${escapeHtml(
-                `${c.firstName || ""} ${c.lastName || ""}`
-                    .trim()
-            )}
+${escapeHtml(
+    `${c.firstName || ""} ${c.lastName || ""}`
+        .trim()
+)}
 
-                        </div>
+</div>
 
-                    </td>
+</td>
 
-                    <td>
-                        ${c.age ?? "—"}
-                    </td>
 
-                    <td>
-                        ${escapeHtml(
-                c.gender || "—"
-            )}
-                    </td>
+<td>
+    ${c.age ?? "—"}
+</td>
 
-                    <td>
+
+<td>
+    ${escapeHtml(
+    c.gender || "—"
+)}
+</td>
+
+
+<td>
 
                         <span
                             class="status ${
-                c.isActive
-                    ? ""
-                    : "off"
-            }"
+                                c.active
+                                    ? ""
+                                    : "off"
+                            }"
                         >
                             ${
-                c.isActive
-                    ? "Faol"
-                    : "Faol emas"
-            }
+                            c.active
+                                ? "Faol"
+                                : "Faol emas"
+                        }
                         </span>
 
-                    </td>
+</td>
 
-                    <td>
 
-                        <div class="person-actions">
+<td>
 
-                            <button
-                                class="small-btn"
-                                data-edit-child="${c.id}"
-                            >
-                                Tahrirlash
-                            </button>
+    <div class="person-actions">
 
-                            <button
-                                class="small-btn danger"
-                                data-delete-child="${c.id}"
-                            >
-                                O‘chirish
-                            </button>
+        <!-- KO'RISH -->
 
-                        </div>
+        <button
+            class="small-btn"
+            data-view-child="${c.id}"
+        >
+            Ko‘rish
+        </button>
 
-                    </td>
 
-                </tr>
+        <!-- TAHRIRLASH -->
 
-            `).join("")
+        <button
+            class="small-btn"
+            data-edit-child="${c.id}"
+        >
+            Tahrirlash
+        </button>
+
+
+        <!-- O'CHIRISH -->
+
+        <button
+            class="small-btn danger"
+            data-delete-child="${c.id}"
+        >
+            O‘chirish
+        </button>
+
+    </div>
+
+</td>
+
+</tr>
+
+`).join("")
             : `
-                <tr>
-                    <td
-                        colspan="5"
-                        class="loading-row"
-                    >
-                        Bola topilmadi.
-                    </td>
-                </tr>
-            `;
+<tr>
+<td
+colspan="5"
+class="loading-row"
+    >
+    Bola topilmadi.
+</td>
+</tr>
+`;
 
 
-    // Edit
+    // =========================
+    // VIEW CHILD
+    // =========================
+
+    document
+        .querySelectorAll("[data-view-child]")
+        .forEach(btn => {
+
+            btn.addEventListener(
+                "click",
+                () => {
+
+                    viewChild(
+                        Number(
+                            btn.dataset.viewChild
+                        ),
+                        state
+                    );
+
+                }
+            );
+
+        });
+
+
+    // =========================
+    // EDIT CHILD
+    // =========================
+
     document
         .querySelectorAll("[data-edit-child]")
         .forEach(btn => {
@@ -201,19 +248,24 @@ export function renderChildren(state) {
             btn.addEventListener(
                 "click",
                 () => {
+
                     editChild(
                         Number(
                             btn.dataset.editChild
                         ),
                         state
                     );
+
                 }
             );
 
         });
 
 
-    // Delete
+    // =========================
+    // DELETE CHILD
+    // =========================
+
     document
         .querySelectorAll("[data-delete-child]")
         .forEach(btn => {
@@ -221,12 +273,14 @@ export function renderChildren(state) {
             btn.addEventListener(
                 "click",
                 () => {
+
                     deleteChild(
                         Number(
                             btn.dataset.deleteChild
                         ),
                         state
                     );
+
                 }
             );
 
@@ -234,35 +288,204 @@ export function renderChildren(state) {
 }
 
 
-export async function editChild(id, state) {
+// =====================================================
+// VIEW CHILD
+// =====================================================
+
+export async function viewChild(
+    id,
+    state
+) {
+
+    try {
+
+        const child =
+            await api(`/api/children/${id}`);
+
+        if (!child) {
+            throw new Error(
+                "Bola topilmadi"
+            );
+        }
+
+
+        // =========================
+        // HEADER
+        // =========================
+
+        $("#viewChildAvatar").textContent =
+            initials(
+                child.firstName,
+                child.lastName
+            );
+
+
+        $("#viewChildName").textContent =
+            `${child.firstName || ""} ${child.lastName || ""}`
+                .trim();
+
+
+        $("#viewChildPatronymic").textContent =
+            child.patronymic || "—";
+
+
+        // =========================
+        // ASOSIY MA'LUMOTLAR
+        // =========================
+
+        $("#viewChildBirthDate").textContent =
+            child.birthDate || "—";
+
+
+        $("#viewChildAge").textContent =
+            child.age != null
+                ? `${child.age} yosh`
+                : "—";
+
+
+        $("#viewChildGender").textContent =
+            child.gender || "—";
+
+
+        $("#viewChildGroup").textContent =
+            child.groupName || "—";
+
+
+        // =========================
+        // OTA-ONA
+        // =========================
+
+        $("#viewChildMother").textContent =
+            `${child.motherFirstName || ""} ${child.motherLastName || ""}`
+                .trim() || "—";
+
+
+        $("#viewChildMotherPhone").textContent =
+            child.motherPhone || "—";
+
+
+        $("#viewChildFather").textContent =
+            `${child.fatherFirstName || ""} ${child.fatherLastName || ""}`
+                .trim() || "—";
+
+
+        $("#viewChildFatherPhone").textContent =
+            child.fatherPhone || "—";
+
+
+        // =========================
+        // MANZIL
+        // =========================
+
+        $("#viewChildAddress").textContent =
+            child.address || "—";
+
+
+        // =========================
+        // STATUS
+        // =========================
+
+        const status =
+            $("#viewChildStatus");
+
+        status.textContent =
+            child.active
+                ? "Faol"
+                : "Faol emas";
+
+        status.className =
+            child.active
+                ? "teacher-view-status"
+                : "teacher-view-status off";
+
+
+        // =========================
+        // EDIT BUTTON
+        // =========================
+
+        const editBtn =
+            $("#viewChildEditBtn");
+
+        editBtn.onclick = () => {
+
+            closeModal(
+                "viewChildModal"
+            );
+
+            editChild(
+                child.id,
+                state
+            );
+
+        };
+
+
+        // =========================
+        // OPEN MODAL
+        // =========================
+
+        openModal(
+            "viewChildModal"
+        );
+
+    } catch (e) {
+
+        console.error(
+            "View child error:",
+            e
+        );
+
+        showToast(
+            "Bola ma'lumotini olishda xatolik."
+        );
+    }
+}
+
+
+// =====================================================
+// EDIT CHILD
+// =====================================================
+
+export async function editChild(
+    id,
+    state
+) {
 
     try {
 
         const c =
             await api(`/api/children/${id}`);
 
+
         await fillGroupSelect(
             $("#childGroup"),
             state
         );
 
+
         $("#childId").value =
             c.id;
+
 
         $("#childModalTitle").textContent =
             "Bolani tahrirlash";
 
+
         $("#childFirstName").value =
             c.firstName || "";
+
 
         $("#childLastName").value =
             c.lastName || "";
 
+
         $("#childPatronymic").value =
             c.patronymic || "";
 
+
         $("#childBirthDate").value =
             c.birthDate || "";
+
 
         $("#childGender").value =
             c.gender || "MALE";
@@ -275,6 +498,7 @@ export async function editChild(id, state) {
                     g.name === c.group
             );
 
+
         $("#childGroup").value =
             group?.id || "";
 
@@ -282,25 +506,34 @@ export async function editChild(id, state) {
         $("#motherFirstName").value =
             c.motherFirstName || "";
 
+
         $("#motherLastName").value =
             c.motherLastName || "";
+
 
         $("#fatherFirstName").value =
             c.fatherFirstName || "";
 
+
         $("#fatherLastName").value =
             c.fatherLastName || "";
+
 
         $("#motherPhone").value =
             c.motherPhone || "";
 
+
         $("#fatherPhone").value =
             c.fatherPhone || "";
+
 
         $("#childAddress").value =
             c.address || "";
 
-        openModal("childModal");
+
+        openModal(
+            "childModal"
+        );
 
     } catch (e) {
 
@@ -312,6 +545,10 @@ export async function editChild(id, state) {
     }
 }
 
+
+// =====================================================
+// DELETE CHILD
+// =====================================================
 
 export async function deleteChild(
     id,
@@ -326,6 +563,7 @@ export async function deleteChild(
         return;
     }
 
+
     try {
 
         await api(
@@ -335,11 +573,16 @@ export async function deleteChild(
             }
         );
 
+
         showToast(
             "Bola faol emas holatiga o‘tkazildi."
         );
 
-        await loadChildren(state);
+
+        await loadChildren(
+            state
+        );
+
 
     } catch (e) {
 
@@ -351,6 +594,10 @@ export async function deleteChild(
     }
 }
 
+
+// =====================================================
+// GROUP SELECT
+// =====================================================
 
 export async function fillGroupSelect(
     select,
@@ -364,22 +611,29 @@ export async function fillGroupSelect(
 
     }
 
+
     select.innerHTML =
         `<option value="">
-            Guruhni tanlang
-        </option>` +
+    Guruhni tanlang
+</option>` +
 
-        state.groups.map(g =>
-            `
+state.groups.map(g =>
+    `
             <option value="${g.id}">
                 ${escapeHtml(g.name)}
             </option>
             `
-        ).join("");
+).join("");
 }
 
 
-export async function openNewChild(state) {
+// =====================================================
+// NEW CHILD
+// =====================================================
+
+export async function openNewChild(
+    state
+) {
 
     $("#childForm").reset();
 
@@ -388,16 +642,26 @@ export async function openNewChild(state) {
     $("#childModalTitle").textContent =
         "Bola qo‘shish";
 
+
     await fillGroupSelect(
         $("#childGroup"),
         state
     );
 
-    openModal("childModal");
+
+    openModal(
+        "childModal"
+    );
 }
 
 
-export function initChildForm(state) {
+// =====================================================
+// CHILD FORM
+// =====================================================
+
+export function initChildForm(
+    state
+) {
 
     $("#childForm")
         .addEventListener(
@@ -405,6 +669,7 @@ export function initChildForm(state) {
             async e => {
 
                 e.preventDefault();
+
 
                 const payload = {
 
@@ -456,6 +721,7 @@ export function initChildForm(state) {
                         Number(
                             $("#childGroup").value
                         )
+
                 };
 
 
@@ -487,6 +753,7 @@ export function initChildForm(state) {
                         "childModal"
                     );
 
+
                     showToast(
                         id
                             ? "Bola yangilandi."
@@ -513,9 +780,9 @@ export function initChildForm(state) {
                     showToast(
                         "Bola saqlanmadi. Request maydonlarini tekshiring."
                     );
+
                 }
 
             }
         );
-
 }
