@@ -106,7 +106,7 @@ public class ChildrenServiceImpl implements ChildrenService {
         Optional<Children> byId = childrenRepository.findById(id);
         if(byId.isEmpty())return false;
         Children children = byId.get();
-        children.setIsActive(false);
+        children.setIsActive(!children.getIsActive());
         childrenRepository.save(children);
         return true;
     }

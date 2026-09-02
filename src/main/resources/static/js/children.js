@@ -187,11 +187,11 @@ ${escapeHtml(
         <!-- O'CHIRISH -->
 
         <button
-            class="small-btn danger"
-            data-delete-child="${c.id}"
-        >
-            O‘chirish
-        </button>
+    class="small-btn ${c.active ? "danger" : ""}"
+    data-delete-child="${c.id}"
+>
+    ${c.active ? "O‘chirish" : "Faollashtirish"}
+</button>
 
     </div>
 
@@ -555,11 +555,28 @@ export async function deleteChild(
     state
 ) {
 
-    if (
-        !confirm(
-            "Bu bolani o‘chirishni xohlaysizmi?"
-        )
-    ) {
+    const child =
+        state.children.find(
+            c => c.id === id
+        );
+
+    if (!child) {
+        showToast("Bola topilmadi.");
+        return;
+    }
+
+
+    const isActive =
+        child.active;
+
+
+    const message =
+        isActive
+            ? "Bu bolani faol emas holatiga o‘tkazish kerakmi?"
+            : "Bu bolani qayta faollashtirish kerakmi?";
+
+
+    if (!confirm(message)) {
         return;
     }
 
@@ -575,7 +592,9 @@ export async function deleteChild(
 
 
         showToast(
-            "Bola faol emas holatiga o‘tkazildi."
+            isActive
+                ? "Bola faol emas holatiga o‘tkazildi."
+                : "Bola qayta faollashtirildi."
         );
 
 
@@ -589,7 +608,9 @@ export async function deleteChild(
         console.error(e);
 
         showToast(
-            "Bolaning holatini o‘zgartirib bo‘lmadi."
+            isActive
+                ? "Bolaning holatini o‘zgartirib bo‘lmadi."
+                : "Bolani faollashtirib bo‘lmadi."
         );
     }
 }

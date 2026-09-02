@@ -712,6 +712,71 @@
         font-size: 30px;
       }
     }
+    .telegram-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+
+      margin-top: 8px;
+
+      padding: 10px 16px;
+
+      border-radius: 12px;
+
+      background: #229ED9;
+
+      color: white;
+
+      text-decoration: none;
+
+      font-size: 14px;
+      font-weight: 700;
+
+      transition: 0.3s;
+
+      box-shadow: 0 6px 15px rgba(34, 158, 217, 0.2);
+    }
+
+    .telegram-btn:hover {
+      transform: translateY(-2px);
+
+      background: #168dcc;
+
+      box-shadow: 0 9px 20px rgba(34, 158, 217, 0.3);
+    }
+    .phone-copy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+
+      margin-top: 8px;
+      padding: 10px 16px;
+
+      border: none;
+      border-radius: 12px;
+
+      background: #f1efff;
+      color: #5435d6;
+
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+
+      cursor: pointer;
+
+      transition: 0.3s;
+    }
+
+    .phone-copy-btn:hover {
+      background: #e4deff;
+      transform: translateY(-2px);
+
+      box-shadow: 0 7px 16px rgba(84, 53, 214, 0.15);
+    }
+
+    .phone-copy-btn:active {
+      transform: scale(0.97);
+    }
   </style>
 </head>
 
@@ -1016,9 +1081,13 @@
           Telefon
         </strong>
 
-        <span>
-                    +998 90 123 45 67
-                </span>
+        <button
+                type="button"
+                class="phone-copy-btn"
+                onclick="copyPhone()"
+        >
+          📞 +998 90 324 81 23
+        </button>
 
       </div>
 
@@ -1028,9 +1097,14 @@
           Telegram
         </strong>
 
-        <span>
-                    @boxcha_uz
-                </span>
+        <a
+                href="https://t.me/software_dev_java"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="telegram-btn"
+        >
+          ✈️ @software_dev_java
+        </a>
 
       </div>
 
@@ -1097,6 +1171,14 @@
 
 </footer>
 
+<script>
+  function copyPhone() {
+    const phone = "+998 90 324 81 23";
 
+    navigator.clipboard.writeText(phone).then(() => {
+      alert("📋 Telefon raqami nusxalandi!");
+    });
+  }
+</script>
 </body>
 </html>

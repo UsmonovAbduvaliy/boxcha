@@ -175,12 +175,12 @@ export function renderUsers(state) {
                             <!-- O'CHIRISH -->
 
                             <button
-                                type="button"
-                                class="small-btn danger"
-                                data-delete-user="${u.id}"
-                            >
-                                O‘chirish
-                            </button>
+    type="button"
+    class="small-btn ${u.isActive ? "danger" : ""}"
+    data-delete-user="${u.id}"
+>
+    ${u.isActive ? "O‘chirish" : "Faollashtirish"}
+</button>
 
 
                         </div>
@@ -575,12 +575,28 @@ export async function deleteUser(
     state
 ) {
 
-    if (
-        !confirm(
-            "Ushbu xodimni faol emas holatiga o‘tkazish kerakmi?"
-        )
-    ) {
+    const user =
+        state.users.find(
+            u => u.id === id
+        );
 
+    if (!user) {
+        showToast("Ustoz topilmadi.");
+        return;
+    }
+
+
+    const isActive =
+        user.isActive;
+
+
+    const message =
+        isActive
+            ? "Ushbu xodimni faol emas holatiga o‘tkazish kerakmi?"
+            : "Ushbu xodimni qayta faollashtirish kerakmi?";
+
+
+    if (!confirm(message)) {
         return;
     }
 
@@ -596,7 +612,9 @@ export async function deleteUser(
 
 
         showToast(
-            "Xodim faol emas holatiga o‘tkazildi."
+            isActive
+                ? "Xodim faol emas holatiga o‘tkazildi."
+                : "Xodim qayta faollashtirildi."
         );
 
 
@@ -610,10 +628,11 @@ export async function deleteUser(
         console.error(e);
 
         showToast(
-            "Xodimni o‘chirishda xatolik."
+            isActive
+                ? "Xodimni o‘chirishda xatolik."
+                : "Xodimni faollashtirishda xatolik."
         );
     }
-
 }
 
 

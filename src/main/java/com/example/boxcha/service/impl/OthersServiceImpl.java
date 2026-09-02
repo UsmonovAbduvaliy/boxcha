@@ -30,6 +30,8 @@ public class OthersServiceImpl implements OthersService {
                 other.getFirstName(),
                 other.getLastName(),
                 other.getProfession(),
+                other.getPhone(),
+                other.getDateOfBirth(),
                 other.getIsActive()
         )));
 
@@ -44,6 +46,8 @@ public class OthersServiceImpl implements OthersService {
                 other.getFirstName(),
                 other.getLastName(),
                 other.getProfession(),
+                other.getPhone(),
+                other.getDateOfBirth(),
                 other.getIsActive()
         )));
         return responses;
@@ -59,6 +63,8 @@ public class OthersServiceImpl implements OthersService {
                     others.getFirstName(),
                     others.getLastName(),
                     others.getProfession(),
+                    others.getPhone(),
+                    others.getDateOfBirth(),
                     others.getIsActive()
             );
         }
@@ -85,7 +91,7 @@ public class OthersServiceImpl implements OthersService {
         Optional<Others> byId = othersRepository.findById(id);
         if(byId.isPresent()){
             Others others = byId.get();
-            others.setIsActive(false);
+            others.setIsActive(!others.getIsActive());
             othersRepository.save(others);
             return true;
         }

@@ -6,10 +6,16 @@ import {
     initials,
     showToast
 } from "./utils.js";
+
 import {
     openModal,
     closeModal
 } from "./modals.js";
+
+
+/* =====================================================
+   LOAD OTHERS
+   ===================================================== */
 
 export async function loadOthers(state) {
 
@@ -28,7 +34,7 @@ export async function loadOthers(state) {
 
     } catch (e) {
 
-        console.error(e);
+        console.error("Load others error:", e);
 
         $("#othersGrid").innerHTML = `
             <div class="empty-state">
@@ -39,106 +45,154 @@ export async function loadOthers(state) {
 }
 
 
+/* =====================================================
+   RENDER OTHERS
+   ===================================================== */
+
 export function renderOthers(state) {
 
-    const arr =
-        state.others.filter(o =>
+    const arr = state.others.filter(o => {
+
+        const active = o.active;
+
+        return (
             state.otherFilter === "all" ||
 
             (
                 state.otherFilter === "active" &&
-                o.isActive
+                active
             ) ||
 
             (
                 state.otherFilter === "inactive" &&
-                !o.isActive
+                !active
             )
         );
+    });
 
 
     $("#othersGrid").innerHTML =
         arr.length
-            ? arr.map(o => `
+            ? arr.map(o => {
 
-                <article class="person-card">
+                const fullName =
+                    `${o.firstName || ""} ${o.lastName || ""}`.trim();
 
-                    <div class="person-top">
+                const active = o.active;
 
-                        <div class="person-avatar">
-                            ${initials(
-                o.firstName,
-                o.lastName
-            )}
-                        </div>
+                return `
 
-                        <div>
+                    <article class="person-card">
 
-                            <h3>
-                                ${escapeHtml(
-                `${o.firstName || ""} ${o.lastName || ""}`
-                    .trim()
-            )}
-                            </h3>
+                        <div class="person-top">
 
-                            <p>
-                                ${escapeHtml(
-                o.profession ||
-                "Xodim"
-            )}
-                            </p>
+                            <div class="person-avatar">
+                                ${initials(
+                    o.firstName,
+                    o.lastName
+                )}
+                            </div>
 
-                        </div>
+                            <div>
 
-                    </div>
+                                <h3>
+                                    ${escapeHtml(
+                    fullName || "Noma'lum"
+                )}
+                                </h3>
 
+                                <p>
+                                    ${escapeHtml(
+                    o.profession || "Xodim"
+                )}
+                                </p>
 
-                    <div class="person-meta">
-
-                        <span
-                            class="status ${
-                o.isActive
-                    ? ""
-                    : "off"
-            }"
-                        >
-                            ${
-                o.isActive
-                    ? "Faol"
-                    : "Faol emas"
-            }
-                        </span>
-
-
-                        <div class="person-actions">
-
-                            <button
-                                class="small-btn"
-                                data-edit-other="${o.id}"
-                            >
-                                Tahrirlash
-                            </button>
-
-                            <button
-                                class="small-btn danger"
-                                data-delete-other="${o.id}"
-                            >
-                                O‘chirish
-                            </button>
+                            </div>
 
                         </div>
 
-                    </div>
 
-                </article>
+                        <div class="person-meta">
 
-            `).join("")
+                            <span class="status ${active ? "" : "off"}">
+                                ${active ? "Faol" : "Faol emas"}
+                            </span>
+
+
+                            <div class="person-actions">
+
+                                <!-- KO'RISH -->
+                                <button
+                                    class="small-btn"
+                                    data-view-other="${o.id}"
+                                >
+                                    Ko‘rish
+                                </button>
+
+
+                                <!-- TAHRIRLASH -->
+                                <button
+                                    class="small-btn"
+                                    data-edit-other="${o.id}"
+                                >
+                                    Tahrirlash
+                                </button>
+
+
+                                <!-- O'CHIRISH / FAOLLASHTIRISH -->
+                                <button
+                                    class="small-btn ${
+                    active
+                        ? "danger"
+                        : "activate-btn"
+                }"
+                                    data-delete-other="${o.id}"
+                                >
+                                    ${
+                    active
+                        ? "O‘chirish"
+                        : "Faollashtirish"
+                }
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                `;
+            }).join("")
             : `
                 <div class="empty-state">
                     Xodim topilmadi.
                 </div>
             `;
 
+
+    /* =================================================
+       VIEW
+       ================================================= */
+
+    $$("[data-view-other]")
+        .forEach(btn => {
+
+            btn.addEventListener(
+                "click",
+                () =>
+                    viewOther(
+                        Number(
+                            btn.dataset.viewOther
+                        )
+                    )
+            );
+
+        });
+
+
+    /* =================================================
+       EDIT
+       ================================================= */
 
     $$("[data-edit-other]")
         .forEach(btn => {
@@ -155,6 +209,10 @@ export function renderOthers(state) {
 
         });
 
+
+    /* =================================================
+       DELETE / ACTIVATE
+       ================================================= */
 
     $$("[data-delete-other]")
         .forEach(btn => {
@@ -174,12 +232,246 @@ export function renderOthers(state) {
 }
 
 
+/* =====================================================
+   VIEW ONE OTHER
+   ===================================================== */
+
+export async function viewOther(id) {
+
+    try {
+
+        const o =
+            await api(`/api/others/${id}`);
+
+        if (!o) {
+            showToast("Xodim ma'lumoti topilmadi.");
+            return;
+        }
+
+
+        const fullName =
+            `${o.firstName || ""} ${o.lastName || ""}`.trim();
+
+
+        const active =
+            o.active;
+
+
+        const avatar =
+            initials(
+                o.firstName,
+                o.lastName
+            );
+
+
+        $("#otherViewContent").innerHTML = `
+
+            <div class="other-view">
+
+                <!-- HEADER -->
+
+                <div class="other-view-header">
+
+                    <div class="other-view-avatar">
+                        ${avatar}
+                    </div>
+
+                    <div class="other-view-title">
+
+                        <h3>
+                            ${escapeHtml(
+            fullName || "Noma'lum"
+        )}
+                        </h3>
+
+                        <p>
+                            ${escapeHtml(
+            o.profession || "Xodim"
+        )}
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- STATUS -->
+
+                <div class="other-view-status-row">
+
+                    <span class="other-view-label">
+                        Holati
+                    </span>
+
+                    <span class="
+                        other-view-status
+                        ${active ? "" : "off"}
+                    ">
+
+                        <span class="status-dot"></span>
+
+                        ${active ? "Faol" : "Faol emas"}
+
+                    </span>
+
+                </div>
+
+
+                <!-- INFORMATION -->
+
+                <div class="other-view-info">
+
+                    <div class="other-info-item">
+
+                        <span class="other-info-label">
+                            Ism
+                        </span>
+
+                        <strong class="other-info-value">
+                            ${escapeHtml(
+            o.firstName || "—"
+        )}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="other-info-item">
+
+                        <span class="other-info-label">
+                            Familiya
+                        </span>
+
+                        <strong class="other-info-value">
+                            ${escapeHtml(
+            o.lastName || "—"
+        )}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="other-info-item full">
+
+                        <span class="other-info-label">
+                            Kasbi
+                        </span>
+
+                        <strong class="other-info-value">
+                            ${escapeHtml(
+            o.profession || "—"
+        )}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="other-info-item full">
+
+                        <span class="other-info-label">
+                            Telefon
+                        </span>
+
+                        <strong class="other-info-value">
+                            ${escapeHtml(
+            o.phone || "Telefon ko‘rsatilmagan"
+        )}
+                        </strong>
+
+                    </div>
+                    
+                    <div class="other-info-item full">
+
+                        <span class="other-info-label">
+                            Tug‘ilgan sana
+                        </span>
+
+                        <span class="other-info-value">
+                            ${escapeHtml(
+            o.birthDate || "-"
+        )}
+                        </span>
+
+                    </div>
+
+
+                    <div class="other-info-item full">
+
+                        <span class="other-info-label">
+                            ID
+                        </span>
+
+                        <strong class="other-info-value">
+                            #${o.id}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ACTIONS -->
+
+                <div class="other-view-actions">
+
+                    <button
+                        class="secondary-btn"
+                        type="button"
+                        data-close-other-view
+                    >
+                        Yopish
+                    </button>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        openModal("otherViewModal");
+
+
+        const closeBtn =
+            $("[data-close-other-view]");
+
+        if (closeBtn) {
+
+            closeBtn.addEventListener(
+                "click",
+                () =>
+                    closeModal(
+                        "otherViewModal"
+                    )
+            );
+
+        }
+
+    } catch (e) {
+
+        console.error(
+            "View other error:",
+            e
+        );
+
+        showToast(
+            "Xodim ma'lumotini olishda xatolik."
+        );
+    }
+}
+
+
+/* =====================================================
+   EDIT OTHER
+   ===================================================== */
+
 export async function editOther(id) {
 
     try {
 
         const o =
             await api(`/api/others/${id}`);
+
 
         $("#otherFirstName").value =
             o.firstName || "";
@@ -193,10 +485,9 @@ export async function editOther(id) {
         $("#otherPhone").value =
             o.phone || "";
 
+
         $("#otherBirthDate").value =
-            o.birthDate ||
-            o.dateOfBirth ||
-            "";
+            o.birthDate || "";
 
 
         $("#otherForm")
@@ -213,7 +504,10 @@ export async function editOther(id) {
 
     } catch (e) {
 
-        console.error(e);
+        console.error(
+            "Edit other error:",
+            e
+        );
 
         showToast(
             "Xodim ma'lumotini olishda xatolik."
@@ -222,18 +516,45 @@ export async function editOther(id) {
 }
 
 
+/* =====================================================
+   DELETE / ACTIVATE OTHER
+   ===================================================== */
+
 export async function deleteOther(
     id,
     state
 ) {
 
-    if (
-        !confirm(
-            "Ushbu xodimni faol emas holatiga o‘tkazish kerakmi?"
-        )
-    ) {
+    const other =
+        state.others.find(
+            o => o.id === id
+        );
+
+
+    if (!other) {
+
+        showToast(
+            "Xodim topilmadi."
+        );
+
         return;
     }
+
+
+    const isActive =
+        other.active;
+
+
+    const message =
+        isActive
+            ? "Ushbu xodimni faol emas holatiga o‘tkazish kerakmi?"
+            : "Ushbu xodimni qayta faollashtirish kerakmi?";
+
+
+    if (!confirm(message)) {
+        return;
+    }
+
 
     try {
 
@@ -244,22 +565,39 @@ export async function deleteOther(
             }
         );
 
+
         showToast(
-            "Xodim faol emas holatiga o‘tkazildi."
+            isActive
+                ? "Xodim faol emas holatiga o‘tkazildi."
+                : "Xodim qayta faollashtirildi."
         );
 
-        await loadOthers(state);
+
+        await loadOthers(
+            state
+        );
+
 
     } catch (e) {
 
-        console.error(e);
+        console.error(
+            "Delete other error:",
+            e
+        );
+
 
         showToast(
-            "Xodimni o‘chirishda xatolik."
+            isActive
+                ? "Xodimni o‘chirishda xatolik."
+                : "Xodimni faollashtirishda xatolik."
         );
     }
 }
 
+
+/* =====================================================
+   NEW OTHER
+   ===================================================== */
 
 export function openNewOther() {
 
@@ -267,14 +605,22 @@ export function openNewOther() {
 
     delete $("#otherForm").dataset.editId;
 
+
     $("#otherModal")
         .querySelector("h2")
         .textContent =
         "Xodim qo‘shish";
 
-    openModal("otherModal");
+
+    openModal(
+        "otherModal"
+    );
 }
 
+
+/* =====================================================
+   OTHER FORM
+   ===================================================== */
 
 export function initOtherForm(state) {
 
@@ -284,6 +630,7 @@ export function initOtherForm(state) {
             async e => {
 
                 e.preventDefault();
+
 
                 const editId =
                     e.currentTarget.dataset.editId;
@@ -321,6 +668,7 @@ export function initOtherForm(state) {
                             }
                         );
 
+
                         showToast(
                             "Xodim yangilandi."
                         );
@@ -354,6 +702,7 @@ export function initOtherForm(state) {
                                     })
                             }
                         );
+
 
                         showToast(
                             "Xodim qo‘shildi."

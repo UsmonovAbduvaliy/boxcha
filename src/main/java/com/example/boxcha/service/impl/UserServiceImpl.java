@@ -148,7 +148,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> byId = userRepository.findById(id);
         if(byId.isPresent()){
             User user = byId.get();
-            user.setIsActive(false);
+            user.setIsActive(!user.getIsActive());
             userRepository.save(user);
             return true;
         }
