@@ -1,9 +1,7 @@
 package com.example.boxcha.entity;
 
 import com.example.boxcha.entity.base.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,10 +16,21 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
+@Table(
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_daily_child_date",
+                        columnNames = {
+                                "child_id",
+                                "date"
+                        }
+                )
+        }
+)
 public class Daily extends BaseEntity {
     private LocalDate date;
     private Boolean isPresent;
     @ManyToOne
-    @JoinColumn(name = "child_id")
+    @JoinColumn(name = "child_id", nullable = false)
     private Children children;
 }

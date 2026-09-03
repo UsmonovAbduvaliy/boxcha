@@ -3,7 +3,7 @@ package com.example.boxcha.controller;
 import com.example.boxcha.dto.request.AddDailyChildrenRequest;
 import com.example.boxcha.dto.request.UpdateDailyChildrenRequest;
 import com.example.boxcha.dto.response.GetDailyChildrenResponse;
-import com.example.boxcha.dto.response.UpdateDailyChildrenResponse;
+import com.example.boxcha.dto.response.GetOneChildrenDailyResponse;
 import com.example.boxcha.service.interfaces.DailyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,21 +12,27 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/daily")
+@RequestMapping("api/daily")
 @RequiredArgsConstructor
 public class DailyController {
 
     private final DailyService dailyService;
 
     @GetMapping("/children/{id}")
-    private ResponseEntity<?> getDailyChildren(@PathVariable Long id){
-        List<GetDailyChildrenResponse> responses = dailyService.getChildrenDaily(id);
+    public ResponseEntity<?> getDailyChildren(@PathVariable Long id, @RequestParam int year, @RequestParam int month) {
+        List<GetDailyChildrenResponse> responses =
+                dailyService.getChildrenDaily(id, year, month);
+        System.out.println(responses);
+        if (responses == null) {
+            return ResponseEntity.notFound().build();
+        }
+
         return ResponseEntity.ok(responses);
     }
 
     @GetMapping("{id}")
     private ResponseEntity<?> getOneDaily(@PathVariable Long id){
-        UpdateDailyChildrenResponse response = dailyService.getOneDaily(id);
+        GetOneChildrenDailyResponse response = dailyService.getOneDaily(id);
         if(response==null)return ResponseEntity.notFound().build();
         return ResponseEntity.ok(response);
     }

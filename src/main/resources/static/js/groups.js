@@ -13,9 +13,14 @@ import {
 } from "./modals.js";
 
 import {
-    editChild
+    editChild,
+    viewChild
 } from "./children.js";
 
+
+// ========================================
+// LOAD GROUPS
+// ========================================
 
 export async function loadGroupsPage(state) {
 
@@ -111,9 +116,9 @@ export async function loadGroupsPage(state) {
                 `;
 
 
-        // ================================
+        // ========================================
         // GROUP CARD CLICK
-        // ================================
+        // ========================================
 
         document
             .querySelectorAll("[data-group-id]")
@@ -284,6 +289,18 @@ export function renderGroupDetails(
 
             </div>
 
+
+            <div>
+
+                <button
+                    class="primary-btn"
+                    id="startAttendanceBtn"
+                >
+                    ✓ Davomat qilish
+                </button>
+
+            </div>
+
         </div>
 
 
@@ -403,106 +420,97 @@ export function renderGroupDetails(
             ? children.map(
                 child => `
 
-                                <div
-                                    class="group-child-item"
-                                    data-child-id="${child.id}"
-                                    style="cursor:pointer;"
-                                >
+                                    <div
+                                        class="group-child-item"
+                                        data-child-id="${child.id}"
+                                        style="cursor:pointer;"
+                                    >
 
+                                        <div class="child-avatar">
 
-                                    <!-- AVATAR -->
-
-                                    <div class="child-avatar">
-
-                                        ${initials(
+                                            ${initials(
                     child.firstName,
                     child.lastName
                 )}
 
-                                    </div>
+                                        </div>
 
 
-                                    <!-- NAME -->
+                                        <div
+                                            class="group-child-info"
+                                        >
 
-                                    <div
-                                        class="group-child-info"
-                                    >
+                                            <strong>
 
-                                        <strong>
-
-                                            ${escapeHtml(
+                                                ${escapeHtml(
                     `${child.firstName || ""} ${child.lastName || ""}`
                         .trim()
                 )}
 
-                                        </strong>
+                                            </strong>
 
 
-                                        <span>
+                                            <span>
 
-                                            ${escapeHtml(
+                                                ${escapeHtml(
                     child.patronymic || ""
                 )}
 
-                                        </span>
+                                            </span>
 
-                                    </div>
-
-
-                                    <!-- META -->
-
-                                    <div
-                                        class="group-child-meta"
-                                    >
-
-                                        <span>
-
-                                            ${child.age ?? "—"}
-                                            yosh
-
-                                        </span>
+                                        </div>
 
 
-                                        <span>
+                                        <div
+                                            class="group-child-meta"
+                                        >
 
-                                            ${escapeHtml(
+                                            <span>
+
+                                                ${child.age ?? "—"}
+                                                yosh
+
+                                            </span>
+
+
+                                            <span>
+
+                                                ${escapeHtml(
                     child.gender || "—"
                 )}
 
-                                        </span>
+                                            </span>
 
 
-                                        <span
-                                            class="status ${
+                                            <span
+                                                class="status ${
                     child.active
                         ? ""
                         : "off"
                 }"
-                                        >
+                                            >
 
-                                            ${
+                                                ${
                     child.active
                         ? "Faol"
                         : "Faol emas"
                 }
 
-                                        </span>
+                                            </span>
+
+                                        </div>
+
+
+                                        <div
+                                            class="group-child-arrow"
+                                        >
+                                            →
+                                        </div>
+
 
                                     </div>
 
-
-                                    <!-- ARROW -->
-
-                                    <div
-                                        class="group-child-arrow"
-                                    >
-                                        →
-                                    </div>
-
-
-                                </div>
-
-                            `
+                                `
             ).join("")
 
 
@@ -555,11 +563,31 @@ export function renderGroupDetails(
 
 
     // ========================================
+    // START ATTENDANCE
+    // ========================================
+
+    $("#startAttendanceBtn")
+        ?.addEventListener(
+            "click",
+            () => {
+
+                startAttendance(
+                    group,
+                    state
+                );
+
+            }
+        );
+
+
+    // ========================================
     // CHILD CLICK
     // ========================================
 
     document
-        .querySelectorAll("[data-child-id]")
+        .querySelectorAll(
+            ".group-child-item[data-child-id]"
+        )
         .forEach(item => {
 
             item.addEventListener(
@@ -572,7 +600,7 @@ export function renderGroupDetails(
                         );
 
 
-                    openGroupChild(
+                    viewChild(
                         childId,
                         state
                     );
@@ -621,212 +649,502 @@ export async function changeGroupTeacher(
 
 
 // ========================================
-// OPEN CHILD
+// START ATTENDANCE
 // ========================================
 
-export async function openGroupChild(
-    childId,
+export function startAttendance(
+    group,
     state
 ) {
 
-    try {
-
-        const child =
-            await api(
-                `/api/children/${childId}`
-            );
-
-
-        if (!child) {
-
-            throw new Error(
-                "Bola topilmadi"
-            );
-
-        }
+    const children =
+        Array.isArray(group.children)
+            ? group.children.filter(
+                child => child.active !== false
+            )
+            : [];
 
 
-        // ==================================
-        // AVATAR
-        // ==================================
+    if (!children.length) {
 
-        $("#viewChildAvatar").textContent =
-            initials(
-                child.firstName,
-                child.lastName
-            );
+        showToast(
+            "Bu guruhda faol bolalar mavjud emas."
+        );
+
+        return;
+    }
 
 
-        // ==================================
-        // NAME
-        // ==================================
+    renderAttendance(
+        group,
+        children,
+        state
+    );
 
-        $("#viewChildName").textContent =
+}
+
+
+// ========================================
+// RENDER ATTENDANCE
+// ========================================
+
+export function renderAttendance(
+    group,
+    children,
+    state
+) {
+
+    const today =
+        new Date()
+            .toISOString()
+            .split("T")[0];
+
+
+    $("#groupDetailsContent").innerHTML = `
+
+        <div class="attendance-page">
+
+
+            <!-- HEADER -->
+
+            <div class="group-detail-header">
+
+                <div>
+
+                    <button
+                        class="secondary-btn"
+                        id="backFromAttendanceBtn"
+                    >
+                        ← Guruhga qaytish
+                    </button>
+
+
+                    <h2>
+                        ${escapeHtml(
+        group.groupName ||
+        "Guruh"
+    )}
+                        — Davomat
+                    </h2>
+
+
+                    <p>
+                        ${today}
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- CHILDREN -->
+
+            <section class="panel">
+
+                <div class="panel-head">
+
+                    <div>
+
+                        <h2>
+                            Bolalar davomatı
+                        </h2>
+
+                        <p>
+                            Kelgan bolalarni belgilang
+                        </p>
+
+                    </div>
+
+
+                    <span
+                        class="status"
+                        id="attendanceCount"
+                    >
+                        0 / ${children.length}
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="attendance-children-list"
+                    id="attendanceChildrenList"
+                >
+
+                    ${children.map(
+        child => `
+
+                            <div
+                                class="attendance-child-item"
+                                data-attendance-child-id="${child.id}"
+                            >
+
+                                <div class="child-avatar">
+
+                                    ${initials(
+            child.firstName,
+            child.lastName
+        )}
+
+                                </div>
+
+
+                                <div
+                                    class="attendance-child-info"
+                                >
+
+                                    <strong>
+
+                                        ${escapeHtml(
             `${child.firstName || ""} ${child.lastName || ""}`
-                .trim();
+                .trim()
+        )}
+
+                                    </strong>
 
 
-        // ==================================
-        // BIRTH DATE
-        // ==================================
+                                    <span>
 
-        $("#viewChildBirthDate").textContent =
-            child.birthDate || "—";
+                                        ${escapeHtml(
+            child.patronymic || ""
+        )}
 
+                                    </span>
 
-        // ==================================
-        // AGE
-        // ==================================
-
-        $("#viewChildAge").textContent =
-            child.age != null
-                ? `${child.age} yosh`
-                : "—";
+                                </div>
 
 
-        // ==================================
-        // GENDER
-        // ==================================
+                                <button
+                                    type="button"
+                                    class="attendance-toggle absent"
+                                    data-attendance-toggle
+                                >
+                                    Kelmagan
+                                </button>
 
-        $("#viewChildGender").textContent =
-            child.gender || "—";
+                            </div>
 
+                        `
+    ).join("")}
 
-        // ==================================
-        // GROUP
-        // ==================================
-
-        $("#viewChildGroup").textContent =
-            child.groupName ||
-            child.group ||
-            "—";
+                </div>
 
 
-        // ==================================
-        // MOTHER
-        // ==================================
+                <!-- FINISH -->
 
-        $("#viewChildMother").textContent =
-            `${child.motherFirstName || ""} ${child.motherLastName || ""}`
-                .trim() || "—";
+                <div class="attendance-actions">
 
-
-        // ==================================
-        // FATHER
-        // ==================================
-
-        $("#viewChildFather").textContent =
-            `${child.fatherFirstName || ""} ${child.fatherLastName || ""}`
-                .trim() || "—";
+                    <button
+                        type="button"
+                        class="secondary-btn"
+                        id="cancelAttendanceBtn"
+                    >
+                        Bekor qilish
+                    </button>
 
 
-        // ==================================
-        // MOTHER PHONE
-        // ==================================
+                    <button
+                        type="button"
+                        class="primary-btn"
+                        id="finishAttendanceBtn"
+                    >
+                        ✓ Yakunlash
+                    </button>
 
-        $("#viewChildMotherPhone").textContent =
-            child.motherPhone || "—";
+                </div>
 
+            </section>
 
-        // ==================================
-        // FATHER PHONE
-        // ==================================
-
-        $("#viewChildFatherPhone").textContent =
-            child.fatherPhone || "—";
-
-
-        // ==================================
-        // ADDRESS
-        // ==================================
-
-        $("#viewChildAddress").textContent =
-            child.address || "—";
+        </div>
+    `;
 
 
-        // ==================================
-        // STATUS
-        // ==================================
+    // ========================================
+    // BACK
+    // ========================================
 
-        const status =
-            $("#viewChildStatus");
+    $("#backFromAttendanceBtn")
+        ?.addEventListener(
+            "click",
+            () => {
 
+                renderGroupDetails(
+                    group,
+                    state
+                );
 
-        status.textContent =
-            child.active
-                ? "Faol"
-                : "Faol emas";
-
-
-        status.classList.toggle(
-            "off",
-            !child.active
+            }
         );
 
 
-        // ==================================
-        // EDIT BUTTON
-        // ==================================
+    // ========================================
+    // CANCEL
+    // ========================================
 
-        const editButton =
-            $("#viewChildEditBtn");
+    $("#cancelAttendanceBtn")
+        ?.addEventListener(
+            "click",
+            () => {
 
+                renderGroupDetails(
+                    group,
+                    state
+                );
 
-        if (editButton) {
-
-            // Old eventlarni olib tashlash uchun
-            // yangi button clone qilamiz
-
-            const newButton =
-                editButton.cloneNode(true);
-
-
-            editButton.replaceWith(
-                newButton
-            );
+            }
+        );
 
 
-            newButton.addEventListener(
+    // ========================================
+    // TOGGLE
+    // ========================================
+
+    document
+        .querySelectorAll(
+            "[data-attendance-toggle]"
+        )
+        .forEach(button => {
+
+            button.addEventListener(
                 "click",
-                async () => {
+                () => {
 
-                    closeModal(
-                        "viewChildModal"
+                    toggleAttendance(
+                        button
                     );
 
-
-                    await editChild(
-                        childId,
-                        state
-                    );
+                    updateAttendanceCount();
 
                 }
             );
 
-        }
+        });
 
 
-        // ==================================
-        // OPEN MODAL
-        // ==================================
+    // ========================================
+    // FINISH
+    // ========================================
 
-        openModal(
-            "viewChildModal"
+    $("#finishAttendanceBtn")
+        ?.addEventListener(
+            "click",
+            () => {
+
+                finishAttendance(
+                    children,
+                    today,
+                    group,
+                    state
+                );
+
+            }
+        );
+
+}
+
+
+// ========================================
+// TOGGLE ATTENDANCE
+// ========================================
+
+function toggleAttendance(
+    button
+) {
+
+    const isPresent =
+        button.classList.contains(
+            "present"
+        );
+
+
+    if (isPresent) {
+
+        button.classList.remove(
+            "present"
+        );
+
+        button.classList.add(
+            "absent"
+        );
+
+        button.textContent =
+            "Kelmagan";
+
+    } else {
+
+        button.classList.remove(
+            "absent"
+        );
+
+        button.classList.add(
+            "present"
+        );
+
+        button.textContent =
+            "Kelgan";
+
+    }
+
+}
+
+
+// ========================================
+// UPDATE ATTENDANCE COUNT
+// ========================================
+
+function updateAttendanceCount() {
+
+    const buttons =
+        document.querySelectorAll(
+            "[data-attendance-toggle]"
+        );
+
+
+    const present =
+        document.querySelectorAll(
+            "[data-attendance-toggle].present"
+        ).length;
+
+
+    const counter =
+        $("#attendanceCount");
+
+
+    if (counter) {
+
+        counter.textContent =
+            `${present} / ${buttons.length}`;
+
+    }
+
+}
+
+
+// ========================================
+// FINISH ATTENDANCE
+// ========================================
+
+export async function finishAttendance(
+    children,
+    date,
+    group,
+    state
+) {
+
+    const buttons =
+        document.querySelectorAll(
+            "[data-attendance-toggle]"
+        );
+
+
+    const requests =
+        children.map(
+            child => {
+
+                const button =
+                    document.querySelector(
+                        `[data-attendance-child-id="${child.id}"] [data-attendance-toggle]`
+                    );
+
+
+                const isPresent =
+                    button?.classList.contains(
+                        "present"
+                    ) || false;
+
+
+                return {
+
+                    // MUHIM:
+                    // bu CHILDREN ID
+                    id: child.id,
+
+                    isPresent: isPresent,
+
+                    date: date
+
+                };
+
+            }
+        );
+
+
+    console.log(
+        "Daily request:",
+        requests
+    );
+
+
+    const finishButton =
+        $("#finishAttendanceBtn");
+
+
+    if (finishButton) {
+
+        finishButton.disabled =
+            true;
+
+        finishButton.textContent =
+            "Saqlanmoqda...";
+
+    }
+
+
+    try {
+
+        await api(
+            "/api/daily",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body:
+                    JSON.stringify(
+                        requests
+                    )
+            }
+        );
+
+
+        showToast(
+            "Davomat muvaffaqiyatli saqlandi."
+        );
+
+
+        renderGroupDetails(
+            group,
+            state
         );
 
 
     } catch (e) {
 
         console.error(
-            "Open child error:",
+            "Attendance save error:",
             e
         );
 
 
         showToast(
-            "Bola ma'lumotini olishda xatolik."
+            "Davomatni saqlashda xatolik."
         );
+
+
+        if (finishButton) {
+
+            finishButton.disabled =
+                false;
+
+            finishButton.textContent =
+                "✓ Yakunlash";
+
+        }
 
     }
 
 }
+

@@ -37,6 +37,4 @@ public class Children extends BaseEntity {
     @ManyToOne
     private Group group;
     private String address;
-    @OneToMany(mappedBy = "children")
-    List<Daily> daily;
 }

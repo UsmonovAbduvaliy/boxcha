@@ -3,142 +3,448 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Boxcha — Kabinet</title>
+
     <link rel="stylesheet" href="/css/CabinetPage.css">
 </head>
+
 <body>
+
 <div id="toast" class="toast"></div>
 
 <div class="app-shell">
+
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
+
     <aside class="sidebar">
+
         <div class="brand">
             <div class="brand-mark">B</div>
             <span>Boxcha</span>
         </div>
 
         <nav class="side-nav">
-            <button class="nav-item active" data-page="dashboard">
-                <span class="nav-icon">⌂</span><span>Bosh sahifa</span>
+
+            <button
+                    class="nav-item active"
+                    data-page="dashboard"
+                    type="button"
+            >
+                <span class="nav-icon">⌂</span>
+                <span>Bosh sahifa</span>
             </button>
-            <button class="nav-item" data-page="groups">
-                <span class="nav-icon">◫</span><span>Guruhlar</span>
+
+            <button
+                    class="nav-item"
+                    data-page="groups"
+                    type="button"
+            >
+                <span class="nav-icon">◫</span>
+                <span>Guruhlar</span>
             </button>
-            <button class="nav-item" data-page="children">
-                <span class="nav-icon">♙</span><span>Bolalar</span>
+
+            <button
+                    class="nav-item"
+                    data-page="children"
+                    type="button"
+            >
+                <span class="nav-icon">♙</span>
+                <span>Bolalar</span>
             </button>
-            <button class="nav-item" data-page="teachers">
-                <span class="nav-icon">♟</span><span>Ustozlar</span>
+
+            <button
+                    class="nav-item"
+                    data-page="teachers"
+                    type="button"
+            >
+                <span class="nav-icon">♟</span>
+                <span>Ustozlar</span>
             </button>
-            <button class="nav-item" data-page="others">
-                <span class="nav-icon">◉</span><span>Boshqalar</span>
+
+            <button
+                    class="nav-item"
+                    data-page="others"
+                    type="button"
+            >
+                <span class="nav-icon">◉</span>
+                <span>Boshqalar</span>
             </button>
-            <button class="nav-item" data-page="attendance">
-                <span class="nav-icon">✓</span><span>Davomat</span>
-            </button>
-            <button class="nav-item" data-page="settings">
-                <span class="nav-icon">⚙</span><span>Sozlamalar</span>
-            </button>
+
         </nav>
 
+
         <div class="sidebar-bottom">
+
             <div class="profile-mini">
-                <div class="avatar" id="profileAvatar">D</div>
-                <div>
-                    <strong id="profileName">Foydalanuvchi</strong>
-                    <small id="profileRole">Admin</small>
+
+                <div
+                        class="avatar"
+                        id="profileAvatar"
+                >
+                    D
                 </div>
-                <span class="profile-arrow">⌄</span>
+
+                <div>
+                    <strong id="profileName">
+                        Foydalanuvchi
+                    </strong>
+
+                    <small id="profileRole">
+                        Admin
+                    </small>
+                </div>
+
+                <span class="profile-arrow">
+                    ⌄
+                </span>
+
             </div>
-            <button class="logout-btn" id="logoutBtn"><span>↪</span> Chiqish</button>
+
+
+            <button
+                    class="logout-btn"
+                    id="logoutBtn"
+                    type="button"
+            >
+                <span>↪</span>
+                Chiqish
+            </button>
+
         </div>
+
     </aside>
 
+
+    <!-- =====================================================
+         MAIN
+         ===================================================== -->
+
     <main class="main">
+
+        <!-- TOPBAR -->
+
         <header class="topbar">
+
             <div>
-                <div class="mobile-brand">Boxcha</div>
-                <h1 id="pageTitle">Salom, <span id="welcomeName">Foydalanuvchi</span>! 🌿</h1>
-                <p id="pageSubtitle">Bugun yaxshi kun. Bolajonlar bilan ishlashni davom ettiring.</p>
-            </div>
-            <div class="top-actions">
-                <button class="icon-btn" title="Yangilash" id="refreshBtn">↻</button>
-                <button class="icon-btn notification" title="Bildirishnomalar">♧<i></i></button>
-                <div class="top-profile">
-                    <div class="avatar" id="topAvatar">D</div>
-                    <div>
-                        <strong id="topName">Foydalanuvchi</strong>
-                        <small id="topRole">Direktor</small>
-                    </div>
-                    <span>⌄</span>
+
+                <div class="mobile-brand">
+                    Boxcha
                 </div>
+
+                <h1 id="pageTitle">
+                    Salom,
+                    <span id="welcomeName">
+                        Foydalanuvchi
+                    </span>
+                    ! 🌿
+                </h1>
+
+                <p id="pageSubtitle">
+                    Bugun yaxshi kun. Bolajonlar bilan ishlashni davom ettiring.
+                </p>
+
             </div>
+
+
+            <div class="top-actions">
+
+                <button
+                        class="icon-btn"
+                        title="Yangilash"
+                        id="refreshBtn"
+                        type="button"
+                >
+                    ↻
+                </button>
+
+                <button
+                        class="icon-btn notification"
+                        title="Bildirishnomalar"
+                        type="button"
+                >
+                    ♧
+                    <i></i>
+                </button>
+
+
+                <div class="top-profile">
+
+                    <div
+                            class="avatar"
+                            id="topAvatar"
+                    >
+                        D
+                    </div>
+
+                    <div>
+
+                        <strong id="topName">
+                            Foydalanuvchi
+                        </strong>
+
+                        <small id="topRole">
+                            Direktor
+                        </small>
+
+                    </div>
+
+                    <span>⌄</span>
+
+                </div>
+
+            </div>
+
         </header>
 
-        <section id="page-dashboard" class="page active">
+
+        <!-- =====================================================
+             DASHBOARD
+             ===================================================== -->
+
+        <section
+                id="page-dashboard"
+                class="page active"
+        >
+
             <div class="stats-grid">
+
                 <article class="stat-card">
-                    <div class="stat-icon purple">⌂</div>
-                    <div><strong id="groupsCount">0</strong><span>Guruhlar</span><small>Faol guruhlar</small></div>
+
+                    <div class="stat-icon purple">
+                        ⌂
+                    </div>
+
+                    <div>
+                        <strong id="groupsCount">0</strong>
+                        <span>Guruhlar</span>
+                        <small>Faol guruhlar</small>
+                    </div>
+
                 </article>
+
+
                 <article class="stat-card">
-                    <div class="stat-icon blue">♙</div>
-                    <div><strong id="childrenCount">0</strong><span>Bolalar</span><small>Jami bolalar</small></div>
+
+                    <div class="stat-icon blue">
+                        ♙
+                    </div>
+
+                    <div>
+                        <strong id="childrenCount">0</strong>
+                        <span>Bolalar</span>
+                        <small>Jami bolalar</small>
+                    </div>
+
                 </article>
+
+
                 <article class="stat-card">
-                    <div class="stat-icon green">♟</div>
-                    <div><strong id="employeesCount">0</strong><span>Ustozlar</span><small>Faol xodimlar</small></div>
+
+                    <div class="stat-icon green">
+                        ♟
+                    </div>
+
+                    <div>
+                        <strong id="employeesCount">0</strong>
+                        <span>Ustozlar</span>
+                        <small>Faol xodimlar</small>
+                    </div>
+
                 </article>
+
+
                 <article class="stat-card">
-                    <div class="stat-icon orange">✓</div>
-                    <div><strong id="activeChildrenCount">0</strong><span>Faol bolalar</span><small>Bugungi ma'lumot</small></div>
+
+                    <div class="stat-icon orange">
+                        ✓
+                    </div>
+
+                    <div>
+                        <strong id="activeChildrenCount">0</strong>
+                        <span>Faol bolalar</span>
+                        <small>Bugungi ma'lumot</small>
+                    </div>
+
                 </article>
+
             </div>
+
 
             <div class="dashboard-grid">
+
+                <!-- GROUPS -->
+
                 <section class="panel groups-panel">
+
                     <div class="panel-head">
-                        <div><h2>Guruhlar</h2><p>Guruhlar bo‘yicha bolalar soni</p></div>
-                        <button class="text-btn" data-page="groups">Barchasini ko‘rish →</button>
+
+                        <div>
+                            <h2>Guruhlar</h2>
+                            <p>
+                                Guruhlar bo‘yicha bolalar soni
+                            </p>
+                        </div>
+
+                        <button
+                                class="text-btn"
+                                data-page="groups"
+                                type="button"
+                        >
+                            Barchasini ko‘rish →
+                        </button>
+
                     </div>
-                    <div id="dashboardGroups" class="group-list">
+
+                    <div
+                            id="dashboardGroups"
+                            class="group-list"
+                    >
                         <div class="skeleton-list"></div>
                     </div>
+
                 </section>
+
+
+                <!-- CALENDAR -->
 
                 <section class="panel calendar-panel">
+
                     <div class="panel-head">
-                        <div><h2>Kalendar</h2><p>Bugungi reja</p></div>
-                        <span class="date-pill" id="todayDate"></span>
+
+                        <div>
+                            <h2>Kalendar</h2>
+                            <p>Bugungi reja</p>
+                        </div>
+
+                        <span
+                                class="date-pill"
+                                id="todayDate"
+                        ></span>
+
                     </div>
-                    <div class="calendar-date"><strong id="calendarDay">26</strong><div><b id="calendarMonth">Avgust</b><span id="calendarWeekday">Chorshanba</span></div></div>
+
+
+                    <div class="calendar-date">
+
+                        <strong id="calendarDay">
+                            26
+                        </strong>
+
+                        <div>
+
+                            <b id="calendarMonth">
+                                Avgust
+                            </b>
+
+                            <span id="calendarWeekday">
+                                Chorshanba
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
                     <div class="schedule">
-                        <div><time>09:00</time><span>Ertalabki mashg‘ulot</span></div>
-                        <div><time>12:00</time><span>Tushlik</span></div>
-                        <div><time>16:00</time><span>Sayr va o‘yinlar</span></div>
+
+                        <div>
+                            <time>09:00</time>
+                            <span>
+                                Ertalabki mashg‘ulot
+                            </span>
+                        </div>
+
+                        <div>
+                            <time>12:00</time>
+                            <span>
+                                Tushlik
+                            </span>
+                        </div>
+
+                        <div>
+                            <time>16:00</time>
+                            <span>
+                                Sayr va o‘yinlar
+                            </span>
+                        </div>
+
                     </div>
+
                 </section>
+
+
+                <!-- UPDATES -->
 
                 <section class="panel updates-panel">
+
                     <div class="panel-head">
-                        <div><h2>So‘nggi yangiliklar</h2><p>Backenddan kelgan ma'lumotlar</p></div>
+
+                        <div>
+                            <h2>So‘nggi yangiliklar</h2>
+                            <p>
+                                Backenddan kelgan ma'lumotlar
+                            </p>
+                        </div>
+
                     </div>
-                    <div id="recentUpdates" class="updates-list"></div>
+
+                    <div
+                            id="recentUpdates"
+                            class="updates-list"
+                    ></div>
+
                 </section>
+
+
+                <!-- REMINDER -->
 
                 <section class="panel reminder-panel">
+
                     <div class="panel-head">
-                        <div><h2>Eslatma</h2><p>Bugungi eslatmalar</p></div>
+
+                        <div>
+                            <h2>Eslatma</h2>
+                            <p>
+                                Bugungi eslatmalar
+                            </p>
+                        </div>
+
                     </div>
+
                     <div class="empty-reminder">
-                        <div class="reminder-icon">□</div>
-                        <b>Yangi eslatma yo‘q</b>
-                        <span>Hozircha eslatma mavjud emas</span>
+
+                        <div class="reminder-icon">
+                            □
+                        </div>
+
+                        <b>
+                            Yangi eslatma yo‘q
+                        </b>
+
+                        <span>
+                            Hozircha eslatma mavjud emas
+                        </span>
+
                     </div>
+
                 </section>
+
             </div>
+
         </section>
 
-        <section id="page-groups" class="page">
+
+        <!-- =====================================================
+             GROUPS
+             ===================================================== -->
+
+        <section
+                id="page-groups"
+                class="page"
+        >
 
             <!-- GROUP LIST -->
 
@@ -147,15 +453,22 @@
                 <div class="section-toolbar">
 
                     <div>
+
                         <h2>Guruhlar</h2>
+
                         <p>
                             Barcha guruhlar va ulardagi faol bolalar
                         </p>
+
                     </div>
 
                 </div>
 
-                <div id="groupsPage" class="cards-grid"></div>
+
+                <div
+                        id="groupsPage"
+                        class="cards-grid"
+                ></div>
 
             </div>
 
@@ -164,7 +477,7 @@
 
             <div
                     id="groupDetailsPage"
-                    style="display:none;"
+                    style="display: none;"
             >
 
                 <div id="groupDetailsContent"></div>
@@ -173,106 +486,439 @@
 
         </section>
 
-        <section id="page-children" class="page">
+
+        <!-- =====================================================
+             CHILDREN
+             ===================================================== -->
+
+        <section
+                id="page-children"
+                class="page"
+        >
+
             <div class="section-toolbar">
-                <div><h2>Bolalar</h2><p>Bolalar ro‘yxati</p></div>
+
+                <div>
+
+                    <h2>Bolalar</h2>
+
+                    <p>
+                        Bolalar ro‘yxati
+                    </p>
+
+                </div>
+
+
                 <div class="toolbar-actions">
-                    <input id="childrenSearch" class="search-input" placeholder="Ism yoki familiya...">
-                    <button class="primary-btn" id="addChildBtn">＋ Bola qo‘shish</button>
+
+                    <input
+                            id="childrenSearch"
+                            class="search-input"
+                            placeholder="Ism yoki familiya..."
+                    >
+
+                    <button
+                            class="primary-btn"
+                            id="addChildBtn"
+                            type="button"
+                    >
+                        ＋ Bola qo‘shish
+                    </button>
+
                 </div>
+
             </div>
+
+
             <div class="filter-row">
-                <button class="filter-btn active" data-child-filter="all">Barchasi</button>
-                <button class="filter-btn" data-child-filter="active">Faol</button>
-                <button class="filter-btn" data-child-filter="inactive">Faol emas</button>
+
+                <button
+                        class="filter-btn active"
+                        data-child-filter="all"
+                        type="button"
+                >
+                    Barchasi
+                </button>
+
+                <button
+                        class="filter-btn"
+                        data-child-filter="active"
+                        type="button"
+                >
+                    Faol
+                </button>
+
+                <button
+                        class="filter-btn"
+                        data-child-filter="inactive"
+                        type="button"
+                >
+                    Faol emas
+                </button>
+
             </div>
+
+
             <div class="table-card">
+
                 <div class="table-scroll">
+
                     <table>
-                        <thead><tr><th>Bola</th><th>Yosh</th><th>Jins</th><th>Holat</th><th></th></tr></thead>
+
+                        <thead>
+
+                        <tr>
+                            <th>Bola</th>
+                            <th>Yosh</th>
+                            <th>Jins</th>
+                            <th>Holat</th>
+                            <th></th>
+                        </tr>
+
+                        </thead>
+
                         <tbody id="childrenTable"></tbody>
+
                     </table>
+
                 </div>
+
             </div>
+
         </section>
 
-        <section id="page-teachers" class="page">
+
+        <!-- =====================================================
+             TEACHERS
+             ===================================================== -->
+
+        <section
+                id="page-teachers"
+                class="page"
+        >
+
             <div class="section-toolbar">
-                <div><h2>Ustozlar</h2><p>Faol va faol bo‘lmagan xodimlar</p></div>
-                <button class="primary-btn" id="addTeacherBtn">＋ Ustoz qo‘shish</button>
+
+                <div>
+
+                    <h2>Ustozlar</h2>
+
+                    <p>
+                        Faol va faol bo‘lmagan xodimlar
+                    </p>
+
+                </div>
+
+
+                <button
+                        class="primary-btn"
+                        id="addTeacherBtn"
+                        type="button"
+                >
+                    ＋ Ustoz qo‘shish
+                </button>
+
             </div>
+
+
             <div class="filter-row">
-                <button class="filter-btn active" data-user-filter="all">Barchasi</button>
-                <button class="filter-btn" data-user-filter="active">Faol</button>
-                <button class="filter-btn" data-user-filter="inactive">Faol emas</button>
+
+                <button
+                        class="filter-btn active"
+                        data-user-filter="all"
+                        type="button"
+                >
+                    Barchasi
+                </button>
+
+                <button
+                        class="filter-btn"
+                        data-user-filter="active"
+                        type="button"
+                >
+                    Faol
+                </button>
+
+                <button
+                        class="filter-btn"
+                        data-user-filter="inactive"
+                        type="button"
+                >
+                    Faol emas
+                </button>
+
             </div>
-            <div id="teachersGrid" class="people-grid"></div>
+
+
+            <div
+                    id="teachersGrid"
+                    class="people-grid"
+            ></div>
+
         </section>
 
-        <section id="page-others" class="page">
+
+        <!-- =====================================================
+             OTHERS
+             ===================================================== -->
+
+        <section
+                id="page-others"
+                class="page"
+        >
+
             <div class="section-toolbar">
-                <div><h2>Boshqalar</h2><p>Qo‘shimcha xodimlar</p></div>
-                <button class="primary-btn" id="addOtherBtn">＋ Xodim qo‘shish</button>
+
+                <div>
+
+                    <h2>Boshqalar</h2>
+
+                    <p>
+                        Qo‘shimcha xodimlar
+                    </p>
+
+                </div>
+
+
+                <button
+                        class="primary-btn"
+                        id="addOtherBtn"
+                        type="button"
+                >
+                    ＋ Xodim qo‘shish
+                </button>
+
             </div>
+
+
             <div class="filter-row">
-                <button class="filter-btn active" data-other-filter="all">Barchasi</button>
-                <button class="filter-btn" data-other-filter="active">Faol</button>
-                <button class="filter-btn" data-other-filter="inactive">Faol emas</button>
+
+                <button
+                        class="filter-btn active"
+                        data-other-filter="all"
+                        type="button"
+                >
+                    Barchasi
+                </button>
+
+                <button
+                        class="filter-btn"
+                        data-other-filter="active"
+                        type="button"
+                >
+                    Faol
+                </button>
+
+                <button
+                        class="filter-btn"
+                        data-other-filter="inactive"
+                        type="button"
+                >
+                    Faol emas
+                </button>
+
             </div>
-            <div id="othersGrid" class="people-grid"></div>
+
+
+            <div
+                    id="othersGrid"
+                    class="people-grid"
+            ></div>
+
         </section>
 
-        <section id="page-attendance" class="page">
-            <div class="section-toolbar">
-                <div><h2>Davomat</h2><p>Bolalarning kunlik davomatini ko‘rish</p></div>
-            </div>
-            <div class="attendance-card">
-                <div class="attendance-intro">Bolani tanlang — uning kundalik davomat yozuvlari ko‘rsatiladi.</div>
-                <select id="attendanceChild" class="select-input"><option value="">Bolani tanlang</option></select>
-                <div id="attendanceResult" class="attendance-result"></div>
-            </div>
-        </section>
-
-        <section id="page-settings" class="page">
-            <div class="settings-card">
-                <div class="settings-icon">⚙</div>
-                <div><h2>Sozlamalar</h2><p>Hozircha bu bo‘lim uchun backend endpoint mavjud emas. Bu yerga keyinchalik sozlamalar qo‘shish mumkin.</p></div>
-            </div>
-        </section>
     </main>
+
 </div>
 
-<!-- CHILD MODAL -->
-<div class="modal" id="childModal">
+
+<!-- =========================================================
+     ADD / EDIT CHILD MODAL
+     ========================================================= -->
+
+<div
+        class="modal"
+        id="childModal"
+>
+
     <div class="modal-box large">
-        <button class="modal-close" data-close="childModal">×</button>
-        <h2 id="childModalTitle">Bola qo‘shish</h2>
-        <p>ChildrenController dagi AddNewChildrenRequest maydonlari asosida.</p>
-        <form id="childForm" class="form-grid">
-            <input type="hidden" id="childId">
-            <label>Ism<input id="childFirstName" required></label>
-            <label>Familiya<input id="childLastName" required></label>
-            <label>Otasining ismi<input id="childPatronymic"></label>
-            <label>Tug‘ilgan sana<input id="childBirthDate" type="date" required></label>
-            <label>Jins<select id="childGender"><option value="MALE">Erkak</option><option value="FEMALE">Ayol</option></select></label>
-            <label>Guruh<select id="childGroup" required></select></label>
-            <label>Onasi ismi<input id="motherFirstName"></label>
-            <label>Onasi familiyasi<input id="motherLastName"></label>
-            <label>Otasi ismi<input id="fatherFirstName"></label>
-            <label>Otasi familiyasi<input id="fatherLastName"></label>
-            <label>Onasi telefoni<input id="motherPhone"></label>
-            <label>Otasi telefoni<input id="fatherPhone"></label>
-            <label class="full">Manzil<input id="childAddress"></label>
-            <div class="form-actions full"><button type="button" class="secondary-btn" data-close="childModal">Bekor qilish</button><button class="primary-btn">Saqlash</button></div>
+
+        <button
+                type="button"
+                class="modal-close"
+                data-close="childModal"
+        >
+            ×
+        </button>
+
+
+        <h2 id="childModalTitle">
+            Bola qo‘shish
+        </h2>
+
+        <p>
+            ChildrenController dagi AddNewChildrenRequest maydonlari asosida.
+        </p>
+
+
+        <form
+                id="childForm"
+                class="form-grid"
+        >
+
+            <input
+                    type="hidden"
+                    id="childId"
+            >
+
+
+            <label>
+                Ism
+                <input
+                        id="childFirstName"
+                        required
+                >
+            </label>
+
+
+            <label>
+                Familiya
+                <input
+                        id="childLastName"
+                        required
+                >
+            </label>
+
+
+            <label>
+                Otasining ismi
+                <input
+                        id="childPatronymic"
+                >
+            </label>
+
+
+            <label>
+                Tug‘ilgan sana
+                <input
+                        id="childBirthDate"
+                        type="date"
+                        required
+                >
+            </label>
+
+
+            <label>
+                Jins
+
+                <select id="childGender">
+
+                    <option value="MALE">
+                        Erkak
+                    </option>
+
+                    <option value="FEMALE">
+                        Ayol
+                    </option>
+
+                </select>
+
+            </label>
+
+
+            <label>
+                Guruh
+                <select
+                        id="childGroup"
+                        required
+                ></select>
+            </label>
+
+
+            <label>
+                Onasi ismi
+                <input id="motherFirstName">
+            </label>
+
+
+            <label>
+                Onasi familiyasi
+                <input id="motherLastName">
+            </label>
+
+
+            <label>
+                Otasi ismi
+                <input id="fatherFirstName">
+            </label>
+
+
+            <label>
+                Otasi familiyasi
+                <input id="fatherLastName">
+            </label>
+
+
+            <label>
+                Onasi telefoni
+                <input id="motherPhone">
+            </label>
+
+
+            <label>
+                Otasi telefoni
+                <input id="fatherPhone">
+            </label>
+
+
+            <label class="full">
+                Manzil
+                <input id="childAddress">
+            </label>
+
+
+            <div class="form-actions full">
+
+                <button
+                        type="button"
+                        class="secondary-btn"
+                        data-close="childModal"
+                >
+                    Bekor qilish
+                </button>
+
+                <button
+                        type="submit"
+                        class="primary-btn"
+                >
+                    Saqlash
+                </button>
+
+            </div>
+
         </form>
+
     </div>
+
 </div>
 
-<!-- VIEW CHILD MODAL -->
 
-<div class="modal" id="viewChildModal">
+<!-- =========================================================
+     VIEW CHILD MODAL
+
+     MUHIM:
+     .modal-box ICHIDA FAQAT BITTA modal-close BOR.
+     Profile va Daily ikkita alohida content.
+     ========================================================= -->
+
+<div
+        class="modal"
+        id="viewChildModal"
+>
 
     <div class="modal-box">
+
+        <!-- DOIMIY YOPISH TUGMASI -->
 
         <button
                 type="button"
@@ -282,277 +928,444 @@
             ×
         </button>
 
-        <h2>Bola ma'lumotlari</h2>
 
-        <p>
-            Bola haqidagi asosiy ma'lumotlar
-        </p>
+        <!-- =================================================
+             CHILD PROFILE CONTENT
+             ================================================= -->
+
+        <div id="viewChildProfileContent">
+
+            <h2>
+                Bola ma'lumotlari
+            </h2>
+
+            <p>
+                Bola haqidagi asosiy ma'lumotlar
+            </p>
 
 
-        <!-- CHILD HEADER -->
+            <!-- HEADER -->
 
-        <div class="teacher-view-header">
+            <div class="teacher-view-header">
 
-            <div class="teacher-view-avatar">
-                <span id="viewChildAvatar">
-                    B
-                </span>
+                <div class="teacher-view-avatar">
+
+                    <span id="viewChildAvatar">
+                        B
+                    </span>
+
+                </div>
+
+
+                <div class="teacher-view-title">
+
+                    <h3 id="viewChildName">
+                        —
+                    </h3>
+
+                    <p id="viewChildPatronymic">
+                        —
+                    </p>
+
+                </div>
+
             </div>
 
-            <div class="teacher-view-title">
 
-                <h3 id="viewChildName">
-                    —
-                </h3>
+            <!-- INFORMATION -->
 
-                <p id="viewChildPatronymic">
-                    —
-                </p>
+            <div class="teacher-view-info">
+
+
+                <div class="teacher-info-item">
+
+                    <span class="teacher-info-label">
+                        Tug‘ilgan sana
+                    </span>
+
+                    <strong
+                            class="teacher-info-value"
+                            id="viewChildBirthDate"
+                    >
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="teacher-info-item">
+
+                    <span class="teacher-info-label">
+                        Yosh
+                    </span>
+
+                    <strong
+                            class="teacher-info-value"
+                            id="viewChildAge"
+                    >
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="teacher-info-item">
+
+                    <span class="teacher-info-label">
+                        Jins
+                    </span>
+
+                    <strong
+                            class="teacher-info-value"
+                            id="viewChildGender"
+                    >
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="teacher-info-item">
+
+                    <span class="teacher-info-label">
+                        Guruh
+                    </span>
+
+                    <strong
+                            class="teacher-info-value"
+                            id="viewChildGroup"
+                    >
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="teacher-info-item">
+
+                    <span class="teacher-info-label">
+                        Onasi
+                    </span>
+
+                    <strong
+                            class="teacher-info-value"
+                            id="viewChildMother"
+                    >
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="teacher-info-item">
+
+                    <span class="teacher-info-label">
+                        Onasi telefoni
+                    </span>
+
+                    <strong
+                            class="teacher-info-value"
+                            id="viewChildMotherPhone"
+                    >
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="teacher-info-item">
+
+                    <span class="teacher-info-label">
+                        Otasi
+                    </span>
+
+                    <strong
+                            class="teacher-info-value"
+                            id="viewChildFather"
+                    >
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="teacher-info-item">
+
+                    <span class="teacher-info-label">
+                        Otasi telefoni
+                    </span>
+
+                    <strong
+                            class="teacher-info-value"
+                            id="viewChildFatherPhone"
+                    >
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="teacher-info-item full">
+
+                    <span class="teacher-info-label">
+                        Manzil
+                    </span>
+
+                    <strong
+                            class="teacher-info-value"
+                            id="viewChildAddress"
+                    >
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="teacher-info-item full">
+
+                    <span class="teacher-info-label">
+                        Holati
+                    </span>
+
+                    <span
+                            class="teacher-view-status"
+                            id="viewChildStatus"
+                    >
+                        Faol
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- ACTIONS -->
+
+            <div class="teacher-view-actions">
+
+                <button
+                        type="button"
+                        class="secondary-btn"
+                        data-close="viewChildModal"
+                >
+                    Yopish
+                </button>
+
+
+                <button
+                        type="button"
+                        class="primary-btn"
+                        id="viewChildEditBtn"
+                >
+                    Tahrirlash
+                </button>
+
+
+                <button
+                        type="button"
+                        class="small-btn daily-btn"
+                        id="viewChildDailyBtn"
+                >
+                    📅 Davomat tarixi
+                </button>
+
+
+                <button
+                        type="button"
+                        class="small-btn danger"
+                        id="viewChildDeleteBtn"
+                >
+                    O‘chirish
+                </button>
 
             </div>
 
         </div>
 
 
-        <!-- CHILD INFORMATION -->
+        <!-- =================================================
+             DAILY HISTORY CONTENT
 
-        <div class="teacher-view-info">
+             MUHIM:
+             Bu div BO‘SH turadi.
+             attendance.js shu joyga HTML joylaydi.
 
-            <div class="teacher-info-item">
+             Bu yerda:
+             ❌ modal-close YO‘Q
+             ❌ boshqa .modal YO‘Q
+             ================================================= -->
 
-                <span class="teacher-info-label">
-                    Tug‘ilgan sana
-                </span>
-
-                <strong
-                        class="teacher-info-value"
-                        id="viewChildBirthDate"
-                >
-                    —
-                </strong>
-
-            </div>
-
-
-            <div class="teacher-info-item">
-
-                <span class="teacher-info-label">
-                    Yosh
-                </span>
-
-                <strong
-                        class="teacher-info-value"
-                        id="viewChildAge"
-                >
-                    —
-                </strong>
-
-            </div>
-
-
-            <div class="teacher-info-item">
-
-                <span class="teacher-info-label">
-                    Jins
-                </span>
-
-                <strong
-                        class="teacher-info-value"
-                        id="viewChildGender"
-                >
-                    —
-                </strong>
-
-            </div>
-
-
-            <div class="teacher-info-item">
-
-                <span class="teacher-info-label">
-                    Guruh
-                </span>
-
-                <strong
-                        class="teacher-info-value"
-                        id="viewChildGroup"
-                >
-                    —
-                </strong>
-
-            </div>
-
-
-            <div class="teacher-info-item">
-
-                <span class="teacher-info-label">
-                    Onasi
-                </span>
-
-                <strong
-                        class="teacher-info-value"
-                        id="viewChildMother"
-                >
-                    —
-                </strong>
-
-            </div>
-
-
-            <div class="teacher-info-item">
-
-                <span class="teacher-info-label">
-                    Onasi telefoni
-                </span>
-
-                <strong
-                        class="teacher-info-value"
-                        id="viewChildMotherPhone"
-                >
-                    —
-                </strong>
-
-            </div>
-
-
-            <div class="teacher-info-item">
-
-                <span class="teacher-info-label">
-                    Otasi
-                </span>
-
-                <strong
-                        class="teacher-info-value"
-                        id="viewChildFather"
-                >
-                    —
-                </strong>
-
-            </div>
-
-
-            <div class="teacher-info-item">
-
-                <span class="teacher-info-label">
-                    Otasi telefoni
-                </span>
-
-                <strong
-                        class="teacher-info-value"
-                        id="viewChildFatherPhone"
-                >
-                    —
-                </strong>
-
-            </div>
-
-
-            <div class="teacher-info-item full">
-
-                <span class="teacher-info-label">
-                    Manzil
-                </span>
-
-                <strong
-                        class="teacher-info-value"
-                        id="viewChildAddress"
-                >
-                    —
-                </strong>
-
-            </div>
-
-
-            <div class="teacher-info-item full">
-
-                <span class="teacher-info-label">
-                    Holati
-                </span>
-
-                <span
-                        class="teacher-view-status"
-                        id="viewChildStatus"
-                >
-                    Faol
-                </span>
-
-            </div>
-
-        </div>
-
-
-        <!-- ACTIONS -->
-
-        <div class="teacher-view-actions">
-
-            <button
-                    type="button"
-                    class="secondary-btn"
-                    data-close="viewChildModal"
-            >
-                Yopish
-            </button>
-
-            <button
-                    type="button"
-                    class="primary-btn"
-                    id="viewChildEditBtn"
-            >
-                Tahrirlash
-            </button>
-
-        </div>
+        <div
+                id="viewChildDailyContent"
+                style="display: none;"
+        ></div>
 
     </div>
 
 </div>
 
-<!-- TEACHER MODAL -->
-<div class="modal" id="teacherModal">
-    <div class="modal-box">
-        <button class="modal-close" data-close="teacherModal">×</button>
-        <h2>Ustoz qo‘shish</h2>
-        <p>UserServiceImpl dagi request maydonlari asosida.</p>
-        <form id="teacherForm" class="form-grid">
-            <label>Ism<input id="teacherFirstName" required></label>
-            <label>Familiya<input id="teacherLastName" required></label>
-            <label>Email<input id="teacherEmail" type="email" required></label>
-            <label>Telefon<input id="teacherPhone"></label>
-            <label>Guruh<select id="teacherGroup" required></select></label>
-            <label>Rol<select id="teacherRole" required></select></label>
-            <div class="form-note full">Backend yangi ustoz uchun standart parolni <b>boxcha001</b> qilib yaratadi.</div>
-            <div class="form-actions full"><button type="button" class="secondary-btn" data-close="teacherModal">Bekor qilish</button><button class="primary-btn">Saqlash</button></div>
-        </form>
-    </div>
-</div>
 
-<div class="modal" id="viewTeacherModal">
+<!-- =========================================================
+     ADD / EDIT TEACHER MODAL
+     ========================================================= -->
+
+<div
+        class="modal"
+        id="teacherModal"
+>
 
     <div class="modal-box">
 
         <button
                 type="button"
                 class="modal-close"
-                data-close-modal="viewTeacherModal"
+                data-close="teacherModal"
         >
             ×
         </button>
 
 
-        <h2>Ustoz ma'lumotlari</h2>
+        <h2>
+            Ustoz qo‘shish
+        </h2>
+
+        <p>
+            UserServiceImpl dagi request maydonlari asosida.
+        </p>
+
+
+        <form
+                id="teacherForm"
+                class="form-grid"
+        >
+
+            <label>
+                Ism
+                <input
+                        id="teacherFirstName"
+                        required
+                >
+            </label>
+
+
+            <label>
+                Familiya
+                <input
+                        id="teacherLastName"
+                        required
+                >
+            </label>
+
+
+            <label>
+                Email
+                <input
+                        id="teacherEmail"
+                        type="email"
+                        required
+                >
+            </label>
+
+
+            <label>
+                Telefon
+                <input id="teacherPhone">
+            </label>
+
+
+            <label>
+                Guruh
+                <select
+                        id="teacherGroup"
+                        required
+                ></select>
+            </label>
+
+
+            <label>
+                Rol
+                <select
+                        id="teacherRole"
+                        required
+                ></select>
+            </label>
+
+
+            <div class="form-note full">
+
+                Backend yangi ustoz uchun standart parolni
+                <b>boxcha001</b>
+                qilib yaratadi.
+
+            </div>
+
+
+            <div class="form-actions full">
+
+                <button
+                        type="button"
+                        class="secondary-btn"
+                        data-close="teacherModal"
+                >
+                    Bekor qilish
+                </button>
+
+
+                <button
+                        type="submit"
+                        class="primary-btn"
+                >
+                    Saqlash
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     VIEW TEACHER MODAL
+     ========================================================= -->
+
+<div
+        class="modal"
+        id="viewTeacherModal"
+>
+
+    <div class="modal-box">
+
+        <button
+                type="button"
+                class="modal-close"
+                data-close="viewTeacherModal"
+        >
+            ×
+        </button>
+
+
+        <h2>
+            Ustoz ma'lumotlari
+        </h2>
 
         <p>
             Ustoz haqidagi asosiy ma'lumotlar
         </p>
 
 
-        <!-- TEACHER HEADER -->
+        <!-- HEADER -->
 
         <div class="teacher-view-header">
 
             <div class="teacher-view-avatar">
+
                 <span id="viewTeacherAvatar">
                     U
                 </span>
+
             </div>
 
 
@@ -571,7 +1384,7 @@
         </div>
 
 
-        <!-- TEACHER INFORMATION -->
+        <!-- INFORMATION -->
 
         <div class="teacher-view-info">
 
@@ -655,7 +1468,6 @@
 
             </div>
 
-
         </div>
 
 
@@ -666,7 +1478,7 @@
             <button
                     type="button"
                     class="secondary-btn"
-                    data-close-modal="viewTeacherModal"
+                    data-close="viewTeacherModal"
             >
                 Yopish
             </button>
@@ -686,39 +1498,138 @@
 
 </div>
 
-<!-- OTHER MODAL -->
-<div class="modal" id="otherModal">
-    <div class="modal-box">
-        <button class="modal-close" data-close="otherModal">×</button>
-        <h2>Xodim qo‘shish</h2>
-        <p>OthersController dagi request maydonlari asosida.</p>
-        <form id="otherForm" class="form-grid">
-            <label>Ism<input id="otherFirstName" required></label>
-            <label>Familiya<input id="otherLastName" required></label>
-            <label>Telefon<input id="otherPhone"></label>
-            <label>Kasbi<input id="otherProfession" required></label>
-            <label>Tug‘ilgan sana<input id="otherBirthDate" type="date"></label>
-            <div class="form-actions full"><button type="button" class="secondary-btn" data-close="otherModal">Bekor qilish</button><button class="primary-btn">Saqlash</button></div>
-        </form>
-    </div>
-</div>
 
-<div id="otherViewModal" class="modal">
+<!-- =========================================================
+     ADD / EDIT OTHER MODAL
+     ========================================================= -->
+
+<div
+        class="modal"
+        id="otherModal"
+>
 
     <div class="modal-box">
 
         <button
+                type="button"
                 class="modal-close"
-                onclick="this.closest('.modal').classList.remove('open')"
+                data-close="otherModal"
         >
             ×
         </button>
 
-        <h2>Xodim ma'lumotlari</h2>
+
+        <h2>
+            Xodim qo‘shish
+        </h2>
+
+        <p>
+            OthersController dagi request maydonlari asosida.
+        </p>
+
+
+        <form
+                id="otherForm"
+                class="form-grid"
+        >
+
+            <label>
+                Ism
+                <input
+                        id="otherFirstName"
+                        required
+                >
+            </label>
+
+
+            <label>
+                Familiya
+                <input
+                        id="otherLastName"
+                        required
+                >
+            </label>
+
+
+            <label>
+                Telefon
+                <input id="otherPhone">
+            </label>
+
+
+            <label>
+                Kasbi
+                <input
+                        id="otherProfession"
+                        required
+                >
+            </label>
+
+
+            <label>
+                Tug‘ilgan sana
+                <input
+                        id="otherBirthDate"
+                        type="date"
+                >
+            </label>
+
+
+            <div class="form-actions full">
+
+                <button
+                        type="button"
+                        class="secondary-btn"
+                        data-close="otherModal"
+                >
+                    Bekor qilish
+                </button>
+
+
+                <button
+                        type="submit"
+                        class="primary-btn"
+                >
+                    Saqlash
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     VIEW OTHER MODAL
+     ========================================================= -->
+
+<div
+        class="modal"
+        id="otherViewModal"
+>
+
+    <div class="modal-box">
+
+        <button
+                type="button"
+                class="modal-close"
+                data-close="otherViewModal"
+        >
+            ×
+        </button>
+
+
+        <h2>
+            Xodim ma'lumotlari
+        </h2>
 
         <p>
             Xodim haqida batafsil ma'lumot
         </p>
+
 
         <div id="otherViewContent"></div>
 
@@ -726,6 +1637,15 @@
 
 </div>
 
-<script type="module" src="/js/CabinetPage.js"></script>
+
+<!-- =========================================================
+     JAVASCRIPT
+     ========================================================= -->
+
+<script
+        type="module"
+        src="/js/CabinetPage.js"
+></script>
+
 </body>
 </html>
