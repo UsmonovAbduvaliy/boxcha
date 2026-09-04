@@ -6,7 +6,10 @@ import {
 import {
     $,
     $$,
-    todayText
+    todayText,
+    uzMonth,
+    uzMonthShort,
+    uzWeekday
 } from "./utils.js";
 
 import {
@@ -122,13 +125,7 @@ function setupUser() {
 
 
     $("#todayDate").textContent =
-        new Intl.DateTimeFormat(
-            "uz-UZ",
-            {
-                day: "2-digit",
-                month: "short"
-            }
-        ).format(d);
+        `${d.getDate()} ${uzMonthShort(d)}`;
 
 
     $("#calendarDay").textContent =
@@ -136,21 +133,11 @@ function setupUser() {
 
 
     $("#calendarMonth").textContent =
-        new Intl.DateTimeFormat(
-            "uz-UZ",
-            {
-                month: "long"
-            }
-        ).format(d);
+        uzMonth(d);
 
 
     $("#calendarWeekday").textContent =
-        new Intl.DateTimeFormat(
-            "uz-UZ",
-            {
-                weekday: "long"
-            }
-        ).format(d);
+        uzWeekday(d);
 
 
     $("#pageSubtitle").textContent =
@@ -531,7 +518,7 @@ async function init() {
     if (!token()) {
 
         window.location.href =
-            "/login.html";
+            "/auth/login.html";
 
         return;
     }

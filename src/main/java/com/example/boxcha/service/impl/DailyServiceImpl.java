@@ -121,4 +121,12 @@ public class DailyServiceImpl implements DailyService {
         return new GetOneChildrenDailyResponse(daily);
     }
 
+    @Override
+    @Transactional
+    public boolean deleteDaily(Long id) {
+        Optional<Daily> byId = dailyRepository.findById(id);
+        if (byId.isEmpty()) return false;
+        dailyRepository.delete(byId.get());
+        return true;
+    }
 }

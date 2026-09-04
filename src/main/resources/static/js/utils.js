@@ -26,15 +26,46 @@ export function initials(first = "", last = "") {
     ).toUpperCase() || "B";
 }
 
+// Browsers don't ship an "uz-UZ" date locale (it renders months as "M09"),
+// so we localise dates manually.
+const UZ_MONTHS = [
+    "Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun",
+    "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"
+];
+
+const UZ_MONTHS_SHORT = [
+    "Yan", "Fev", "Mar", "Apr", "May", "Iyun",
+    "Iyul", "Avg", "Sen", "Okt", "Noy", "Dek"
+];
+
+const UZ_WEEKDAYS = [
+    "Yakshanba", "Dushanba", "Seshanba", "Chorshanba",
+    "Payshanba", "Juma", "Shanba"
+];
+
+export const uzMonth = (d) => UZ_MONTHS[d.getMonth()];
+export const uzMonthShort = (d) => UZ_MONTHS_SHORT[d.getMonth()];
+export const uzWeekday = (d) => UZ_WEEKDAYS[d.getDay()];
+
 export function todayText() {
     const d = new Date();
 
-    return new Intl.DateTimeFormat("uz-UZ", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-        weekday: "long"
-    }).format(d);
+    return `${d.getDate()}-${uzMonth(d)} ${d.getFullYear()}, ${uzWeekday(d)}`;
+}
+
+// Enum values (MALE/FEMALE) leak from the backend — show them in Uzbek.
+export function genderText(value) {
+    const v = String(value || "").trim().toUpperCase();
+
+    if (["MALE", "M", "ERKAK", "O'G'IL", "O‘G‘IL", "BOY"].includes(v)) {
+        return "O‘g‘il";
+    }
+
+    if (["FEMALE", "F", "AYOL", "QIZ", "GIRL"].includes(v)) {
+        return "Qiz";
+    }
+
+    return value ? String(value) : "—";
 }
 
 export function escapeHtml(value) {

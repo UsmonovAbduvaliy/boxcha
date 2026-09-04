@@ -4,6 +4,7 @@ import {
     $,
     escapeHtml,
     initials,
+    genderText,
     showToast
 } from "./utils.js";
 
@@ -166,7 +167,7 @@ export function renderChildren(state) {
 
                     <td>
                         ${escapeHtml(
-                c.gender || "—"
+                genderText(c.gender)
             )}
                     </td>
 
@@ -452,7 +453,7 @@ export async function viewChild(
         if (gender) {
 
             gender.textContent =
-                child.gender || "—";
+                genderText(child.gender);
 
         }
 

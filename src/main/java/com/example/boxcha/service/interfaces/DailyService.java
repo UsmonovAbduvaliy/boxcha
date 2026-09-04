@@ -17,4 +17,6 @@ public interface DailyService {
     boolean updateDailyChildren(UpdateDailyChildrenRequest request);
 
     GetOneChildrenDailyResponse getOneDaily(Long id);
+
+    boolean deleteDaily(Long id);
 }

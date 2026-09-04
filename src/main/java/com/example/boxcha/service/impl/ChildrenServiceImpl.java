@@ -130,7 +130,9 @@ public class ChildrenServiceImpl implements ChildrenService {
         children.setMotherPhone(request.getMotherPhone() !=null? request.getMotherPhone() : children.getMotherPhone());
         children.setFatherPhone(request.getFatherPhone() !=null? request.getFatherPhone() : children.getFatherPhone());
         children.setAddress(request.getAddress() !=null? request.getAddress() : children.getAddress());
-        children.setAge(Period.between(request.getBirthDate(), LocalDate.now()).getYears());
+        if (children.getBirthDate() != null) {
+            children.setAge(Period.between(children.getBirthDate(), LocalDate.now()).getYears());
+        }
         children.setGroup(group.get());
         Children save = childrenRepository.save(children);
         return new AddNewChildrenResponse(save.getId(), save.getFirstName(), save.getLastName(), save.getPatronymic());

@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DailyRepository extends JpaRepository<Daily, Long> {
-    List<Daily> findAllByChildrenId(Long childrenId);
-
     List<Daily> findAllByChildrenIdAndDateBetween(
             Long childrenId,
             LocalDate startDate,

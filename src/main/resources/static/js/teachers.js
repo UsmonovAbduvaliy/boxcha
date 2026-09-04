@@ -117,7 +117,7 @@ export function renderUsers(state) {
                             <p>
 
                                 ${escapeHtml(
-                u.roles || "Xodim"
+                u.profession || "Ustoz"
             )}
 
                             </p>

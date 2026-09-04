@@ -79,7 +79,7 @@ export async function loadDashboard(state, loadChildren) {
 
         $("#activeChildrenCount").textContent =
             state.children.filter(
-                c => c.isActive === true
+                c => c.active === true
             ).length;
 
         renderRecent(state);

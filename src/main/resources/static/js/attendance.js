@@ -6,9 +6,13 @@ import {
     showToast
 } from "./utils.js";
 
-import {
-    openModal
-} from "./modals.js";
+
+// =====================================================
+// CONSTANTS
+// =====================================================
+
+const HISTORY_MODAL_ID = "dailyHistoryModal";
+const EDIT_MODAL_ID = "dailyEditModal";
 
 
 // =====================================================
@@ -17,11 +21,34 @@ import {
 
 export async function loadAttendanceChildren(state) {
 
-    if (!state.children.length) {
-        await state.loadChildren(true);
-    }
+    try {
 
-    renderAttendanceOptions(state);
+        if (!state) {
+            console.error("loadAttendanceChildren: state topilmadi");
+            return;
+        }
+
+        if (!Array.isArray(state.children)) {
+            state.children = [];
+        }
+
+        if (!state.children.length) {
+            await state.loadChildren(true);
+        }
+
+        renderAttendanceOptions(state);
+
+    } catch (error) {
+
+        console.error(
+            "Load attendance children error:",
+            error
+        );
+
+        showToast(
+            "Bolalarni olishda xatolik."
+        );
+    }
 }
 
 
@@ -31,95 +58,139 @@ export async function loadAttendanceChildren(state) {
 
 export function renderAttendanceOptions(state) {
 
-    const select = $("#attendanceChild");
+    const select =
+        $("#attendanceChild");
 
-    if (!select) return;
+    if (!select) {
+        console.warn(
+            "#attendanceChild topilmadi."
+        );
+        return;
+    }
+
+    const children =
+        Array.isArray(state?.children)
+            ? state.children
+            : [];
+
 
     select.innerHTML =
-        `<option value="">
-            Bolani tanlang
-        </option>` +
+        `<option value="">Bolani tanlang</option>` +
 
-        state.children
-            .filter(child => child.active)
-            .map(child => `
-                <option value="${child.id}">
-                    ${escapeHtml(
-                `${child.firstName || ""} ${child.lastName || ""}`.trim()
-            )}
-                </option>
-            `)
-            .join("");
+children
+    .filter(child => child && child.active)
+    .map(child => {
+
+        const fullName =
+            `${child.firstName || ""} ${child.lastName || ""}`
+                .trim();
+
+        return `
+                    <option value="${child.id}">
+                        ${escapeHtml(fullName)}
+                    </option>
+                `;
+    })
+    .join("");
 }
 
 
 // =====================================================
 // SHOW ATTENDANCE
 // =====================================================
+// Bu eski attendanceResult uchun.
+// Asosiy "Davomatni ko'rish" uchun
+// openChildDaily() ishlatiladi.
+// =====================================================
 
 export async function showAttendance(id) {
 
+    if (!id) {
+
+        showToast(
+            "Bola tanlanmagan."
+        );
+
+        return;
+    }
+
+
     try {
 
+        const now =
+            new Date();
+
+
+        const year =
+            now.getFullYear();
+
+
+        const month =
+            now.getMonth() + 1;
+
+
         const records =
-            await api(`/api/daily/children/${id}`) || [];
+            await api(
+                `/api/daily/children/${id}?year=${year}&month=${month}`
+            ) || [];
+
 
         const result =
             $("#attendanceResult");
 
+
         if (!result) {
+
+            console.warn(
+                "#attendanceResult topilmadi."
+            );
+
             return;
         }
 
+
+        if (!Array.isArray(records) || !records.length) {
+
+            result.innerHTML = `
+                <div class="empty-state">
+                    Bu bola uchun davomat yozuvlari yo‘q.
+                </div>
+            `;
+
+            return;
+        }
+
+
         result.innerHTML =
-            records.length
+            records
+                .map(record => {
 
-                ? records.map(record => {
+                    const present =
+                        isPresentValue(record);
 
-                    const isPresent =
-                        record.present === true ||
-                        record.present === "true";
 
                     return `
-
                         <div class="attendance-row">
 
                             <span>
                                 ${escapeHtml(
-                        String(record.date || "—")
+                        normalizeDate(record?.date)
                     )}
                             </span>
 
-                            <b class="${
-                        isPresent
-                            ? "present"
-                            : "absent"
-                    }">
-
+                            <b class="${present ? "present" : "absent"}">
                                 ${
-                        isPresent
+                        present
                             ? "Keldi"
                             : "Kelmagan"
                     }
-
                             </b>
 
                         </div>
-
                     `;
+                })
+                .join("");
 
-                }).join("")
-
-                : `
-
-                    <div class="empty-state">
-
-                        Bu bola uchun davomat
-                        yozuvlari yo‘q.
-
-                    </div>
-
-                `;
 
     } catch (error) {
 
@@ -128,26 +199,249 @@ export async function showAttendance(id) {
             error
         );
 
+
         const result =
             $("#attendanceResult");
+
 
         if (result) {
 
             result.innerHTML = `
-
                 <div class="empty-state">
-
-                    Davomatni olishda
-                    xatolik.
-
+                    Davomatni olishda xatolik.
                 </div>
-
             `;
-
         }
+    }
+}
 
+
+// =====================================================
+// DATE HELPERS
+// =====================================================
+
+function normalizeDate(date) {
+
+    if (!date) {
+        return "";
     }
 
+    return String(date).substring(0, 10);
+}
+
+
+// =====================================================
+// TODAY
+// =====================================================
+
+function getTodayDate() {
+
+    const now =
+        new Date();
+
+
+    return [
+        now.getFullYear(),
+
+        String(
+            now.getMonth() + 1
+        ).padStart(2, "0"),
+
+        String(
+            now.getDate()
+        ).padStart(2, "0")
+
+    ].join("-");
+}
+
+
+// =====================================================
+// PRESENT VALUE
+// =====================================================
+
+function isPresentValue(daily) {
+
+    if (!daily) {
+        return false;
+    }
+
+
+    const value =
+        daily.present !== undefined
+            ? daily.present
+            : daily.isPresent;
+
+
+    return (
+        value === true ||
+        value === "true"
+    );
+}
+
+
+// =====================================================
+// DATE FORMAT
+// =====================================================
+
+function formatUzbekDate(date) {
+
+    const normalized =
+        normalizeDate(date);
+
+
+    const parts =
+        normalized.split("-");
+
+
+    if (parts.length !== 3) {
+        return String(date || "");
+    }
+
+
+    const year =
+        parts[0];
+
+
+    const month =
+        Number(parts[1]);
+
+
+    const day =
+        Number(parts[2]);
+
+
+    const months = [
+        "Yanvar",
+        "Fevral",
+        "Mart",
+        "Aprel",
+        "May",
+        "Iyun",
+        "Iyul",
+        "Avgust",
+        "Sentabr",
+        "Oktabr",
+        "Noyabr",
+        "Dekabr"
+    ];
+
+
+    return `${
+        day
+    } ${
+        months[month - 1] || ""
+    } ${
+        year
+    }`;
+}
+
+
+// =====================================================
+// MONTH NAMES
+// =====================================================
+
+function getMonthNames() {
+
+    return [
+        "Yanvar",
+        "Fevral",
+        "Mart",
+        "Aprel",
+        "May",
+        "Iyun",
+        "Iyul",
+        "Avgust",
+        "Sentabr",
+        "Oktabr",
+        "Noyabr",
+        "Dekabr"
+    ];
+}
+
+
+// =====================================================
+// REMOVE MODAL
+// =====================================================
+
+function removeModal(id) {
+
+    const modal =
+        document.getElementById(id);
+
+
+    if (!modal) {
+        return;
+    }
+
+
+    if (modal._escapeHandler) {
+
+        document.removeEventListener(
+            "keydown",
+            modal._escapeHandler
+        );
+
+        modal._escapeHandler = null;
+    }
+
+
+    modal.remove();
+}
+
+
+// =====================================================
+// CLOSE HISTORY
+// =====================================================
+
+function closeDailyHistory() {
+
+    removeModal(
+        HISTORY_MODAL_ID
+    );
+
+
+    document.body.classList.remove(
+        "daily-modal-open"
+    );
+}
+
+
+// =====================================================
+// CLOSE EDIT
+// =====================================================
+
+function closeDailyEdit() {
+
+    removeModal(
+        EDIT_MODAL_ID
+    );
+
+
+    document.body.classList.remove(
+        "daily-modal-open"
+    );
+}
+
+
+// =====================================================
+// CLOSE ALL DAILY MODALS
+// =====================================================
+
+function closeAllDailyModals() {
+
+    removeModal(
+        HISTORY_MODAL_ID
+    );
+
+
+    removeModal(
+        EDIT_MODAL_ID
+    );
+
+
+    document.body.classList.remove(
+        "daily-modal-open"
+    );
 }
 
 
@@ -162,12 +456,101 @@ export async function openChildDaily(
     month = new Date().getMonth() + 1
 ) {
 
+    // =================================================
+    // CHILD CHECK
+    // =================================================
+
+    if (!child || !child.id) {
+
+        console.error(
+            "openChildDaily: child topilmadi:",
+            child
+        );
+
+
+        showToast(
+            "Bola topilmadi."
+        );
+
+
+        return;
+    }
+
+
+    // =================================================
+    // YEAR / MONTH NORMALIZE
+    // =================================================
+
+    year =
+        Number(year);
+
+
+    month =
+        Number(month);
+
+
+    if (
+        !Number.isInteger(year) ||
+        !Number.isInteger(month) ||
+        month < 1 ||
+        month > 12
+    ) {
+
+        console.error(
+            "openChildDaily: noto‘g‘ri year/month:",
+            {
+                year,
+                month
+            }
+        );
+
+
+        showToast(
+            "Sana ma'lumotida xatolik."
+        );
+
+
+        return;
+    }
+
+
     try {
 
-        const dailies =
+        console.log(
+            "OPEN CHILD DAILY:",
+            {
+                childId: child.id,
+                year,
+                month
+            }
+        );
+
+
+        // =============================================
+        // BACKEND
+        // =============================================
+
+        const response =
             await api(
                 `/api/daily/children/${child.id}?year=${year}&month=${month}`
-            ) || [];
+            );
+
+
+        const dailies =
+            Array.isArray(response)
+                ? response
+                : [];
+
+
+        console.log(
+            "DAILY RESPONSE:",
+            dailies
+        );
+
+
+        // =============================================
+        // RENDER
+        // =============================================
 
         renderChildDaily(
             child,
@@ -177,6 +560,7 @@ export async function openChildDaily(
             state
         );
 
+
     } catch (error) {
 
         console.error(
@@ -184,12 +568,893 @@ export async function openChildDaily(
             error
         );
 
+
         showToast(
             "Davomat tarixini olishda xatolik."
         );
+    }
+}
 
+
+// =====================================================
+// OPEN DAILY DETAIL
+// =====================================================
+
+async function openDailyDetail(
+    child,
+    daily,
+    date,
+    state,
+    year,
+    month
+) {
+
+    console.log(
+        "OPEN DAILY DETAIL:",
+        {
+            child,
+            daily,
+            date,
+            year,
+            month
+        }
+    );
+
+
+    // =================================================
+    // DATE
+    // =================================================
+
+    const normalizedDate =
+        normalizeDate(date);
+
+
+    if (!normalizedDate) {
+
+        showToast(
+            "Sana topilmadi."
+        );
+
+        return;
     }
 
+
+    // =================================================
+    // FUTURE DATE BLOCK
+    // =================================================
+
+    const today =
+        getTodayDate();
+
+
+    if (normalizedDate > today) {
+
+        showToast(
+            "Kelajakdagi sana uchun davomat kiritib bo‘lmaydi."
+        );
+
+        return;
+    }
+
+
+    // =================================================
+    // EXISTING DAILY
+    // =================================================
+
+    let existing =
+        daily || null;
+
+
+    // =================================================
+    // GET FULL DAILY
+    // =================================================
+
+    if (
+        existing &&
+        existing.id
+    ) {
+
+        try {
+
+            const response =
+                await api(
+                    `/api/daily/${existing.id}`
+                );
+
+
+            if (response) {
+
+                // GET /api/daily/{id} wraps the record as { daily: {...} }
+                existing =
+                    response.daily || response;
+            }
+
+
+        } catch (error) {
+
+            console.warn(
+                "Full daily olishda xatolik.",
+                error
+            );
+
+            // Listdagi daily ishlatiladi.
+        }
+    }
+
+
+    // =================================================
+    // REMOVE OLD EDIT MODAL
+    // =================================================
+
+    removeModal(
+        EDIT_MODAL_ID
+    );
+
+
+    // =================================================
+    // EXISTING CHECK
+    // =================================================
+
+    const hasExisting =
+        !!(
+            existing &&
+            existing.id
+        );
+
+
+    const present =
+        hasExisting
+            ? isPresentValue(existing)
+            : null;
+
+
+    // =================================================
+    // CHILD NAME
+    // =================================================
+
+    const childName =
+        `${child.firstName || ""} ${child.lastName || ""}`
+            .trim() ||
+        "Noma'lum bola";
+
+
+    // =================================================
+    // CREATE MODAL
+    // =================================================
+
+    const modal =
+        document.createElement("div");
+
+
+    modal.id =
+        EDIT_MODAL_ID;
+
+
+    modal.className =
+        "daily-edit-modal open";
+
+
+    modal.innerHTML = `
+
+        <div
+            class="daily-edit-backdrop"
+            data-edit-close
+        ></div>
+
+
+        <div
+            class="daily-edit-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="dailyEditTitle"
+        >
+
+            <div class="daily-edit-header">
+
+                <div>
+
+                    <span class="daily-edit-label">
+                        DAVOMAT
+                    </span>
+
+                    <h3 id="dailyEditTitle">
+                        ${escapeHtml(
+        formatUzbekDate(normalizedDate)
+    )}
+                    </h3>
+
+                    <p>
+                        ${escapeHtml(childName)}
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="daily-edit-close"
+                    id="dailyEditCloseBtn"
+                    aria-label="Yopish"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <div class="daily-edit-body">
+
+                ${
+        hasExisting
+
+            ? `
+
+                            <div class="daily-detail-info">
+
+                                <div class="
+                                    daily-detail-status
+                                    ${
+                present
+                    ? "present"
+                    : "absent"
+            }
+                                ">
+
+                                    <span class="option-icon">
+                                        ${
+                present
+                    ? "✓"
+                    : "✕"
+            }
+                                    </span>
+
+
+                                    <div>
+
+                                        <strong>
+                                            ${
+                present
+                    ? "Keldi"
+                    : "Kelmagan"
+            }
+                                        </strong>
+
+
+                                        <small>
+                                            ${escapeHtml(
+                formatUzbekDate(
+                    normalizedDate
+                )
+            )}
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        `
+
+            : `
+
+                            <div class="daily-edit-question">
+                                Bola keldimi?
+                            </div>
+
+                        `
+    }
+
+
+                <div class="daily-attendance-options">
+
+                    <button
+                        type="button"
+                        class="
+                            daily-attendance-option
+                            present
+                            ${
+        present === true
+            ? "selected"
+            : ""
+    }
+                        "
+                        data-present="true"
+                    >
+
+                        <span class="option-icon">
+                            ✓
+                        </span>
+
+
+                        <span>
+
+                            <strong>
+                                Keldi
+                            </strong>
+
+
+                            <small>
+                                Bola guruhda bo‘ldi
+                            </small>
+
+                        </span>
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="
+                            daily-attendance-option
+                            absent
+                            ${
+        present === false
+            ? "selected"
+            : ""
+    }
+                        "
+                        data-present="false"
+                    >
+
+                        <span class="option-icon">
+                            ✕
+                        </span>
+
+
+                        <span>
+
+                            <strong>
+                                Kelmagan
+                            </strong>
+
+
+                            <small>
+                                Bola guruhda bo‘lmadi
+                            </small>
+
+                        </span>
+
+                    </button>
+
+                </div>
+
+
+                <div
+                    class="daily-edit-error"
+                    id="dailyEditError"
+                ></div>
+
+            </div>
+
+
+            <div class="daily-edit-footer">
+
+                ${
+        hasExisting
+
+            ? `
+
+                            <button
+                                type="button"
+                                class="daily-delete-btn"
+                                id="dailyDeleteBtn"
+                            >
+                                🗑 O‘chirish
+                            </button>
+
+                        `
+
+            : `
+
+                            <div></div>
+
+                        `
+    }
+
+
+                <div class="daily-edit-actions">
+
+                    <button
+                        type="button"
+                        class="daily-cancel-btn"
+                        id="dailyEditCancelBtn"
+                    >
+                        Bekor qilish
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="daily-save-btn"
+                        id="dailySaveBtn"
+                        disabled
+                    >
+                        ${
+        hasExisting
+            ? "Yangilash"
+            : "Saqlash"
+    }
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+    `;
+
+
+    // =================================================
+    // APPEND
+    // =================================================
+
+    document.body.appendChild(
+        modal
+    );
+
+
+    // CSS `.open` bo‘lsa darhol ko‘rinadi.
+    modal.classList.add(
+        "open"
+    );
+
+
+    document.body.classList.add(
+        "daily-modal-open"
+    );
+
+
+    // =================================================
+    // CLOSE FUNCTION
+    // =================================================
+
+    const closeEdit =
+        () => {
+
+            closeDailyEdit();
+        };
+
+
+    // =================================================
+    // CLOSE BUTTON
+    // =================================================
+
+    const closeButton =
+        modal.querySelector(
+            "#dailyEditCloseBtn"
+        );
+
+
+    if (closeButton) {
+
+        closeButton.addEventListener(
+            "click",
+            closeEdit
+        );
+    }
+
+
+    // =================================================
+    // CANCEL BUTTON
+    // =================================================
+
+    const cancelButton =
+        modal.querySelector(
+            "#dailyEditCancelBtn"
+        );
+
+
+    if (cancelButton) {
+
+        cancelButton.addEventListener(
+            "click",
+            closeEdit
+        );
+    }
+
+
+    // =================================================
+    // BACKDROP
+    // =================================================
+
+    const backdrop =
+        modal.querySelector(
+            "[data-edit-close]"
+        );
+
+
+    if (backdrop) {
+
+        backdrop.addEventListener(
+            "click",
+            closeEdit
+        );
+    }
+
+
+    // =================================================
+    // SELECT PRESENT / ABSENT
+    // =================================================
+
+    let selectedPresent =
+        present;
+
+
+    const optionButtons =
+        modal.querySelectorAll(
+            ".daily-attendance-option"
+        );
+
+
+    const saveButton =
+        modal.querySelector(
+            "#dailySaveBtn"
+        );
+
+
+    optionButtons.forEach(
+        button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    selectedPresent =
+                        button.dataset.present === "true";
+
+
+                    optionButtons.forEach(
+                        item => {
+
+                            item.classList.remove(
+                                "selected"
+                            );
+                        }
+                    );
+
+
+                    button.classList.add(
+                        "selected"
+                    );
+
+
+                    if (saveButton) {
+
+                        saveButton.disabled =
+                            false;
+                    }
+                }
+            );
+        }
+    );
+
+
+    // =================================================
+    // SAVE / UPDATE
+    // =================================================
+
+    if (saveButton) {
+
+        saveButton.addEventListener(
+            "click",
+            async () => {
+
+                // =====================================
+                // VALIDATION
+                // =====================================
+
+                if (
+                    selectedPresent === null ||
+                    selectedPresent === undefined
+                ) {
+
+                    showToast(
+                        "Davomat holatini tanlang."
+                    );
+
+                    return;
+                }
+
+
+                saveButton.disabled =
+                    true;
+
+
+                saveButton.textContent =
+                    hasExisting
+                        ? "Yangilanmoqda..."
+                        : "Saqlanmoqda...";
+
+
+                try {
+
+                    // =================================
+                    // UPDATE EXISTING
+                    // =================================
+
+                    if (hasExisting) {
+
+                        if (!existing.id) {
+
+                            throw new Error(
+                                "Daily ID topilmadi."
+                            );
+                        }
+
+
+                        console.log(
+                            "UPDATE DAILY:",
+                            {
+                                id: existing.id,
+                                present: selectedPresent
+                            }
+                        );
+
+
+                        await api(
+                            "/api/daily",
+                            {
+                                method: "PUT",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body:
+                                    JSON.stringify({
+                                        id:
+                                        existing.id,
+
+                                        present:
+                                        selectedPresent
+                                    })
+                            }
+                        );
+
+
+                        showToast(
+                            "Davomat yangilandi."
+                        );
+
+                    }
+
+
+                        // =================================
+                        // CREATE NEW
+                    // =================================
+
+                    else {
+
+                        console.log(
+                            "CREATE DAILY:",
+                            {
+                                id: child.id,
+                                date: normalizedDate,
+                                isPresent: selectedPresent
+                            }
+                        );
+
+
+                        await api(
+                            "/api/daily",
+                            {
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body:
+                                    JSON.stringify([
+                                        {
+                                            id:
+                                            child.id,
+
+                                            date:
+                                            normalizedDate,
+
+                                            isPresent:
+                                            selectedPresent
+                                        }
+                                    ])
+                            }
+                        );
+
+
+                        showToast(
+                            "Davomat saqlandi."
+                        );
+                    }
+
+
+                    // =================================
+                    // CLOSE EDIT
+                    // =================================
+
+                    closeDailyEdit();
+
+
+                    // =================================
+                    // REOPEN HISTORY
+                    // =================================
+
+                    await openChildDaily(
+                        child,
+                        state,
+                        year,
+                        month
+                    );
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Daily save/update error:",
+                        error
+                    );
+
+
+                    saveButton.disabled =
+                        false;
+
+
+                    saveButton.textContent =
+                        hasExisting
+                            ? "Yangilash"
+                            : "Saqlash";
+
+
+                    showToast(
+                        hasExisting
+                            ? "Davomatni yangilashda xatolik."
+                            : "Davomatni saqlashda xatolik."
+                    );
+                }
+            }
+        );
+    }
+
+
+    // =================================================
+    // DELETE
+    // =================================================
+
+    const deleteButton =
+        modal.querySelector(
+            "#dailyDeleteBtn"
+        );
+
+
+    if (deleteButton) {
+
+        deleteButton.addEventListener(
+            "click",
+            async () => {
+
+                if (
+                    !existing ||
+                    !existing.id
+                ) {
+
+                    showToast(
+                        "Davomat ID topilmadi."
+                    );
+
+                    return;
+                }
+
+
+                const confirmed =
+                    confirm(
+                        `${
+                            formatUzbekDate(
+                                normalizedDate
+                            )
+                        } kunidagi davomatni o‘chirmoqchimisiz?`
+                    );
+
+
+                if (!confirmed) {
+                    return;
+                }
+
+
+                deleteButton.disabled =
+                    true;
+
+
+                deleteButton.textContent =
+                    "O‘chirilmoqda...";
+
+
+                try {
+
+                    console.log(
+                        "DELETE DAILY:",
+                        existing.id
+                    );
+
+
+                    await api(
+                        `/api/daily/${existing.id}`,
+                        {
+                            method: "DELETE"
+                        }
+                    );
+
+
+                    showToast(
+                        "Davomat o‘chirildi."
+                    );
+
+
+                    // ================================
+                    // CLOSE EDIT
+                    // ================================
+
+                    closeDailyEdit();
+
+
+                    // ================================
+                    // REOPEN HISTORY
+                    // ================================
+
+                    await openChildDaily(
+                        child,
+                        state,
+                        year,
+                        month
+                    );
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Delete daily error:",
+                        error
+                    );
+
+
+                    deleteButton.disabled =
+                        false;
+
+
+                    deleteButton.textContent =
+                        "🗑 O‘chirish";
+
+
+                    showToast(
+                        "Davomatni o‘chirishda xatolik."
+                    );
+                }
+            }
+        );
+    }
+
+
+    // =================================================
+    // ESC
+    // =================================================
+
+    modal._escapeHandler =
+        event => {
+
+            if (event.key !== "Escape") {
+                return;
+            }
+
+
+            closeDailyEdit();
+        };
+
+
+    document.addEventListener(
+        "keydown",
+        modal._escapeHandler
+    );
 }
 
 
@@ -206,124 +1471,77 @@ function renderChildDaily(
 ) {
 
     // =================================================
-    // MODAL
+    // REMOVE OLD HISTORY
     // =================================================
 
-    const modal =
-        $("#viewChildModal");
+    removeModal(
+        HISTORY_MODAL_ID
+    );
 
-    if (!modal) {
 
-        console.error(
-            "viewChildModal topilmadi"
-        );
+    // =================================================
+    // REMOVE OLD EDIT
+    // =================================================
 
-        return;
+    removeModal(
+        EDIT_MODAL_ID
+    );
 
+
+    // =================================================
+    // NORMALIZE
+    // =================================================
+
+    if (!Array.isArray(dailies)) {
+        dailies = [];
     }
-
-
-    // =================================================
-    // PROFILE CONTENT
-    // =================================================
-
-    const profile =
-        $("#viewChildProfileContent");
-
-    if (!profile) {
-
-        console.error(
-            "viewChildProfileContent topilmadi"
-        );
-
-        return;
-
-    }
-
-
-    // =================================================
-    // DAILY CONTENT
-    // =================================================
-
-    const dailyContent =
-        $("#viewChildDailyContent");
-
-    if (!dailyContent) {
-
-        console.error(
-            "viewChildDailyContent topilmadi"
-        );
-
-        return;
-
-    }
-
-
-    // =================================================
-    // PROFILE YASHIRAMIZ
-    // =================================================
-
-    profile.style.display =
-        "none";
-
-
-    // =================================================
-    // DAILY KO‘RSATAMIZ
-    // =================================================
-
-    dailyContent.style.display =
-        "block";
 
 
     // =================================================
     // DAILY MAP
     // =================================================
-    //
-    // Backend:
-    //
-    // {
-    //     id: 4,
-    //     date: "2026-09-03",
-    //     present: true,
-    //     childrenId: 2
-    // }
-    //
-    // =================================================
 
     const dailyMap =
-        new Map(
-            dailies.map(daily => [
+        new Map();
 
-                String(daily.date)
-                    .substring(0, 10),
 
-                daily.present
+    dailies.forEach(
+        daily => {
 
-            ])
-        );
+            if (!daily) {
+                return;
+            }
+
+
+            const date =
+                normalizeDate(
+                    daily.date
+                );
+
+
+            if (!date) {
+                return;
+            }
+
+
+            dailyMap.set(
+                date,
+                daily
+            );
+        }
+    );
 
 
     // =================================================
     // TODAY
     // =================================================
 
+    const todayDate =
+        getTodayDate();
+
+
     const now =
         new Date();
-
-
-    const todayDate = [
-
-        now.getFullYear(),
-
-        String(
-            now.getMonth() + 1
-        ).padStart(2, "0"),
-
-        String(
-            now.getDate()
-        ).padStart(2, "0")
-
-    ].join("-");
 
 
     const todayYear =
@@ -338,22 +1556,8 @@ function renderChildDaily(
     // MONTH NAMES
     // =================================================
 
-    const monthNames = [
-
-        "Yanvar",
-        "Fevral",
-        "Mart",
-        "Aprel",
-        "May",
-        "Iyun",
-        "Iyul",
-        "Avgust",
-        "Sentabr",
-        "Oktabr",
-        "Noyabr",
-        "Dekabr"
-
-    ];
+    const monthNames =
+        getMonthNames();
 
 
     // =================================================
@@ -375,6 +1579,7 @@ function renderChildDaily(
     let presentCount =
         0;
 
+
     let absentCount =
         0;
 
@@ -382,33 +1587,22 @@ function renderChildDaily(
     dailies.forEach(
         daily => {
 
-            const isPresent =
-                daily.present === true ||
-                daily.present === "true";
-
-
-            if (isPresent) {
+            if (
+                isPresentValue(daily)
+            ) {
 
                 presentCount++;
 
-            }
-
-            else if (
-                daily.present === false ||
-                daily.present === "false"
-            ) {
+            } else {
 
                 absentCount++;
-
             }
-
         }
     );
 
 
     const recordedCount =
-        presentCount +
-        absentCount;
+        dailies.length;
 
 
     // =================================================
@@ -418,18 +1612,16 @@ function renderChildDaily(
     let previousYear =
         year;
 
+
     let previousMonth =
         month - 1;
 
 
-    if (
-        previousMonth === 0
-    ) {
+    if (previousMonth === 0) {
 
         previousMonth = 12;
 
         previousYear--;
-
     }
 
 
@@ -440,18 +1632,16 @@ function renderChildDaily(
     let nextYear =
         year;
 
+
     let nextMonth =
         month + 1;
 
 
-    if (
-        nextMonth === 13
-    ) {
+    if (nextMonth === 13) {
 
         nextMonth = 1;
 
         nextYear++;
-
     }
 
 
@@ -465,7 +1655,7 @@ function renderChildDaily(
 
 
     // =================================================
-    // DAYS HTML
+    // ROWS
     // =================================================
 
     let rows =
@@ -478,176 +1668,126 @@ function renderChildDaily(
         day++
     ) {
 
-        // =============================================
-        // DATE
-        // =============================================
+        const date =
+            [
+                year,
 
-        const date = [
+                String(month)
+                    .padStart(2, "0"),
 
-            year,
+                String(day)
+                    .padStart(2, "0")
 
-            String(
-                month
-            ).padStart(2, "0"),
-
-            String(
-                day
-            ).padStart(2, "0")
-
-        ].join("-");
+            ].join("-");
 
 
-        // =============================================
-        // DAILY VALUE
-        // =============================================
-
-        const value =
+        const daily =
             dailyMap.get(date);
+
+
+        const isFuture =
+            date > todayDate;
 
 
         // =============================================
         // STATUS
         // =============================================
 
-        let rowClass =
-            "";
-
-        let statusText =
-            "";
-
-        let statusIcon =
-            "";
+        let statusType;
+        let statusText;
+        let statusIcon;
 
 
-        // =============================================
-        // PRESENT
-        // =============================================
-        //
-        // present = true
-        //
-        // Bugun bo‘lsa ham yashil chiqadi.
-        //
-        // =============================================
+        if (daily) {
 
-        if (
-            value === true ||
-            value === "true"
-        ) {
+            const present =
+                isPresentValue(daily);
 
-            rowClass =
-                "present";
+
+            statusType =
+                present
+                    ? "present"
+                    : "absent";
+
 
             statusText =
-                "Kelgan";
+                present
+                    ? "Keldi"
+                    : "Kelmagan";
+
 
             statusIcon =
-                "✓";
+                present
+                    ? "✓"
+                    : "✕";
 
-        }
+        } else if (isFuture) {
 
+            statusType =
+                "future";
 
-            // =============================================
-            // ABSENT
-            // =============================================
-            //
-            // present = false
-            //
-            // Bugun bo‘lsa ham qizil chiqadi.
-            //
-        // =============================================
-
-        else if (
-            value === false ||
-            value === "false"
-        ) {
-
-            rowClass =
-                "absent";
 
             statusText =
-                "Kelmagan";
+                "Hali kelmagan";
+
 
             statusIcon =
-                "✕";
+                "—";
 
-        }
+        } else {
 
-
-            // =============================================
-            // TODAY WITHOUT RECORD
-            // =============================================
-            //
-            // Bugun uchun hali daily yozilmagan.
-            //
-        // =============================================
-
-        else if (
-            date === todayDate
-        ) {
-
-            rowClass =
-                "today";
-
-            statusText =
-                "Bugun";
-
-            statusIcon =
-                "●";
-
-        }
-
-
-            // =============================================
-            // PAST WITHOUT RECORD
-        // =============================================
-
-        else if (
-            date < todayDate
-        ) {
-
-            rowClass =
+            statusType =
                 "not-recorded";
+
 
             statusText =
                 "Belgilanmagan";
 
-            statusIcon =
-                "—";
-
-        }
-
-
-            // =============================================
-            // FUTURE
-        // =============================================
-
-        else {
-
-            rowClass =
-                "future";
-
-            statusText =
-                "—";
 
             statusIcon =
                 "—";
-
         }
 
 
         // =============================================
-        // ROW HTML
+        // FUTURE DISABLED
         // =============================================
+
+        const disabled =
+            isFuture;
+
 
         rows += `
 
-            <div
-                class="daily-history-row ${rowClass}"
+            <button
+                type="button"
+
+                class="
+                    daily-history-row
+                    ${statusType}
+                    ${
+            disabled
+                ? "disabled"
+                : "clickable"
+        }
+                "
+
+                data-date="${date}"
+
+                ${
+            daily
+                ? `data-daily-id="${daily.id}"`
+                : ""
+        }
+
+                ${
+            disabled
+                ? "disabled"
+                : ""
+        }
             >
 
-                <div
-                    class="daily-history-date"
-                >
+                <div class="daily-history-date">
 
                     <strong>
                         ${day}
@@ -670,29 +1810,56 @@ function renderChildDaily(
                 </div>
 
 
-                <div
-                    class="daily-history-status"
-                >
+                <div class="daily-history-status">
 
-                    <span
-                        class="daily-status-dot"
-                    ></span>
+                    <span class="daily-status-dot"></span>
 
 
-                    <span>
+                    <span class="daily-status-text">
 
-                        ${statusIcon}
+                        <span class="daily-status-icon">
+                            ${statusIcon}
+                        </span>
 
                         ${statusText}
 
                     </span>
 
+
+                    ${
+            daily
+
+                ? `
+
+                                <span
+                                    class="daily-open-icon"
+                                    title="Davomatni tahrirlash"
+                                >
+                                    ›
+                                </span>
+
+                            `
+
+                : !isFuture
+
+                    ? `
+
+                                    <span
+                                        class="daily-open-icon"
+                                        title="Davomat kiritish"
+                                    >
+                                        ›
+                                    </span>
+
+                                `
+
+                    : ""
+        }
+
                 </div>
 
-            </div>
-
+            </button>
         `;
-
     }
 
 
@@ -702,301 +1869,388 @@ function renderChildDaily(
 
     const childName =
         `${child.firstName || ""} ${child.lastName || ""}`
-            .trim();
+            .trim() ||
+        "Noma'lum bola";
 
 
     // =================================================
-    // DAILY CONTENT
+    // CREATE HISTORY MODAL
     // =================================================
 
-    dailyContent.innerHTML = `
+    const modal =
+        document.createElement("div");
 
-        <div class="daily-history-header">
 
-            <div class="daily-history-title">
+    modal.id =
+        HISTORY_MODAL_ID;
 
-                <div class="daily-history-icon">
-                    📅
+
+    modal.className =
+        "daily-history-modal open";
+
+
+    modal.innerHTML = `
+
+        <div
+            class="daily-history-backdrop"
+            data-history-close
+        ></div>
+
+
+        <div
+            class="daily-history-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="dailyHistoryTitle"
+        >
+
+            <!-- HEADER -->
+
+            <div class="daily-history-header">
+
+                <div class="daily-history-title">
+
+                    <div class="daily-history-icon">
+                        📅
+                    </div>
+
+
+                    <div>
+
+                        <span class="daily-history-label">
+                            DAVOMAT
+                        </span>
+
+
+                        <h2 id="dailyHistoryTitle">
+                            Davomat tarixi
+                        </h2>
+
+
+                        <p>
+                            ${escapeHtml(childName)}
+                        </p>
+
+                    </div>
+
                 </div>
 
 
-                <div>
-
-                    <h2>
-                        Davomat tarixi
-                    </h2>
-
-
-                    <p>
-                        ${escapeHtml(childName)}
-                    </p>
-
-                </div>
+                <button
+                    type="button"
+                    class="daily-history-close"
+                    id="dailyHistoryCloseBtn"
+                    aria-label="Yopish"
+                >
+                    ×
+                </button>
 
             </div>
 
 
-            <button
-                type="button"
-                class="secondary-btn"
-                id="dailyHistoryBackBtn"
-            >
-                ← Bola ma'lumotlari
-            </button>
+            <!-- MONTH NAVIGATION -->
 
-        </div>
+            <div class="daily-month-navigation">
 
-
-        <!-- =========================================
-             MONTH NAVIGATION
-        ========================================== -->
-
-        <div class="daily-month-navigation">
-
-            <button
-                type="button"
-                class="daily-month-btn"
-                id="dailyPrevMonthBtn"
-            >
-                ‹
-            </button>
+                <button
+                    type="button"
+                    class="daily-month-btn"
+                    id="dailyPrevMonthBtn"
+                    title="Oldingi oy"
+                >
+                    ‹
+                </button>
 
 
-            <div
-                class="daily-month-current"
-            >
-
-                <strong>
-                    ${monthNames[month - 1]}
-                </strong>
-
-
-                <span>
-                    ${year}
-                </span>
-
-            </div>
-
-
-            <button
-                type="button"
-                class="daily-month-btn"
-                id="dailyNextMonthBtn"
-                ${isCurrentMonth ? "disabled" : ""}
-            >
-                ›
-            </button>
-
-        </div>
-
-
-        <!-- =========================================
-             STATISTICS
-        ========================================== -->
-
-        <div class="daily-statistics">
-
-
-            <div class="daily-stat-card present">
-
-                <div class="daily-stat-icon">
-                    ✓
-                </div>
-
-
-                <div>
-
-                    <strong>
-                        ${presentCount}
-                    </strong>
-
-
-                    <span>
-                        Kelgan
-                    </span>
-
-                </div>
-
-            </div>
-
-
-
-            <div class="daily-stat-card absent">
-
-                <div class="daily-stat-icon">
-                    ✕
-                </div>
-
-
-                <div>
-
-                    <strong>
-                        ${absentCount}
-                    </strong>
-
-
-                    <span>
-                        Kelmagan
-                    </span>
-
-                </div>
-
-            </div>
-
-
-
-            <div class="daily-stat-card recorded">
-
-                <div class="daily-stat-icon">
-                    #
-                </div>
-
-
-                <div>
-
-                    <strong>
-                        ${recordedCount}
-                    </strong>
-
-
-                    <span>
-                        Jami yozuv
-                    </span>
-
-                </div>
-
-            </div>
-
-
-        </div>
-
-
-        <!-- =========================================
-             DAYS
-        ========================================== -->
-
-        <div class="daily-history-month">
-
-            <div
-                class="daily-history-month-title"
-            >
-
-                <div>
+                <div class="daily-month-current">
 
                     <strong>
                         ${monthNames[month - 1]}
-                        ${year}
                     </strong>
 
 
                     <span>
-                        ${daysInMonth} kun
+                        ${year}
                     </span>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="daily-month-btn"
+                    id="dailyNextMonthBtn"
+                    title="Keyingi oy"
+
+                    ${
+        isCurrentMonth
+            ? "disabled"
+            : ""
+    }
+                >
+                    ›
+                </button>
+
+            </div>
+
+
+            <!-- STATISTICS -->
+
+            <div class="daily-statistics">
+
+                <div class="daily-stat-card present">
+
+                    <div class="daily-stat-icon">
+                        ✓
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            ${presentCount}
+                        </strong>
+
+
+                        <span>
+                            Kelgan
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="daily-stat-card absent">
+
+                    <div class="daily-stat-icon">
+                        ✕
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            ${absentCount}
+                        </strong>
+
+
+                        <span>
+                            Kelmagan
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="daily-stat-card recorded">
+
+                    <div class="daily-stat-icon">
+                        #
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            ${recordedCount}
+                        </strong>
+
+
+                        <span>
+                            Jami yozuv
+                        </span>
+
+                    </div>
 
                 </div>
 
             </div>
 
 
-            <div
-                class="daily-history-list"
-            >
+            <!-- DAYS -->
 
-                ${rows}
+            <div class="daily-history-month">
+
+                <div class="daily-history-month-title">
+
+                    <div>
+
+                        <strong>
+                            ${monthNames[month - 1]}
+                            ${year}
+                        </strong>
+
+
+                        <span>
+                            ${daysInMonth} kun
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="daily-history-list">
+
+                    ${
+        rows ||
+        `
+                            <div class="daily-empty">
+                                Davomat yozuvlari yo‘q.
+                            </div>
+                        `
+    }
+
+                </div>
 
             </div>
 
         </div>
-
     `;
 
 
-    // =====================================================
-    // BACK BUTTON
-    // =====================================================
+    // =================================================
+    // APPEND TO BODY
+    // =================================================
 
-    const backButton =
-        dailyContent.querySelector(
-            "#dailyHistoryBackBtn"
+    document.body.appendChild(
+        modal
+    );
+
+
+    // =================================================
+    // OPEN
+    // =================================================
+
+    modal.classList.add(
+        "open"
+    );
+
+
+    document.body.classList.add(
+        "daily-modal-open"
+    );
+
+
+    // =================================================
+    // CLOSE BUTTON
+    // =================================================
+
+    const closeButton =
+        modal.querySelector(
+            "#dailyHistoryCloseBtn"
         );
 
 
-    if (backButton) {
+    if (closeButton) {
 
-        backButton.addEventListener(
+        closeButton.addEventListener(
             "click",
-            async () => {
-
-                console.log(
-                    "Bola ma'lumotlariga qaytish"
-                );
-
-
-                // -----------------------------------------
-                // DAILY YASHIRISH
-                // -----------------------------------------
-
-                dailyContent.style.display =
-                    "none";
-
-
-                // -----------------------------------------
-                // PROFILE KO‘RSATISH
-                // -----------------------------------------
-
-                profile.style.display =
-                    "block";
-
-
-                // -----------------------------------------
-                // CHILD PROFILE
-                // -----------------------------------------
-
-                try {
-
-                    const {
-                        viewChild
-                    } = await import(
-                        "./children.js"
-                        );
-
-
-                    await viewChild(
-                        child.id,
-                        state
-                    );
-
-                } catch (error) {
-
-                    console.error(
-                        "View child error:",
-                        error
-                    );
-
-                    showToast(
-                        "Bola ma'lumotlarini olishda xatolik."
-                    );
-
-                }
-
-            }
+            closeDailyHistory
         );
-
-    } else {
-
-        console.error(
-            "dailyHistoryBackBtn topilmadi"
-        );
-
     }
 
 
-    // =====================================================
+    // =================================================
+    // BACKDROP
+    // =================================================
+
+    const backdrop =
+        modal.querySelector(
+            "[data-history-close]"
+        );
+
+
+    if (backdrop) {
+
+        backdrop.addEventListener(
+            "click",
+            closeDailyHistory
+        );
+    }
+
+
+    // =================================================
+    // DAY CLICK
+    // =================================================
+
+    const list =
+        modal.querySelector(
+            ".daily-history-list"
+        );
+
+
+    if (list) {
+
+        list.addEventListener(
+            "click",
+            async event => {
+
+                const button =
+                    event.target.closest(
+                        ".daily-history-row"
+                    );
+
+
+                if (!button) {
+                    return;
+                }
+
+
+                if (
+                    button.disabled ||
+                    button.classList.contains("disabled")
+                ) {
+
+                    return;
+                }
+
+
+                const date =
+                    button.dataset.date;
+
+
+                const dailyId =
+                    button.dataset.dailyId;
+
+
+                const daily =
+                    dailyId
+                        ? dailyMap.get(date)
+                        : null;
+
+
+                console.log(
+                    "DAILY CLICK:",
+                    {
+                        date,
+                        dailyId,
+                        daily
+                    }
+                );
+
+
+                await openDailyDetail(
+                    child,
+                    daily,
+                    date,
+                    state,
+                    year,
+                    month
+                );
+            }
+        );
+    }
+
+
+    // =================================================
     // PREVIOUS MONTH
-    // =====================================================
+    // =================================================
 
     const previousButton =
-        dailyContent.querySelector(
+        modal.querySelector(
             "#dailyPrevMonthBtn"
         );
 
@@ -1008,29 +2262,22 @@ function renderChildDaily(
             async () => {
 
                 await openChildDaily(
-
                     child,
-
                     state,
-
                     previousYear,
-
                     previousMonth
-
                 );
-
             }
         );
-
     }
 
 
-    // =====================================================
+    // =================================================
     // NEXT MONTH
-    // =====================================================
+    // =================================================
 
     const nextButton =
-        dailyContent.querySelector(
+        modal.querySelector(
             "#dailyNextMonthBtn"
         );
 
@@ -1041,39 +2288,53 @@ function renderChildDaily(
             "click",
             async () => {
 
-                if (
-                    isCurrentMonth
-                ) {
-
+                if (isCurrentMonth) {
                     return;
-
                 }
 
 
                 await openChildDaily(
-
                     child,
-
                     state,
-
                     nextYear,
-
                     nextMonth
-
                 );
-
             }
         );
-
     }
 
 
-    // =====================================================
-    // OPEN MODAL
-    // =====================================================
+    // =================================================
+    // ESC
+    // =================================================
 
-    openModal(
-        "viewChildModal"
+    modal._escapeHandler =
+        event => {
+
+            if (event.key !== "Escape") {
+                return;
+            }
+
+
+            const editModal =
+                document.getElementById(
+                    EDIT_MODAL_ID
+                );
+
+
+            if (editModal) {
+
+                closeDailyEdit();
+
+            } else {
+
+                closeDailyHistory();
+            }
+        };
+
+
+    document.addEventListener(
+        "keydown",
+        modal._escapeHandler
     );
-
 }

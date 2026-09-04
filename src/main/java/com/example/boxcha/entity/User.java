@@ -1,6 +1,7 @@
 package com.example.boxcha.entity;
 
 import com.example.boxcha.entity.base.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -19,6 +20,7 @@ import java.util.List;
 @Table(name="users")
 public class User extends BaseEntity implements UserDetails {
     private String email;
+    @JsonIgnore
     private String password;
     private String firstName;
     private String lastName;

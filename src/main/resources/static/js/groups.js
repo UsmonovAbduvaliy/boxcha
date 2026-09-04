@@ -4,6 +4,7 @@ import {
     $,
     escapeHtml,
     initials,
+    genderText,
     showToast
 } from "./utils.js";
 
@@ -25,6 +26,13 @@ import {
 export async function loadGroupsPage(state) {
 
     const el = $("#groupsPage");
+
+    // Returning to the list via the sidebar can leave the detail view open;
+    // make sure the list is visible and any stale detail is hidden.
+    const detailsView = $("#groupDetailsPage");
+
+    el.style.display = "";
+    if (detailsView) detailsView.style.display = "none";
 
     el.innerHTML = `
         <div class="empty-state">
@@ -476,7 +484,7 @@ export function renderGroupDetails(
                                             <span>
 
                                                 ${escapeHtml(
-                    child.gender || "—"
+                    genderText(child.gender)
                 )}
 
                                             </span>

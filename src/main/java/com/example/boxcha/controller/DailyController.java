@@ -50,4 +50,17 @@ public class DailyController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteDaily(@PathVariable Long id) {
+
+        boolean deleted =
+                dailyService.deleteDaily(id);
+
+        if (!deleted) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
 }
