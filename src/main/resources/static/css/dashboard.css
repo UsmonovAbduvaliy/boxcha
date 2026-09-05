@@ -1,0 +1,483 @@
+/* =========================================================
+   BOXCHA — DASHBOARD
+   ========================================================= */
+
+
+/* =========================================================
+   STATS
+   ========================================================= */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+
+    margin-bottom: 18px;
+}
+
+.stat-card {
+    position: relative;
+
+    min-height: 125px;
+
+    padding: 20px;
+
+    border: 1px solid #e9eaf0;
+    border-radius: 18px;
+
+    background: #ffffff;
+
+    overflow: hidden;
+
+    transition:
+            transform .2s ease,
+            box-shadow .2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(25, 29, 48, .06);
+}
+
+.stat-card strong {
+    display: block;
+
+    margin-top: 15px;
+
+    font-size: 27px;
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+.stat-card span {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #4d5261;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.stat-card small {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #a1a5b1;
+    font-size: 11px;
+}
+
+.stat-icon {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    font-size: 18px;
+}
+
+.stat-icon.purple {
+    background: #efedff;
+    color: #6559e9;
+}
+
+.stat-icon.blue {
+    background: #eaf4ff;
+    color: #3989e9;
+}
+
+.stat-icon.green {
+    background: #eaf9f1;
+    color: #2ca66d;
+}
+
+.stat-icon.orange {
+    background: #fff3e7;
+    color: #ec913d;
+}
+
+
+/* =========================================================
+   DASHBOARD PANELS
+   ========================================================= */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(300px, .8fr);
+    gap: 18px;
+}
+
+.panel {
+    padding: 20px;
+
+    border: 1px solid #e9eaf0;
+    border-radius: 18px;
+
+    background: #ffffff;
+}
+
+.panel-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    margin-bottom: 18px;
+}
+
+.panel-head h2 {
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.panel-head p {
+    margin-top: 4px;
+
+    color: #969aa7;
+    font-size: 12px;
+}
+
+.text-btn {
+    color: #6155e9;
+
+    background: transparent;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.text-btn:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================================================
+   GROUP LIST
+   ========================================================= */
+
+.group-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.group-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 12px 0;
+
+    border-bottom: 1px solid #f0f1f4;
+}
+
+.group-row:last-child {
+    border-bottom: 0;
+}
+
+.group-symbol {
+    width: 39px;
+    height: 39px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 12px;
+
+    background: #f0efff;
+    color: #6256e8;
+
+    font-weight: 800;
+}
+
+.group-row strong {
+    display: block;
+
+    font-size: 13px;
+}
+
+.group-row small {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #989daa;
+    font-size: 11px;
+}
+
+.group-count {
+    margin-left: auto;
+
+    color: #777c8a;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.group-bar {
+    width: 90px;
+    height: 5px;
+
+    overflow: hidden;
+
+    border-radius: 10px;
+
+    background: #f0f1f5;
+}
+
+.group-bar i {
+    display: block;
+
+    height: 100%;
+
+    border-radius: inherit;
+
+    background: #7569ed;
+}
+
+
+/* =========================================================
+   CALENDAR
+   ========================================================= */
+
+.calendar-date {
+    display: flex;
+    gap: 7px;
+
+    overflow-x: auto;
+
+    padding-bottom: 5px;
+}
+
+.date-pill {
+    min-width: 48px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 9px 7px;
+
+    border: 1px solid #ececf1;
+    border-radius: 11px;
+
+    background: #fff;
+
+    color: #858a98;
+
+    font-size: 10px;
+
+    transition: .2s ease;
+}
+
+.date-pill strong {
+    margin-top: 4px;
+
+    color: #252936;
+
+    font-size: 13px;
+}
+
+.date-pill.active {
+    border-color: #6b5fe9;
+    background: #6b5fe9;
+    color: #fff;
+}
+
+.date-pill.active strong {
+    color: #fff;
+}
+
+
+/* =========================================================
+   SCHEDULE
+   ========================================================= */
+
+.schedule {
+    display: flex;
+    flex-direction: column;
+}
+
+.schedule > div {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 11px 0;
+
+    border-bottom: 1px solid #f0f1f4;
+}
+
+.schedule > div:last-child {
+    border-bottom: 0;
+}
+
+.schedule time {
+    width: 48px;
+
+    color: #7d8290;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.schedule span {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   UPDATES
+   ========================================================= */
+
+.updates-panel {
+    grid-column: 1 / -1;
+}
+
+.updates-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.update-item {
+    display: grid;
+    grid-template-columns: 38px 1fr auto;
+    gap: 11px;
+
+    align-items: center;
+
+    padding: 12px 0;
+
+    border-bottom: 1px solid #f0f1f4;
+}
+
+.update-item:last-child {
+    border-bottom: 0;
+}
+
+.update-icon {
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: #f1efff;
+    color: #6256e8;
+}
+
+.update-item strong {
+    display: block;
+
+    font-size: 12px;
+}
+
+.update-item span {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #9499a6;
+    font-size: 11px;
+}
+
+.update-item time {
+    color: #a2a6b0;
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   REMINDER
+   ========================================================= */
+
+.reminder-panel {
+    min-height: 180px;
+}
+
+.empty-reminder {
+    min-height: 130px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+.reminder-icon {
+    width: 45px;
+    height: 45px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 10px;
+
+    border-radius: 14px;
+
+    background: #f4f3ff;
+    color: #685ce9;
+}
+
+.empty-reminder b {
+    font-size: 13px;
+}
+
+.empty-reminder span {
+    margin-top: 4px;
+
+    color: #989da9;
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   SKELETON LOADING
+   ========================================================= */
+
+.skeleton-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.skeleton-list > div {
+    height: 45px;
+
+    border-radius: 10px;
+
+    background: linear-gradient(
+            90deg,
+            #f0f1f4,
+            #fafafa,
+            #f0f1f4
+    );
+
+    background-size: 200% 100%;
+
+    animation: load 1.4s infinite;
+}
+
+@keyframes load {
+    from {
+        background-position: 200% 0;
+    }
+
+    to {
+        background-position: -200% 0;
+    }
+}

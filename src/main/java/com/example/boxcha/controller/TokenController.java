@@ -1,6 +1,5 @@
 package com.example.boxcha.controller;
 
-import com.example.boxcha.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

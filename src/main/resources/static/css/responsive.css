@@ -1,0 +1,631 @@
+/* =========================================================
+   BOXCHA — RESPONSIVE
+   ========================================================= */
+
+
+/* =========================================================
+   900px
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .main {
+        width: calc(100% - 210px);
+        margin-left: 210px;
+    }
+
+    .sidebar {
+        width: 210px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .updates-panel {
+        grid-column: auto;
+    }
+
+    .cards-grid,
+    .people-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .group-detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .group-child-meta {
+        display: none;
+    }
+}
+
+
+/* =========================================================
+   680px
+   ========================================================= */
+
+@media (max-width: 680px) {
+
+    /* =========================
+       MOBILE SIDEBAR
+       ========================= */
+
+    .sidebar {
+        top: auto;
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        width: 100%;
+        height: auto;
+
+        flex-direction: row;
+        align-items: center;
+        gap: 4px;
+
+        padding: 7px 8px calc(7px + env(safe-area-inset-bottom, 0px));
+
+        border-right: 0;
+        border-top: 1px solid #e8eaf0;
+
+        box-shadow: 0 -6px 22px rgba(20, 24, 40, .07);
+    }
+
+    .brand {
+        display: none;
+    }
+
+    .side-nav {
+        flex: 1;
+        flex-direction: row;
+        justify-content: space-between;
+
+        gap: 2px;
+    }
+
+    .nav-item {
+        flex: 1;
+        flex-direction: column;
+        gap: 3px;
+
+        padding: 7px 2px;
+
+        border-radius: 12px;
+
+        font-size: 9.5px;
+    }
+
+    .nav-item span:last-child {
+        display: block;
+
+        overflow: hidden;
+
+        max-width: 100%;
+
+        font-size: 9.5px;
+        line-height: 1;
+
+        text-overflow: ellipsis;
+    }
+
+    .nav-icon {
+        font-size: 19px;
+    }
+
+    .sidebar-bottom {
+        margin-top: 0;
+
+        display: flex;
+        align-items: center;
+    }
+
+    .profile-mini {
+        display: none;
+    }
+
+    .logout-btn {
+        flex-direction: column;
+        gap: 3px;
+
+        padding: 7px 9px;
+
+        font-size: 9.5px;
+    }
+
+    .logout-btn span {
+        font-size: 19px;
+    }
+
+    .logout-btn::before {
+        display: none;
+    }
+
+
+    /* =========================
+       MAIN
+       ========================= */
+
+    .main {
+        width: 100%;
+
+        margin-left: 0;
+
+        padding: 16px 15px calc(80px + env(safe-area-inset-bottom, 0px));
+    }
+
+
+    /* =========================
+       TOPBAR
+       ========================= */
+
+    .topbar {
+        margin-bottom: 19px;
+    }
+
+    .topbar h1 {
+        font-size: 21px;
+    }
+
+    .topbar p {
+        font-size: 11px;
+    }
+
+    .top-actions,
+    .top-profile {
+        display: none;
+    }
+
+    .mobile-brand {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .mobile-brand .brand-mark {
+        width: 33px;
+        height: 33px;
+
+        border-radius: 10px;
+    }
+
+
+    /* =========================
+       DASHBOARD
+       ========================= */
+
+    .stats-grid {
+        gap: 10px;
+    }
+
+    .stat-card {
+        min-height: 110px;
+
+        padding: 15px;
+    }
+
+    .stat-icon {
+        width: 37px;
+        height: 37px;
+    }
+
+    .stat-card strong {
+        margin-top: 10px;
+
+        font-size: 23px;
+    }
+
+    .dashboard-grid {
+        gap: 11px;
+    }
+
+    .panel {
+        padding: 15px;
+    }
+
+    .updates-list {
+        gap: 2px;
+    }
+
+
+    /* =========================
+       TOOLBAR
+       ========================= */
+
+    .section-toolbar {
+        align-items: stretch;
+        flex-direction: column;
+
+        gap: 11px;
+    }
+
+    .section-toolbar h2 {
+        font-size: 18px;
+    }
+
+    .toolbar-actions {
+        width: 100%;
+    }
+
+    .search-input {
+        width: 100%;
+    }
+
+    .select-input {
+        flex: 1;
+    }
+
+
+    /* =========================
+       CARDS
+       ========================= */
+
+    .cards-grid,
+    .people-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .person-actions {
+        flex-wrap: wrap;
+    }
+
+    .small-btn {
+        flex: 1;
+    }
+
+
+    /* =========================
+       FORMS
+       ========================= */
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid .full {
+        grid-column: auto;
+    }
+
+
+    /* =========================
+       MODALS
+       ========================= */
+
+    .modal {
+        padding: 12px;
+    }
+
+    .modal-box {
+        max-height: calc(100vh - 24px);
+
+        padding: 17px;
+
+        border-radius: 17px;
+    }
+
+    .modal-box h2 {
+        font-size: 17px;
+    }
+
+
+    /* =========================
+       TEACHER / CHILD
+       ========================= */
+
+    .teacher-view-info {
+        grid-template-columns: 1fr;
+    }
+
+    .teacher-view-info > div.full {
+        grid-column: auto;
+    }
+
+    .teacher-view-actions {
+        flex-direction: column;
+    }
+
+
+    /* =========================
+       OTHERS
+       ========================= */
+
+    .other-view-info {
+        grid-template-columns: 1fr;
+    }
+
+    .other-view-info .full {
+        grid-column: auto;
+    }
+
+
+    /* =========================
+       GROUP
+       ========================= */
+
+    .group-detail-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+
+    /* =========================
+       ATTENDANCE
+       ========================= */
+
+    .attendance-child-item {
+        padding: 10px;
+    }
+
+    .attendance-toggle {
+        min-width: 85px;
+
+        padding: 0 8px;
+    }
+
+    .attendance-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .attendance-counter {
+        align-self: flex-start;
+    }
+
+    .attendance-list {
+        gap: 7px;
+    }
+
+    .attendance-footer {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .attendance-finish-btn {
+        width: 100%;
+    }
+
+
+    /* =========================
+       DAILY
+       ========================= */
+
+    .daily-history-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .daily-month-navigation {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .daily-month-current {
+        flex: 1;
+    }
+
+    .daily-statistics {
+        grid-template-columns: 1fr;
+    }
+
+    .daily-history-row {
+        grid-template-columns: 1fr auto;
+    }
+
+    .daily-history-status {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+    }
+
+    .daily-history-row .small-btn {
+        grid-column: 1 / -1;
+    }
+
+    .daily-history-modal,
+    .daily-edit-modal {
+        padding: 10px;
+    }
+
+    .daily-history-dialog {
+        max-height: calc(100vh - 20px);
+
+        border-radius: 17px;
+    }
+
+    .daily-history-topbar {
+        padding: 14px;
+    }
+
+    .daily-history-body {
+        padding: 14px;
+    }
+
+    .daily-edit-dialog {
+        border-radius: 17px;
+    }
+
+    .daily-edit-header {
+        padding: 14px;
+    }
+
+    .daily-edit-body {
+        padding: 14px;
+    }
+}
+
+
+/* =========================================================
+   420px
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+    .main {
+        padding-left: 11px;
+        padding-right: 11px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 9px;
+    }
+
+    .stat-card {
+        min-height: 92px;
+
+        padding: 13px;
+    }
+
+    .stat-card strong {
+        margin-top: 8px;
+
+        font-size: 20px;
+    }
+
+    .stat-icon {
+        width: 33px;
+        height: 33px;
+
+        font-size: 16px;
+    }
+
+
+    /* PEOPLE */
+
+    .person-meta {
+        flex-direction: column;
+        align-items: stretch;
+
+        gap: 11px;
+    }
+
+    .person-meta .status {
+        align-self: flex-start;
+    }
+
+    .person-meta .person-actions {
+        justify-content: flex-start;
+    }
+
+
+    /* OTHERS */
+
+    .other-view-status-row {
+        margin-top: 9px;
+    }
+
+
+    /* ATTENDANCE */
+
+    .attendance-child-item {
+        align-items: flex-start;
+    }
+
+    .attendance-child-info {
+        padding-top: 2px;
+    }
+
+    .attendance-toggle {
+        min-width: 75px;
+
+        font-size: 9px;
+    }
+
+    .attendance-header-left {
+        align-items: flex-start;
+    }
+
+
+    /* DAILY */
+
+    .daily-history-row {
+        padding: 10px;
+    }
+
+    .daily-history-date strong {
+        font-size: 11px;
+    }
+
+    .daily-history-status {
+        padding: 5px 7px;
+
+        font-size: 8px;
+    }
+
+    .daily-edit-status-options {
+        grid-template-columns: 1fr;
+    }
+
+    .daily-edit-actions {
+        flex-wrap: wrap;
+    }
+
+    .daily-edit-btn.delete {
+        width: 100%;
+        margin-right: 0;
+    }
+
+    .daily-edit-btn.cancel,
+    .daily-edit-btn.save {
+        flex: 1;
+    }
+
+
+    /* TOAST */
+
+    .toast {
+        left: 11px;
+        right: 11px;
+
+        min-width: auto;
+        max-width: none;
+    }
+
+
+    /* DAILY DELETE */
+
+    .daily-edit-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .daily-delete-btn {
+        width: 100%;
+    }
+
+    .daily-edit-actions {
+        width: 100%;
+    }
+
+    .daily-edit-actions button {
+        flex: 1;
+    }
+}
+
+
+/* =========================================================
+   600px
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .daily-edit-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .daily-delete-btn {
+        width: 100%;
+    }
+
+    .daily-edit-actions {
+        width: 100%;
+    }
+
+    .daily-edit-actions button {
+        flex: 1;
+    }
+}

@@ -1,0 +1,693 @@
+/* =========================================================
+   BOXCHA — OTHERS
+   Premium animated UI
+   ========================================================= */
+
+.other-view {
+    padding-top: 5px;
+
+    animation: otherViewEnter 0.35s ease both;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.other-view-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    padding: 4px 2px 17px;
+
+    border-bottom: 1px solid #eff0f3;
+
+    animation: otherHeaderEnter 0.4s ease both;
+}
+
+
+/* =========================================================
+   AVATAR
+   ========================================================= */
+
+.other-view-avatar {
+    position: relative;
+
+    width: 55px;
+    height: 55px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 16px;
+
+    background:
+            linear-gradient(
+                    135deg,
+                    #f1efff 0%,
+                    #e8e5ff 100%
+            );
+
+    color: #6155e8;
+
+    font-size: 17px;
+    font-weight: 800;
+
+    box-shadow:
+            0 8px 22px rgba(97, 85, 232, 0.12);
+
+    transition:
+            transform 0.25s cubic-bezier(.2,.8,.2,1),
+            box-shadow 0.25s ease,
+            border-radius 0.25s ease;
+}
+
+.other-view-avatar::after {
+    content: "";
+
+    position: absolute;
+
+    inset: -4px;
+
+    border-radius: 20px;
+
+    border: 1px solid rgba(97, 85, 232, 0.12);
+
+    opacity: 0;
+
+    transform: scale(0.8);
+
+    transition:
+            opacity 0.25s ease,
+            transform 0.25s ease;
+}
+
+.other-view-header:hover .other-view-avatar {
+    transform:
+            translateY(-2px)
+            rotate(-2deg);
+
+    border-radius: 18px;
+
+    box-shadow:
+            0 12px 28px rgba(97, 85, 232, 0.18);
+}
+
+.other-view-header:hover .other-view-avatar::after {
+    opacity: 1;
+
+    transform: scale(1);
+}
+
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+.other-view-title {
+    flex: 1;
+
+    min-width: 0;
+}
+
+.other-view-title h3 {
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.25;
+
+    color: #202534;
+
+    transition:
+            color 0.2s ease,
+            transform 0.2s ease;
+}
+
+.other-view-header:hover .other-view-title h3 {
+    color: #6155e8;
+
+    transform: translateX(2px);
+}
+
+.other-view-title p {
+    margin-top: 5px;
+
+    color: #999da8;
+
+    font-size: 10px;
+    line-height: 1.4;
+
+    transition:
+            color 0.2s ease;
+}
+
+.other-view-header:hover .other-view-title p {
+    color: #7d8290;
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.other-view-status-row {
+    margin-top: 5px;
+
+    animation: otherStatusEnter 0.5s ease 0.08s both;
+}
+
+
+/* =========================================================
+   INFO GRID
+   ========================================================= */
+
+.other-view-info {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 11px;
+
+    margin-top: 17px;
+
+    animation: otherInfoEnter 0.45s ease 0.1s both;
+}
+
+.other-view-info > div {
+    position: relative;
+
+    min-width: 0;
+
+    padding: 13px;
+
+    overflow: hidden;
+
+    border: 1px solid transparent;
+
+    border-radius: 13px;
+
+    background:
+            linear-gradient(
+                    145deg,
+                    #fafafd,
+                    #f7f7fa
+            );
+
+    box-shadow:
+            0 3px 10px rgba(25, 30, 45, 0.025);
+
+    transition:
+            transform 0.25s cubic-bezier(.2,.8,.2,1),
+            background 0.25s ease,
+            border-color 0.25s ease,
+            box-shadow 0.25s ease;
+}
+
+
+/* Shine effect */
+
+.other-view-info > div::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: -120%;
+
+    width: 80%;
+    height: 100%;
+
+    background:
+            linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(255,255,255,0.65),
+                    transparent
+            );
+
+    transform: skewX(-18deg);
+
+    transition: left 0.55s ease;
+}
+
+.other-view-info > div:hover::before {
+    left: 140%;
+}
+
+.other-view-info > div:hover {
+    transform: translateY(-3px);
+
+    background: #ffffff;
+
+    border-color: rgba(97, 85, 232, 0.10);
+
+    box-shadow:
+            0 10px 25px rgba(25, 30, 45, 0.07);
+}
+
+
+/* =========================================================
+   INFO LABEL
+   ========================================================= */
+
+.other-view-info label {
+    display: block;
+
+    color: #a1a5af;
+
+    font-size: 9px;
+    font-weight: 600;
+
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+
+    transition:
+            color 0.2s ease;
+}
+
+.other-view-info > div:hover label {
+    color: #777c8a;
+}
+
+
+/* =========================================================
+   INFO VALUE
+   ========================================================= */
+
+.other-view-info strong {
+    display: block;
+
+    margin-top: 5px;
+
+    color: #252a38;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    line-height: 1.4;
+
+    word-break: break-word;
+
+    transition:
+            color 0.2s ease,
+            transform 0.2s ease;
+}
+
+.other-view-info > div:hover strong {
+    color: #6155e8;
+
+    transform: translateX(2px);
+}
+
+
+/* FULL WIDTH INFO */
+
+.other-view-info .full {
+    grid-column: 1 / -1;
+}
+
+
+/* =========================================================
+   ACTION BUTTONS
+   ========================================================= */
+
+.other-view-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    margin-top: 19px;
+
+    animation: otherActionsEnter 0.45s ease 0.16s both;
+}
+
+
+/* =========================================================
+   ALL BUTTONS
+   ========================================================= */
+
+.other-view-actions button {
+    position: relative;
+
+    min-height: 42px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    padding: 0 16px;
+
+    border: 1px solid transparent;
+
+    border-radius: 12px;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    overflow: hidden;
+
+    outline: none;
+
+    transition:
+            transform 0.18s cubic-bezier(.2,.8,.2,1),
+            box-shadow 0.22s ease,
+            background 0.22s ease,
+            border-color 0.22s ease,
+            color 0.22s ease,
+            opacity 0.2s ease;
+}
+
+
+/* Button shine */
+
+.other-view-actions button::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: -120%;
+
+    width: 70%;
+    height: 100%;
+
+    background:
+            linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(255,255,255,0.28),
+                    transparent
+            );
+
+    transform: skewX(-20deg);
+
+    transition: left 0.5s ease;
+}
+
+.other-view-actions button:hover::before {
+    left: 140%;
+}
+
+
+/* Button press */
+
+.other-view-actions button:active {
+    transform: scale(0.96);
+}
+
+
+/* =========================================================
+   PRIMARY BUTTON
+   ========================================================= */
+
+.other-view-actions .primary-btn {
+    color: #ffffff;
+
+    background:
+            linear-gradient(
+                    135deg,
+                    #6b5cf1,
+                    #5848dc
+            );
+
+    box-shadow:
+            0 7px 18px rgba(97, 85, 232, 0.22);
+}
+
+.other-view-actions .primary-btn:hover {
+    transform: translateY(-2px);
+
+    background:
+            linear-gradient(
+                    135deg,
+                    #7567f5,
+                    #5b4be0
+            );
+
+    box-shadow:
+            0 11px 26px rgba(97, 85, 232, 0.30);
+}
+
+.other-view-actions .primary-btn:active {
+    transform: translateY(0) scale(0.97);
+
+    box-shadow:
+            0 5px 12px rgba(97, 85, 232, 0.20);
+}
+
+
+/* =========================================================
+   SECONDARY BUTTON
+   ========================================================= */
+
+.other-view-actions .secondary-btn {
+    color: #555b6b;
+
+    background: #f3f4f7;
+
+    border-color: #e9eaf0;
+
+    box-shadow:
+            0 3px 9px rgba(20, 25, 35, 0.03);
+}
+
+.other-view-actions .secondary-btn:hover {
+    color: #353a48;
+
+    background: #ffffff;
+
+    border-color: #dfe1e8;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+            0 9px 20px rgba(20, 25, 35, 0.08);
+}
+
+.other-view-actions .secondary-btn:active {
+    transform: translateY(0) scale(0.97);
+}
+
+
+/* =========================================================
+   DANGER BUTTON
+   Agar delete button bo'lsa
+   ========================================================= */
+
+.other-view-actions .danger-btn {
+    color: #d84d5c;
+
+    background: #fff2f3;
+
+    border-color: #ffe0e3;
+}
+
+.other-view-actions .danger-btn:hover {
+    color: #ffffff;
+
+    background:
+            linear-gradient(
+                    135deg,
+                    #ef6674,
+                    #d94b5a
+            );
+
+    border-color: transparent;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+            0 10px 23px rgba(220, 76, 91, 0.22);
+}
+
+.other-view-actions .danger-btn:active {
+    transform: translateY(0) scale(0.97);
+}
+
+
+/* =========================================================
+   DISABLED BUTTON
+   ========================================================= */
+
+.other-view-actions button:disabled {
+    opacity: 0.55;
+
+    cursor: not-allowed;
+
+    transform: none !important;
+
+    box-shadow: none !important;
+}
+
+
+/* =========================================================
+   FOCUS ACCESSIBILITY
+   ========================================================= */
+
+.other-view-actions button:focus-visible {
+    box-shadow:
+            0 0 0 4px rgba(97, 85, 232, 0.14);
+}
+
+
+/* =========================================================
+   ENTRY ANIMATIONS
+   ========================================================= */
+
+@keyframes otherViewEnter {
+    from {
+        opacity: 0;
+
+        transform:
+                translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+                translateY(0);
+    }
+}
+
+
+@keyframes otherHeaderEnter {
+    from {
+        opacity: 0;
+
+        transform:
+                translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+                translateY(0);
+    }
+}
+
+
+@keyframes otherStatusEnter {
+    from {
+        opacity: 0;
+
+        transform:
+                scale(0.94);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+                scale(1);
+    }
+}
+
+
+@keyframes otherInfoEnter {
+    from {
+        opacity: 0;
+
+        transform:
+                translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+                translateY(0);
+    }
+}
+
+
+@keyframes otherActionsEnter {
+    from {
+        opacity: 0;
+
+        transform:
+                translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+                translateY(0);
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .other-view-header {
+        gap: 11px;
+    }
+
+    .other-view-avatar {
+        width: 50px;
+        height: 50px;
+
+        border-radius: 14px;
+    }
+
+    .other-view-title h3 {
+        font-size: 15px;
+    }
+
+    .other-view-info {
+        grid-template-columns: 1fr;
+
+        gap: 9px;
+    }
+
+    .other-view-info .full {
+        grid-column: auto;
+    }
+
+    .other-view-actions {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+    .other-view-actions button {
+        width: 100%;
+    }
+}
+
+
+/* =========================================================
+   REDUCE MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .other-view,
+    .other-view-header,
+    .other-view-status-row,
+    .other-view-info,
+    .other-view-actions {
+        animation: none !important;
+    }
+
+    .other-view-avatar,
+    .other-view-info > div,
+    .other-view-actions button {
+        transition: none !important;
+    }
+}

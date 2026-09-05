@@ -1,4 +1,9 @@
-import { api } from "./api.js";
+import {
+    api,
+    currentUser,
+    isTeacher,
+    isAdmin
+} from "./api.js";
 
 import {
     $,
@@ -27,12 +32,14 @@ export async function loadGroupsPage(state) {
 
     const el = $("#groupsPage");
 
-    // Returning to the list via the sidebar can leave the detail view open;
-    // make sure the list is visible and any stale detail is hidden.
-    const detailsView = $("#groupDetailsPage");
+    const detailsView =
+        $("#groupDetailsPage");
 
     el.style.display = "";
-    if (detailsView) detailsView.style.display = "none";
+
+    if (detailsView) {
+        detailsView.style.display = "none";
+    }
 
     el.innerHTML = `
         <div class="empty-state">
@@ -42,11 +49,46 @@ export async function loadGroupsPage(state) {
 
     try {
 
-        state.groups =
+        const allGroups =
             await api("/api/group") || [];
+
+
+        // ========================================
+        // TEACHER
+        // FAQAT O'ZIGA BIRIKTIRILGAN GURUHLAR
+        // ========================================
+
+        if (isTeacher()) {
+
+            const user =
+                currentUser();
+
+
+            state.groups =
+                allGroups.filter(
+                    group =>
+                        Number(group.teacherId) ===
+                        Number(user.id)
+                );
+
+        } else {
+
+            // ADMIN + DOCTOR
+            // BARCHA GURUHLAR
+
+            state.groups =
+                allGroups;
+
+        }
+
+
+        // ========================================
+        // DASHBOARD STATISTICS
+        // ========================================
 
         const stats =
             state.dashboard?.groups || [];
+
 
         const map =
             new Map(
@@ -57,12 +99,20 @@ export async function loadGroupsPage(state) {
             );
 
 
+        // ========================================
+        // RENDER GROUPS
+        // ========================================
+
         el.innerHTML =
             state.groups.length
+
                 ? state.groups.map(g => {
 
                     const stat =
-                        map.get(String(g.id));
+                        map.get(
+                            String(g.id)
+                        );
+
 
                     return `
                         <article
@@ -117,6 +167,7 @@ export async function loadGroupsPage(state) {
 
                 }).join("")
 
+
                 : `
                     <div class="empty-state">
                         Guruhlar mavjud emas.
@@ -129,7 +180,9 @@ export async function loadGroupsPage(state) {
         // ========================================
 
         document
-            .querySelectorAll("[data-group-id]")
+            .querySelectorAll(
+                "#groupsPage [data-group-id]"
+            )
             .forEach(card => {
 
                 card.addEventListener(
@@ -140,6 +193,7 @@ export async function loadGroupsPage(state) {
                             Number(
                                 card.dataset.groupId
                             );
+
 
                         openGroup(
                             id,
@@ -159,12 +213,15 @@ export async function loadGroupsPage(state) {
             e
         );
 
+
         el.innerHTML = `
             <div class="empty-state">
                 Guruhlarni olishda xatolik.
             </div>
         `;
+
     }
+
 }
 
 
@@ -180,6 +237,7 @@ export async function openGroup(
     const groupsPage =
         $("#groupsPage");
 
+
     const groupDetailsPage =
         $("#groupDetailsPage");
 
@@ -191,11 +249,13 @@ export async function openGroup(
         );
 
         return;
+
     }
 
 
     groupsPage.style.display =
         "none";
+
 
     groupDetailsPage.style.display =
         "block";
@@ -246,6 +306,7 @@ export async function openGroup(
         `;
 
     }
+
 }
 
 
@@ -278,6 +339,7 @@ export function renderGroupDetails(
                 <button
                     class="secondary-btn"
                     id="backToGroupsBtn"
+                    type="button"
                 >
                     ← Guruhlarga qaytish
                 </button>
@@ -303,6 +365,7 @@ export function renderGroupDetails(
                 <button
                     class="primary-btn"
                     id="startAttendanceBtn"
+                    type="button"
                 >
                     ✓ Davomat qilish
                 </button>
@@ -376,13 +439,20 @@ export function renderGroupDetails(
                 </div>
 
 
-                <button
-                    class="primary-btn"
-                    id="changeGroupTeacherBtn"
-                    data-group-id="${group.id}"
-                >
-                    Ustozni almashtirish
-                </button>
+                ${
+        isAdmin()
+            ? `
+                            <button
+                                class="primary-btn"
+                                id="changeGroupTeacherBtn"
+                                data-group-id="${group.id}"
+                                type="button"
+                            >
+                                Ustozni almashtirish
+                            </button>
+                        `
+            : ""
+    }
 
             </section>
 
@@ -484,7 +554,9 @@ export function renderGroupDetails(
                                             <span>
 
                                                 ${escapeHtml(
-                    genderText(child.gender)
+                    genderText(
+                        child.gender
+                    )
                 )}
 
                                             </span>
@@ -555,6 +627,7 @@ export function renderGroupDetails(
 
     // ========================================
     // CHANGE TEACHER
+    // FAQAT ADMIN
     // ========================================
 
     $("#changeGroupTeacherBtn")
@@ -562,8 +635,20 @@ export function renderGroupDetails(
             "click",
             () => {
 
+                if (!isAdmin()) {
+
+                    showToast(
+                        "Bu amal uchun ruxsat yo‘q."
+                    );
+
+                    return;
+
+                }
+
+
                 changeGroupTeacher(
-                    group.id
+                    group.id,
+                    state
                 );
 
             }
@@ -572,6 +657,7 @@ export function renderGroupDetails(
 
     // ========================================
     // START ATTENDANCE
+    // ADMIN + TEACHER + DOCTOR
     // ========================================
 
     $("#startAttendanceBtn")
@@ -590,6 +676,7 @@ export function renderGroupDetails(
 
     // ========================================
     // CHILD CLICK
+    // ADMIN + TEACHER + DOCTOR
     // ========================================
 
     document
@@ -627,31 +714,410 @@ export function renderGroupDetails(
 
 export function closeGroupDetails() {
 
-    $("#groupDetailsPage").style.display =
-        "none";
+    const details =
+        $("#groupDetailsPage");
 
 
-    $("#groupsPage").style.display =
-        "";
+    const groups =
+        $("#groupsPage");
 
 
-    $("#groupDetailsContent").innerHTML =
-        "";
+    if (details) {
+
+        details.style.display =
+            "none";
+
+    }
+
+
+    if (groups) {
+
+        groups.style.display =
+            "";
+
+    }
+
+
+    const content =
+        $("#groupDetailsContent");
+
+
+    if (content) {
+
+        content.innerHTML =
+            "";
+
+    }
 
 }
 
 
 // ========================================
 // CHANGE GROUP TEACHER
+// FAQAT ADMIN
 // ========================================
 
 export async function changeGroupTeacher(
-    groupId
+    groupId,
+    state
 ) {
 
-    showToast(
-        `Guruh #${groupId} uchun ustozni almashtirish funksiyasi hali backend endpointga bog‘lanmagan.`
-    );
+    if (!isAdmin()) {
+
+        showToast(
+            "Bu amal uchun ruxsat yo‘q."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        // ========================================
+        // LOAD USERS
+        // ========================================
+
+        const users =
+            await api(
+                "/api/user?page=0&size=100"
+            ) || [];
+
+
+        // ========================================
+        // FAQAT TEACHER VA FAOL USERLAR
+        // ========================================
+
+        const teachers =
+            users.filter(user => {
+
+                return (
+
+                    user.isActive === true &&
+
+                    String(
+                        user.profession || ""
+                    )
+                        .trim()
+                        .toUpperCase() ===
+                    "TEACHER"
+
+                );
+
+            });
+
+
+        console.log(
+            "ALL USERS:",
+            users
+        );
+
+
+        console.log(
+            "ACTIVE TEACHERS:",
+            teachers
+        );
+
+
+        if (!teachers.length) {
+
+            showToast(
+                "Faol ustozlar topilmadi."
+            );
+
+            return;
+
+        }
+
+
+        // ========================================
+        // MODAL
+        // ========================================
+
+        const modal =
+            document.createElement(
+                "div"
+            );
+
+
+        modal.className =
+            "modal-overlay";
+
+
+        modal.innerHTML = `
+
+            <div class="modal">
+
+                <div class="modal-header">
+
+                    <div>
+
+                        <h2>
+                            Ustozni almashtirish
+                        </h2>
+
+                        <p>
+                            Guruh uchun yangi ustoz tanlang
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="modal-close"
+                        id="changeTeacherCloseBtn"
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+
+                <div class="modal-body">
+
+                    <label
+                        for="changeTeacherSelect"
+                    >
+                        Ustoz
+                    </label>
+
+
+                    <select
+                        id="changeTeacherSelect"
+                        class="form-control"
+                    >
+
+                        <option value="">
+                            Ustozni tanlang
+                        </option>
+
+                        ${
+            teachers
+                .map(
+                    teacher => {
+
+                        const fullName =
+                            `${teacher.firstName || ""} ${teacher.lastName || ""}`
+                                .trim();
+
+
+                        return `
+
+                                            <option
+                                                value="${teacher.id}"
+                                            >
+                                                ${escapeHtml(
+                            fullName ||
+                            `Ustoz #${teacher.id}`
+                        )}
+                                            </option>
+
+                                        `;
+
+                    }
+                )
+                .join("")
+        }
+
+                    </select>
+
+                </div>
+
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="secondary-btn"
+                        id="cancelChangeTeacherBtn"
+                    >
+                        Bekor qilish
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="primary-btn"
+                        id="saveChangeTeacherBtn"
+                    >
+                        Saqlash
+                    </button>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        document.body.appendChild(
+            modal
+        );
+
+
+        // ========================================
+        // CLOSE
+        // ========================================
+
+        const close =
+            () => {
+
+                modal.remove();
+
+            };
+
+
+        document
+            .getElementById(
+                "changeTeacherCloseBtn"
+            )
+            ?.addEventListener(
+                "click",
+                close
+            );
+
+
+        document
+            .getElementById(
+                "cancelChangeTeacherBtn"
+            )
+            ?.addEventListener(
+                "click",
+                close
+            );
+
+
+        // ========================================
+        // SAVE
+        // ========================================
+
+        document
+            .getElementById(
+                "saveChangeTeacherBtn"
+            )
+            ?.addEventListener(
+                "click",
+                async () => {
+
+                    const select =
+                        document.getElementById(
+                            "changeTeacherSelect"
+                        );
+
+
+                    const teacherId =
+                        Number(
+                            select?.value
+                        );
+
+
+                    if (!teacherId) {
+
+                        showToast(
+                            "Iltimos, ustozni tanlang."
+                        );
+
+                        return;
+
+                    }
+
+
+                    const saveButton =
+                        document.getElementById(
+                            "saveChangeTeacherBtn"
+                        );
+
+
+                    saveButton.disabled =
+                        true;
+
+
+                    saveButton.textContent =
+                        "Saqlanmoqda...";
+
+
+                    try {
+
+                        await api(
+                            `/api/group/${groupId}`,
+                            {
+                                method: "PUT",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body:
+                                    JSON.stringify({
+                                        teacherId:
+                                        teacherId
+                                    })
+                            }
+                        );
+
+
+                        showToast(
+                            "Guruh ustozı muvaffaqiyatli almashtirildi."
+                        );
+
+
+                        close();
+
+
+                        const updatedGroup =
+                            await api(
+                                `/api/group/${groupId}`
+                            );
+
+
+                        renderGroupDetails(
+                            updatedGroup,
+                            state
+                        );
+
+
+                    } catch (e) {
+
+                        console.error(
+                            "Change teacher error:",
+                            e
+                        );
+
+
+                        showToast(
+                            "Ustozni almashtirishda xatolik."
+                        );
+
+
+                        saveButton.disabled =
+                            false;
+
+
+                        saveButton.textContent =
+                            "Saqlash";
+
+                    }
+
+                }
+            );
+
+
+    } catch (e) {
+
+        console.error(
+            "Load teachers error:",
+            e
+        );
+
+
+        showToast(
+            "Ustozlarni olishda xatolik."
+        );
+
+    }
 
 }
 
@@ -666,10 +1132,15 @@ export function startAttendance(
 ) {
 
     const children =
-        Array.isArray(group.children)
+        Array.isArray(
+            group.children
+        )
+
             ? group.children.filter(
-                child => child.active !== false
+                child =>
+                    child.active !== false
             )
+
             : [];
 
 
@@ -680,6 +1151,7 @@ export function startAttendance(
         );
 
         return;
+
     }
 
 
@@ -722,6 +1194,7 @@ export function renderAttendance(
                     <button
                         class="secondary-btn"
                         id="backFromAttendanceBtn"
+                        type="button"
                     >
                         ← Guruhga qaytish
                     </button>
@@ -864,6 +1337,7 @@ export function renderAttendance(
             </section>
 
         </div>
+
     `;
 
 
@@ -921,6 +1395,7 @@ export function renderAttendance(
                         button
                     );
 
+
                     updateAttendanceCount();
 
                 }
@@ -971,9 +1446,11 @@ function toggleAttendance(
             "present"
         );
 
+
         button.classList.add(
             "absent"
         );
+
 
         button.textContent =
             "Kelmagan";
@@ -984,9 +1461,11 @@ function toggleAttendance(
             "absent"
         );
 
+
         button.classList.add(
             "present"
         );
+
 
         button.textContent =
             "Kelgan";
@@ -1063,13 +1542,14 @@ export async function finishAttendance(
 
                 return {
 
-                    // MUHIM:
-                    // bu CHILDREN ID
+                    // CHILD ID
                     id: child.id,
 
-                    isPresent: isPresent,
+                    isPresent:
+                    isPresent,
 
-                    date: date
+                    date:
+                    date
 
                 };
 
@@ -1091,6 +1571,7 @@ export async function finishAttendance(
 
         finishButton.disabled =
             true;
+
 
         finishButton.textContent =
             "Saqlanmoqda...";
@@ -1114,6 +1595,7 @@ export async function finishAttendance(
                     JSON.stringify(
                         requests
                     )
+
             }
         );
 
@@ -1147,6 +1629,7 @@ export async function finishAttendance(
             finishButton.disabled =
                 false;
 
+
             finishButton.textContent =
                 "✓ Yakunlash";
 
@@ -1155,4 +1638,3 @@ export async function finishAttendance(
     }
 
 }
-

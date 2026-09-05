@@ -29,12 +29,21 @@ public class GroupServiceImpl implements GroupService {
     private final ChildrenRepository childrenRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     @Override
     public List<GetAllGroupsResponse> getAllGroups() {
         List<Group> all = groupRepository.findAll();
         List<GetAllGroupsResponse> responses = new ArrayList<>();
         all.forEach(group -> {
-            responses.add(new GetAllGroupsResponse(group.getId(), group.getName()));
+            responses.add(
+                    new GetAllGroupsResponse(
+                            group.getId(),
+                            group.getName(),
+                            group.getTeacher() != null
+                                    ? group.getTeacher().getId()
+                                    : null
+                    )
+            );
         });
         return responses;
     }
@@ -71,18 +80,20 @@ public class GroupServiceImpl implements GroupService {
         );
     }
 
-    @Override
     public UpdateGroupTeacherResponse updateGroupTeacher(Long id, UpdateGroupTeacher teacher) {
         Optional<Group> byId = groupRepository.findById(id);
-        if (byId.isEmpty()) {
-            return null;
-        }
+
+        if (byId.isEmpty()) return null;
         Group group = byId.get();
-        Optional<User> byId1 = userRepository.findById(teacher.getTeacherId());
-        if (byId1.isEmpty()) {
-            return null;
-        }
-        group.setTeacher(byId1.get());
+        Optional<User> teacherOptional = userRepository.findById(teacher.getTeacherId());
+
+        if (teacherOptional.isEmpty()) return null;
+        // Teacher boshqa groupga biriktirilganmi?
+        Optional<Group> existingGroup =
+                groupRepository.findByTeacherId(teacher.getTeacherId());
+
+        if (existingGroup.isPresent() && !existingGroup.get().getId().equals(group.getId())) return null;
+        group.setTeacher(teacherOptional.get());
         groupRepository.save(group);
         return new UpdateGroupTeacherResponse(group.getId());
     }

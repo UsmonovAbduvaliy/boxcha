@@ -1,6 +1,9 @@
 import {
     token,
-    currentUser
+    currentUser,
+    isAdmin,
+    isTeacher,
+    isDoctor
 } from "./api.js";
 
 import {
@@ -75,7 +78,6 @@ const state = {
 };
 
 
-// Children moduliga loadChildren kerak
 state.loadChildren =
     async silent => {
 
@@ -87,28 +89,52 @@ state.loadChildren =
     };
 
 
+/* =====================================================
+   ROLE
+   ===================================================== */
+
+function getRole() {
+
+    return currentUser().role;
+
+}
+
+
+/* =====================================================
+   SETUP USER
+   ===================================================== */
+
 function setupUser() {
 
-    const u = currentUser();
+    const u =
+        currentUser();
+
 
     const name =
-        u.name || "Foydalanuvchi";
+        u.name ||
+        "Foydalanuvchi";
+
 
     const role =
-        u.role || "Foydalanuvchi";
+        u.role ||
+        "Foydalanuvchi";
 
 
     $("#welcomeName").textContent =
         name;
 
+
     $("#profileName").textContent =
         name;
+
 
     $("#topName").textContent =
         name;
 
+
     $("#profileRole").textContent =
         role;
+
 
     $("#topRole").textContent =
         role;
@@ -117,11 +143,13 @@ function setupUser() {
     $("#profileAvatar").textContent =
         name[0].toUpperCase();
 
+
     $("#topAvatar").textContent =
         name[0].toUpperCase();
 
 
-    const d = new Date();
+    const d =
+        new Date();
 
 
     $("#todayDate").textContent =
@@ -143,10 +171,206 @@ function setupUser() {
     $("#pageSubtitle").textContent =
         todayText() +
         " • Boxcha boshqaruv paneli";
+
 }
 
 
+/* =====================================================
+   ROLE BASED UI
+   ===================================================== */
+
+function setupRoleAccess() {
+
+    const role =
+        getRole();
+
+
+    console.log(
+        "Current user role:",
+        role
+    );
+
+
+    const teachersNav =
+        $('[data-page="teachers"]');
+
+
+    const othersNav =
+        $('[data-page="others"]');
+
+
+    const notification =
+        $(".notification");
+
+
+    /*
+     * BILDIRISHNOMA
+     *
+     * Hamma userlardan olib tashlanadi.
+     */
+
+    if (notification) {
+
+        notification.remove();
+
+    }
+
+
+    /*
+     * USTOZLAR
+     *
+     * Faqat ADMIN ko'radi.
+     */
+
+    if (teachersNav) {
+
+        teachersNav.style.display =
+            isAdmin()
+                ? ""
+                : "none";
+
+    }
+
+
+    /*
+     * BOSHQALAR
+     *
+     * Faqat ADMIN ko'radi.
+     */
+
+    if (othersNav) {
+
+        othersNav.style.display =
+            isAdmin()
+                ? ""
+                : "none";
+
+    }
+
+
+    /*
+     * TEACHER / DOCTOR
+     *
+     * Agar tasodifan yashirilgan page ochilib qolsa,
+     * uni dashboardga qaytaramiz.
+     */
+
+    if (
+        !isAdmin() &&
+        (
+            location.hash === "#teachers" ||
+            location.hash === "#others"
+        )
+    ) {
+
+        history.replaceState(
+            null,
+            "",
+            location.pathname
+        );
+
+    }
+
+
+    /*
+     * TEACHER / DOCTOR uchun
+     * admin-only add buttonlar.
+     */
+
+    if (!isAdmin()) {
+
+        $("#addTeacherBtn")?.remove();
+
+        $("#addOtherBtn")?.remove();
+
+    }
+
+}
+
+
+/* =====================================================
+   PAGE ACCESS
+   ===================================================== */
+
+function canOpenPage(page) {
+
+    /*
+     * ADMIN
+     * hammasiga access.
+     */
+
+    if (isAdmin()) {
+
+        return true;
+
+    }
+
+
+    /*
+     * TEACHER
+     * Dashboard
+     * Groups
+     * Children
+     * Attendance
+     */
+
+    if (isTeacher()) {
+
+        return [
+            "dashboard",
+            "groups",
+            "children",
+            "attendance"
+        ].includes(page);
+
+    }
+
+
+    /*
+     * DOCTOR
+     * Dashboard
+     * Groups
+     * Children
+     * Attendance
+     */
+
+    if (isDoctor()) {
+
+        return [
+            "dashboard",
+            "groups",
+            "children",
+            "attendance"
+        ].includes(page);
+
+    }
+
+
+    return [
+        "dashboard"
+    ].includes(page);
+
+}
+
+
+/* =====================================================
+   SET PAGE
+   ===================================================== */
+
 async function setPage(page) {
+
+    if (!canOpenPage(page)) {
+
+        console.warn(
+            `Access denied for page: ${page}`
+        );
+
+        await setPage("dashboard");
+
+        return;
+
+    }
+
 
     $$(".page")
         .forEach(x =>
@@ -158,7 +382,11 @@ async function setPage(page) {
         $(`#page-${page}`);
 
 
-    if (!target) return;
+    if (!target) {
+
+        return;
+
+    }
 
 
     target.classList.add("active");
@@ -198,11 +426,13 @@ async function setPage(page) {
 
         settings:
             "Sozlamalar"
+
     };
 
 
     $("#pageTitle").textContent =
-        titles[page] || "Boxcha";
+        titles[page] ||
+        "Boxcha";
 
 
     $("#pageSubtitle").textContent =
@@ -244,6 +474,15 @@ async function setPage(page) {
 
     if (page === "teachers") {
 
+        if (!isAdmin()) {
+
+            await setPage("dashboard");
+
+            return;
+
+        }
+
+
         await loadUsers(
             state
         );
@@ -252,6 +491,15 @@ async function setPage(page) {
 
 
     if (page === "others") {
+
+        if (!isAdmin()) {
+
+            await setPage("dashboard");
+
+            return;
+
+        }
+
 
         await loadOthers(
             state
@@ -267,8 +515,13 @@ async function setPage(page) {
         );
 
     }
+
 }
 
+
+/* =====================================================
+   NAVIGATION
+   ===================================================== */
 
 function initNavigation() {
 
@@ -279,9 +532,20 @@ function initNavigation() {
                 "click",
                 () => {
 
-                    setPage(
-                        btn.dataset.page
-                    );
+                    const page =
+                        btn.dataset.page;
+
+
+                    if (
+                        !canOpenPage(page)
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    setPage(page);
 
                 }
             );
@@ -297,7 +561,9 @@ function initNavigation() {
                     "nav-item"
                 )
             ) {
+
                 return;
+
             }
 
 
@@ -305,16 +571,32 @@ function initNavigation() {
                 "click",
                 () => {
 
-                    setPage(
-                        btn.dataset.page
-                    );
+                    const page =
+                        btn.dataset.page;
+
+
+                    if (
+                        !canOpenPage(page)
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    setPage(page);
 
                 }
             );
 
         });
+
 }
 
+
+/* =====================================================
+   FILTERS
+   ===================================================== */
 
 function initFilters() {
 
@@ -426,34 +708,80 @@ function initFilters() {
             );
 
         });
+
 }
 
 
+/* =====================================================
+   BUTTONS
+   ===================================================== */
+
 function initButtons() {
+
+    /*
+     * Bola qo'shish
+     *
+     * Faqat ADMIN.
+     */
 
     $("#addChildBtn")
         ?.addEventListener(
             "click",
-            () =>
-                openNewChild(state)
+            () => {
+
+                openNewChild(state);
+
+            }
         );
 
+
+    /*
+     * Ustoz qo'shish
+     */
 
     $("#addTeacherBtn")
         ?.addEventListener(
             "click",
-            () =>
-                openNewTeacher(state)
+            () => {
+
+                if (!isAdmin()) {
+
+                    return;
+
+                }
+
+
+                openNewTeacher(state);
+
+            }
         );
 
+
+    /*
+     * Boshqa xodim qo'shish
+     */
 
     $("#addOtherBtn")
         ?.addEventListener(
             "click",
-            () =>
-                openNewOther()
+            () => {
+
+                if (!isAdmin()) {
+
+                    return;
+
+                }
+
+
+                openNewOther();
+
+            }
         );
 
+
+    /*
+     * Refresh
+     */
 
     $("#refreshBtn")
         ?.addEventListener(
@@ -462,6 +790,10 @@ function initButtons() {
                 setPage("dashboard")
         );
 
+
+    /*
+     * Logout
+     */
 
     $("#logoutBtn")
         ?.addEventListener(
@@ -490,6 +822,10 @@ function initButtons() {
         );
 
 
+    /*
+     * Attendance child select
+     */
+
     $("#attendanceChild")
         ?.addEventListener(
             "change",
@@ -510,8 +846,13 @@ function initButtons() {
 
             }
         );
+
 }
 
+
+/* =====================================================
+   INIT
+   ===================================================== */
 
 async function init() {
 
@@ -521,10 +862,13 @@ async function init() {
             "/auth/login.html";
 
         return;
+
     }
 
 
     setupUser();
+
+    setupRoleAccess();
 
     initNavigation();
 
@@ -536,17 +880,27 @@ async function init() {
 
     initChildForm(state);
 
-    initTeacherForm(state);
+    /*
+     * Teacher form / teacher view
+     * faqat ADMIN uchun kerak.
+     */
 
-    initTeacherView(state);
+    if (isAdmin()) {
 
-    initOtherForm(state);
+        initTeacherForm(state);
+
+        initTeacherView(state);
+
+        initOtherForm(state);
+
+    }
 
 
     await loadDashboard(
         state,
         state.loadChildren
     );
+
 }
 
 

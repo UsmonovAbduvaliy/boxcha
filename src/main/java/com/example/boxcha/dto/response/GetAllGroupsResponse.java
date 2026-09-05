@@ -6,4 +6,5 @@ import lombok.Value;
 public class GetAllGroupsResponse {
     Long id;
     String name;
+    Long teacherId;
 }

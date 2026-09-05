@@ -1,0 +1,122 @@
+/* =========================================================
+   BOXCHA — CHILDREN
+   ========================================================= */
+
+
+/* =========================================================
+   CHILD VIEW
+   ========================================================= */
+
+.teacher-view {
+    padding-top: 8px;
+}
+
+.teacher-view > header {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+
+    padding-bottom: 18px;
+
+    border-bottom: 1px solid #eff0f3;
+}
+
+.teacher-view .avatar {
+    width: 58px;
+    height: 58px;
+
+    border-radius: 16px;
+}
+
+.teacher-view-title h3 {
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.teacher-view-title p {
+    margin-top: 4px;
+
+    color: #989da8;
+
+    font-size: 11px;
+}
+
+.teacher-view-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: 10px;
+
+    margin-top: 17px;
+}
+
+.teacher-view-info > div {
+    padding: 12px;
+
+    border-radius: 12px;
+
+    background: #f8f8fb;
+}
+
+.teacher-view-info > div.full {
+    grid-column: 1 / -1;
+}
+
+.teacher-view-info label {
+    display: block;
+
+    color: #a0a4ae;
+
+    font-size: 9px;
+}
+
+.teacher-view-info strong {
+    display: block;
+
+    margin-top: 4px;
+
+    color: #353946;
+
+    font-size: 11px;
+}
+
+.teacher-view .status {
+    margin-top: 10px;
+}
+
+.teacher-view-actions {
+    display: flex;
+    gap: 8px;
+
+    margin-top: 20px;
+}
+
+.teacher-view-actions button {
+    flex: 1;
+}
+
+.teacher-view-actions .secondary-btn:hover {
+    background: #f7f7fa;
+}
+
+#viewChildEditBtn {
+    border-color: #f0ddb9;
+    background: #fff9ec;
+    color: #d49325;
+}
+
+#viewChildDeleteBtn {
+    border-color: #f1ccd0;
+    background: #fff1f2;
+    color: #dc5260;
+}
+
+#viewChildDailyBtn {
+    border-color: #cfe0fa;
+    background: #eff6ff;
+    color: #3983df;
+}
+
+.teacher-view-actions button:focus-visible {
+    outline: 3px solid rgba(103, 91, 233, .12);
+}
