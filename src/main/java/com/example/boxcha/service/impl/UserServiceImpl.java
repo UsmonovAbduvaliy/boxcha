@@ -39,6 +39,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse getLoginUser(LoginRequest request) {
         User byEmail = userRepository.findByEmail(request.getEmail());
+        System.out.println(request);
         if (byEmail!=null) {
             if (!passwordEncoder.matches(request.getPassword(), byEmail.getPassword())) {
                 System.out.println("-----------------");
