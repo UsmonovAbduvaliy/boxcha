@@ -46,6 +46,7 @@ public class SecurityConfig {
                                 "/cabinet.html",
                                 "/accounting/**"
                         ).permitAll()
+                        .requestMatchers("/").permitAll()
                         .requestMatchers("/api/user/login" , "/api/token").permitAll()
                         .anyRequest().authenticated()
         );
