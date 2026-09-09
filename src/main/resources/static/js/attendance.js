@@ -2068,6 +2068,32 @@ function renderChildDaily(
 
             </div>
 
+<!-- =================================================
+     EXPORT
+================================================= -->
+
+<div class="daily-export-actions">
+
+    <button
+        type="button"
+        class="daily-export-btn excel"
+        id="dailyExportExcelBtn"
+    >
+        <span>📊</span>
+        Excel
+    </button>
+
+
+    <button
+        type="button"
+        class="daily-export-btn pdf"
+        id="dailyExportPdfBtn"
+    >
+        <span>📄</span>
+        PDF
+    </button>
+
+</div>
 
             <!-- DAYS -->
 
@@ -2118,6 +2144,61 @@ function renderChildDaily(
     document.body.appendChild(
         modal
     );
+
+    // =================================================
+// EXPORT EXCEL
+// =================================================
+
+    const exportExcelButton =
+        modal.querySelector(
+            "#dailyExportExcelBtn"
+        );
+
+
+    if (exportExcelButton) {
+
+        exportExcelButton.addEventListener(
+            "click",
+            () => {
+
+                exportDailyToExcel(
+                    child,
+                    dailies,
+                    year,
+                    month
+                );
+
+            }
+        );
+    }
+
+
+// =================================================
+// EXPORT PDF
+// =================================================
+
+    const exportPdfButton =
+        modal.querySelector(
+            "#dailyExportPdfBtn"
+        );
+
+
+    if (exportPdfButton) {
+
+        exportPdfButton.addEventListener(
+            "click",
+            () => {
+
+                exportDailyToPdf(
+                    child,
+                    dailies,
+                    year,
+                    month
+                );
+
+            }
+        );
+    }
 
 
     // =================================================
@@ -2336,5 +2417,559 @@ function renderChildDaily(
     document.addEventListener(
         "keydown",
         modal._escapeHandler
+    );
+}
+// =====================================================
+// DAILY EXPORT — EXCEL
+// =====================================================
+
+function exportDailyToExcel(
+    child,
+    dailies,
+    year,
+    month
+) {
+
+    if (
+        typeof XLSX === "undefined"
+    ) {
+
+        showToast(
+            "Excel kutubxonasi yuklanmagan."
+        );
+
+        return;
+    }
+
+
+    const childName =
+        `${child?.firstName || ""} ${child?.lastName || ""}`
+            .trim() ||
+        "Noma'lum bola";
+
+
+    const monthNames =
+        getMonthNames();
+
+
+    const monthName =
+        monthNames[month - 1] ||
+        "";
+
+
+    // =============================================
+    // DAYS
+    // =============================================
+
+    const daysInMonth =
+        new Date(
+            year,
+            month,
+            0
+        ).getDate();
+
+
+    const dailyMap =
+        new Map();
+
+
+    dailies.forEach(
+        daily => {
+
+            if (!daily) {
+                return;
+            }
+
+
+            const date =
+                normalizeDate(
+                    daily.date
+                );
+
+
+            if (!date) {
+                return;
+            }
+
+
+            dailyMap.set(
+                date,
+                daily
+            );
+        }
+    );
+
+
+    // =============================================
+    // DATA
+    // =============================================
+
+    const rows = [];
+
+
+    for (
+        let day = 1;
+        day <= daysInMonth;
+        day++
+    ) {
+
+        const date =
+            [
+                year,
+                String(month)
+                    .padStart(2, "0"),
+                String(day)
+                    .padStart(2, "0")
+            ].join("-");
+
+
+        const daily =
+            dailyMap.get(date);
+
+
+        let status;
+
+
+        if (!daily) {
+
+            status =
+                "Belgilanmagan";
+
+        } else if (
+            isPresentValue(daily)
+        ) {
+
+            status =
+                "Keldi";
+
+        } else {
+
+            status =
+                "Kelmagan";
+        }
+
+
+        rows.push({
+
+            "Sana":
+            date,
+
+            "Kun":
+            day,
+
+            "Holat":
+            status
+
+        });
+    }
+
+
+    // =============================================
+    // HEADER
+    // =============================================
+
+    const data = [
+
+        ["BOXCHA — DAVOMAT"],
+
+        ["Bola", childName],
+
+        [
+            "Oy",
+            `${monthName} ${year}`
+        ],
+
+        [],
+
+        [
+            "Sana",
+            "Kun",
+            "Holat"
+        ],
+
+        ...rows.map(
+            row => [
+                row["Sana"],
+                row["Kun"],
+                row["Holat"]
+            ]
+        )
+
+    ];
+
+
+    // =============================================
+    // WORKBOOK
+    // =============================================
+
+    const worksheet =
+        XLSX.utils.aoa_to_sheet(
+            data
+        );
+
+
+    worksheet["!cols"] = [
+        { wch: 15 },
+        { wch: 8 },
+        { wch: 20 }
+    ];
+
+
+    const workbook =
+        XLSX.utils.book_new();
+
+
+    XLSX.utils.book_append_sheet(
+        workbook,
+        worksheet,
+        "Davomat"
+    );
+
+
+    // =============================================
+    // FILE NAME
+    // =============================================
+
+    const safeName =
+        childName
+            .replace(
+                /[^a-zA-Z0-9А-Яа-яЎўҚқҒғҲҳЁё ]/g,
+                ""
+            )
+            .replace(
+                /\s+/g,
+                "_"
+            );
+
+
+    const fileName =
+        `Boxcha_Davomat_${safeName}_${year}-${String(month).padStart(2, "0")}.xlsx`;
+
+
+    XLSX.writeFile(
+        workbook,
+        fileName
+    );
+
+
+    showToast(
+        "Excel fayl tayyorlandi."
+    );
+}
+
+
+// =====================================================
+// DAILY EXPORT — PDF
+// =====================================================
+
+function exportDailyToPdf(
+    child,
+    dailies,
+    year,
+    month
+) {
+
+    if (
+        typeof window.jspdf === "undefined"
+    ) {
+
+        showToast(
+            "PDF kutubxonasi yuklanmagan."
+        );
+
+        return;
+    }
+
+
+    const {
+        jsPDF
+    } = window.jspdf;
+
+
+    const childName =
+        `${child?.firstName || ""} ${child?.lastName || ""}`
+            .trim() ||
+        "Noma'lum bola";
+
+
+    const monthNames =
+        getMonthNames();
+
+
+    const monthName =
+        monthNames[month - 1] ||
+        "";
+
+
+    const daysInMonth =
+        new Date(
+            year,
+            month,
+            0
+        ).getDate();
+
+
+    const dailyMap =
+        new Map();
+
+
+    dailies.forEach(
+        daily => {
+
+            if (!daily) {
+                return;
+            }
+
+
+            const date =
+                normalizeDate(
+                    daily.date
+                );
+
+
+            if (!date) {
+                return;
+            }
+
+
+            dailyMap.set(
+                date,
+                daily
+            );
+        }
+    );
+
+
+    // =============================================
+    // STATISTICS
+    // =============================================
+
+    let presentCount =
+        0;
+
+    let absentCount =
+        0;
+
+    let notRecordedCount =
+        0;
+
+
+    const rows = [];
+
+
+    for (
+        let day = 1;
+        day <= daysInMonth;
+        day++
+    ) {
+
+        const date =
+            [
+                year,
+                String(month)
+                    .padStart(2, "0"),
+                String(day)
+                    .padStart(2, "0")
+            ].join("-");
+
+
+        const daily =
+            dailyMap.get(date);
+
+
+        let status;
+
+
+        if (!daily) {
+
+            status =
+                "Belgilanmagan";
+
+            notRecordedCount++;
+
+        } else if (
+            isPresentValue(daily)
+        ) {
+
+            status =
+                "Keldi";
+
+            presentCount++;
+
+        } else {
+
+            status =
+                "Kelmagan";
+
+            absentCount++;
+        }
+
+
+        rows.push([
+            date,
+            String(day),
+            status
+        ]);
+    }
+
+
+    // =============================================
+    // PDF
+    // =============================================
+
+    const doc =
+        new jsPDF({
+            orientation: "portrait",
+            unit: "mm",
+            format: "a4"
+        });
+
+
+    // =============================================
+    // TITLE
+    // =============================================
+
+    doc.setFontSize(18);
+
+    doc.text(
+        "BOXCHA",
+        14,
+        18
+    );
+
+
+    doc.setFontSize(13);
+
+    doc.text(
+        "Davomat hisoboti",
+        14,
+        27
+    );
+
+
+    doc.setFontSize(10);
+
+    doc.text(
+        `Bola: ${childName}`,
+        14,
+        36
+    );
+
+
+    doc.text(
+        `Oy: ${monthName} ${year}`,
+        14,
+        43
+    );
+
+
+    // =============================================
+    // STATISTICS
+    // =============================================
+
+    doc.setFontSize(10);
+
+    doc.text(
+        `Keldi: ${presentCount}`,
+        14,
+        52
+    );
+
+
+    doc.text(
+        `Kelmagan: ${absentCount}`,
+        70,
+        52
+    );
+
+
+    doc.text(
+        `Belgilanmagan: ${notRecordedCount}`,
+        140,
+        52
+    );
+
+
+    // =============================================
+    // TABLE
+    // =============================================
+
+    if (
+        typeof doc.autoTable === "function"
+    ) {
+
+        doc.autoTable({
+
+            startY: 59,
+
+            head: [
+                [
+                    "Sana",
+                    "Kun",
+                    "Holat"
+                ]
+            ],
+
+            body: rows,
+
+            styles: {
+                fontSize: 9,
+                cellPadding: 3
+            },
+
+            headStyles: {
+                fontSize: 9
+            },
+
+            margin: {
+                left: 14,
+                right: 14
+            }
+
+        });
+
+    } else {
+
+        console.error(
+            "jsPDF AutoTable plugin topilmadi."
+        );
+
+
+        showToast(
+            "PDF jadval plagini yuklanmagan."
+        );
+
+
+        return;
+    }
+
+
+    // =============================================
+    // FILE NAME
+    // =============================================
+
+    const safeName =
+        childName
+            .replace(
+                /[^a-zA-Z0-9А-Яа-яЎўҚқҒғҲҳЁё ]/g,
+                ""
+            )
+            .replace(
+                /\s+/g,
+                "_"
+            );
+
+
+    const fileName =
+        `Boxcha_Davomat_${safeName}_${year}-${String(month).padStart(2, "0")}.pdf`;
+
+
+    doc.save(
+        fileName
+    );
+
+
+    showToast(
+        "PDF fayl tayyorlandi."
     );
 }

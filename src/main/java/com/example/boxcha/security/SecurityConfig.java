@@ -43,7 +43,8 @@ public class SecurityConfig {
                                 "/images/**",
                                 "/css/**",
                                 "/js/**",
-                                "/cabinet.html"
+                                "/cabinet.html",
+                                "/accounting/**"
                         ).permitAll()
                         .requestMatchers("/api/user/login" , "/api/token").permitAll()
                         .anyRequest().authenticated()

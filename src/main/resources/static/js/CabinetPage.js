@@ -199,13 +199,19 @@ function setupRoleAccess() {
         $('[data-page="others"]');
 
 
+    const accountingNav =
+        $("#accountingNavBtn");
+
+
     const notification =
         $(".notification");
 
 
+    /* =====================================================
+       BILDIRISHNOMA
+       ===================================================== */
+
     /*
-     * BILDIRISHNOMA
-     *
      * Hamma userlardan olib tashlanadi.
      */
 
@@ -216,11 +222,10 @@ function setupRoleAccess() {
     }
 
 
-    /*
-     * USTOZLAR
-     *
-     * Faqat ADMIN ko'radi.
-     */
+    /* =====================================================
+       USTOZLAR
+       ADMIN ONLY
+       ===================================================== */
 
     if (teachersNav) {
 
@@ -232,11 +237,10 @@ function setupRoleAccess() {
     }
 
 
-    /*
-     * BOSHQALAR
-     *
-     * Faqat ADMIN ko'radi.
-     */
+    /* =====================================================
+       BOSHQALAR
+       ADMIN ONLY
+       ===================================================== */
 
     if (othersNav) {
 
@@ -248,11 +252,29 @@ function setupRoleAccess() {
     }
 
 
+    /* =====================================================
+       ACCOUNTING
+       ADMIN ONLY
+       ===================================================== */
+
+    if (accountingNav) {
+
+        accountingNav.style.display =
+            isAdmin()
+                ? ""
+                : "none";
+
+    }
+
+
+    /* =====================================================
+       ADMIN-ONLY PAGE PROTECTION
+       ===================================================== */
+
     /*
-     * TEACHER / DOCTOR
-     *
-     * Agar tasodifan yashirilgan page ochilib qolsa,
-     * uni dashboardga qaytaramiz.
+     * Agar Teacher yoki Doctor URL orqali
+     * teachers/others page ochishga harakat qilsa,
+     * dashboardga qaytaramiz.
      */
 
     if (
@@ -272,10 +294,10 @@ function setupRoleAccess() {
     }
 
 
-    /*
-     * TEACHER / DOCTOR uchun
-     * admin-only add buttonlar.
-     */
+    /* =====================================================
+       TEACHER / DOCTOR
+       ADMIN-ONLY BUTTONLAR
+       ===================================================== */
 
     if (!isAdmin()) {
 
@@ -286,6 +308,7 @@ function setupRoleAccess() {
     }
 
 }
+
 
 
 /* =====================================================
@@ -711,23 +734,26 @@ function initFilters() {
 
 }
 
-
 /* =====================================================
    BUTTONS
    ===================================================== */
 
 function initButtons() {
 
-    /*
-     * Bola qo'shish
-     *
-     * Faqat ADMIN.
-     */
+    /* =====================================================
+       BOLA QO'SHISH
+       ADMIN ONLY
+       ===================================================== */
 
     $("#addChildBtn")
         ?.addEventListener(
             "click",
             () => {
+
+                /*
+                 * Bola qo'shish hozirgi
+                 * permission logikasiga qoldiriladi.
+                 */
 
                 openNewChild(state);
 
@@ -735,9 +761,10 @@ function initButtons() {
         );
 
 
-    /*
-     * Ustoz qo'shish
-     */
+    /* =====================================================
+       USTOZ QO'SHISH
+       ADMIN ONLY
+       ===================================================== */
 
     $("#addTeacherBtn")
         ?.addEventListener(
@@ -757,9 +784,10 @@ function initButtons() {
         );
 
 
-    /*
-     * Boshqa xodim qo'shish
-     */
+    /* =====================================================
+       BOSHQA XODIM QO'SHISH
+       ADMIN ONLY
+       ===================================================== */
 
     $("#addOtherBtn")
         ?.addEventListener(
@@ -779,9 +807,46 @@ function initButtons() {
         );
 
 
-    /*
-     * Refresh
-     */
+    /* =====================================================
+       ACCOUNTING
+       ADMIN ONLY
+       ===================================================== */
+
+    $("#accountingNavBtn")
+        ?.addEventListener(
+            "click",
+            () => {
+
+                /*
+                 * Frontendda yashirilgan bo'lsa ham,
+                 * JS orqali permissionni yana tekshiramiz.
+                 */
+
+                if (!isAdmin()) {
+
+                    console.warn(
+                        "Accounting access denied"
+                    );
+
+                    return;
+
+                }
+
+
+                /*
+                 * Accounting alohida frontend.
+                 */
+
+                window.location.href =
+                    "/accounting/index.html";
+
+            }
+        );
+
+
+    /* =====================================================
+       REFRESH
+       ===================================================== */
 
     $("#refreshBtn")
         ?.addEventListener(
@@ -791,9 +856,9 @@ function initButtons() {
         );
 
 
-    /*
-     * Logout
-     */
+    /* =====================================================
+       LOGOUT
+       ===================================================== */
 
     $("#logoutBtn")
         ?.addEventListener(
@@ -822,9 +887,9 @@ function initButtons() {
         );
 
 
-    /*
-     * Attendance child select
-     */
+    /* =====================================================
+       ATTENDANCE CHILD SELECT
+       ===================================================== */
 
     $("#attendanceChild")
         ?.addEventListener(
@@ -848,7 +913,6 @@ function initButtons() {
         );
 
 }
-
 
 /* =====================================================
    INIT

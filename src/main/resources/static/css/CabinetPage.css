@@ -112,3 +112,261 @@
     color: #999eab;
     font-size: 11px;
 }
+       /* =========================================================
+          BOXCHA — ACCOUNTING NAVIGATION
+          ADMIN ONLY
+          ========================================================= */
+
+.accounting-nav-item {
+       position: relative;
+
+       margin-top: 8px;
+
+       overflow: hidden;
+
+       border: 1px solid rgba(99, 91, 255, 0.10);
+
+       background:
+               linear-gradient(
+                       135deg,
+                       rgba(99, 91, 255, 0.055),
+                       rgba(79, 70, 229, 0.025)
+               );
+
+       transition:
+               background .25s ease,
+               border-color .25s ease,
+               transform .25s ease,
+               box-shadow .25s ease;
+   }
+
+
+/* =========================================================
+   LIGHT GLOW
+   ========================================================= */
+
+.accounting-nav-item::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 90px;
+    height: 90px;
+
+    top: -45px;
+    right: -35px;
+
+    border-radius: 50%;
+
+    background:
+            radial-gradient(
+                    circle,
+                    rgba(99, 91, 255, 0.12),
+                    transparent 70%
+            );
+
+    pointer-events: none;
+
+    opacity: .7;
+
+    transition:
+            transform .3s ease,
+            opacity .3s ease;
+}
+
+
+/* =========================================================
+   ACCOUNTING ICON
+   ========================================================= */
+
+.accounting-nav-icon {
+
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 9px;
+
+    background:
+            linear-gradient(
+                    135deg,
+                    #635bff,
+                    #5146e5
+            );
+
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 800;
+
+    box-shadow:
+            0 5px 14px rgba(99, 91, 255, 0.22);
+
+    transition:
+            transform .25s ease,
+            box-shadow .25s ease;
+}
+
+
+/* =========================================================
+   TEXT
+   ========================================================= */
+
+.accounting-nav-text {
+
+    font-weight: 700;
+
+    color: #4e4a73;
+
+    transition:
+            color .2s ease;
+}
+
+
+/* =========================================================
+   ADMIN BADGE
+   ========================================================= */
+
+.accounting-nav-badge {
+
+    margin-left: auto;
+
+    padding: 3px 6px;
+
+    border-radius: 6px;
+
+    background:
+            rgba(99, 91, 255, 0.08);
+
+    color: #635bff;
+
+    font-size: 8px;
+    line-height: 1;
+
+    font-weight: 800;
+
+    letter-spacing: .4px;
+
+    opacity: .75;
+
+    transition:
+            background .2s ease,
+            color .2s ease,
+            opacity .2s ease;
+}
+
+
+/* =========================================================
+   HOVER
+   ========================================================= */
+
+.accounting-nav-item:hover {
+
+    background:
+            linear-gradient(
+                    135deg,
+                    rgba(99, 91, 255, 0.11),
+                    rgba(79, 70, 229, 0.055)
+            );
+
+    border-color:
+            rgba(99, 91, 255, 0.18);
+
+    transform:
+            translateX(2px);
+
+    box-shadow:
+            0 7px 20px rgba(99, 91, 255, 0.07);
+}
+
+
+.accounting-nav-item:hover::before {
+
+    transform: scale(1.25);
+
+    opacity: 1;
+}
+
+
+.accounting-nav-item:hover
+.accounting-nav-icon {
+
+    transform:
+            translateY(-1px)
+            rotate(-3deg);
+
+    box-shadow:
+            0 7px 18px rgba(99, 91, 255, 0.30);
+}
+
+
+.accounting-nav-item:hover
+.accounting-nav-text {
+
+    color: #5146e5;
+}
+
+
+.accounting-nav-item:hover
+.accounting-nav-badge {
+
+    background:
+            rgba(99, 91, 255, 0.13);
+
+    color: #5146e5;
+
+    opacity: 1;
+}
+
+
+/* =========================================================
+   ACTIVE-LIKE FEEL
+   ========================================================= */
+
+.accounting-nav-item:active {
+
+    transform:
+            translateX(2px)
+            scale(.985);
+}
+
+
+/* =========================================================
+   FOCUS
+   ========================================================= */
+
+.accounting-nav-item:focus-visible {
+
+    outline: none;
+
+    box-shadow:
+            0 0 0 3px rgba(99, 91, 255, 0.13);
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .accounting-nav-item {
+
+        margin-top: 5px;
+
+    }
+
+
+    .accounting-nav-badge {
+
+        display: none;
+
+    }
+
+}

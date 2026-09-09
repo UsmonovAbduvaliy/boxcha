@@ -3028,3 +3028,114 @@ body.daily-modal-open {
         font-size: 10px;
     }
 }
+/* =====================================================
+   DAILY EXPORT
+   ===================================================== */
+
+.daily-export-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    margin: 16px 0;
+}
+
+
+.daily-export-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    min-width: 100px;
+
+    padding: 10px 15px;
+
+    border: 1px solid transparent;
+
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    font-size: 13px;
+    font-weight: 650;
+
+    cursor: pointer;
+
+    transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease,
+            background 0.2s ease;
+}
+
+
+.daily-export-btn span {
+    font-size: 15px;
+}
+
+
+.daily-export-btn:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+            0 6px 16px
+            rgba(0, 0, 0, 0.08);
+}
+
+
+.daily-export-btn:active {
+    transform: translateY(0);
+}
+
+
+.daily-export-btn.excel {
+    border-color:
+            rgba(16, 185, 129, 0.25);
+
+    color: #047857;
+
+    background:
+            rgba(16, 185, 129, 0.07);
+}
+
+
+.daily-export-btn.excel:hover {
+    background:
+            rgba(16, 185, 129, 0.13);
+}
+
+
+.daily-export-btn.pdf {
+    border-color:
+            rgba(239, 68, 68, 0.25);
+
+    color: #b91c1c;
+
+    background:
+            rgba(239, 68, 68, 0.07);
+}
+
+
+.daily-export-btn.pdf:hover {
+    background:
+            rgba(239, 68, 68, 0.13);
+}
+
+
+@media (max-width: 500px) {
+
+    .daily-export-actions {
+        display: grid;
+
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+
+    .daily-export-btn {
+        width: 100%;
+    }
+}

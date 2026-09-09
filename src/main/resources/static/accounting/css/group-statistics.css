@@ -1,0 +1,1019 @@
+/* =========================================================
+   BOXCHA ACCOUNTING
+   GROUP STATISTICS
+   ========================================================= */
+
+
+/* =========================================================
+   PAGE
+   ========================================================= */
+
+.group-statistics-page {
+    width: 100%;
+    animation: groupStatisticsFadeIn 0.35s ease both;
+}
+
+
+@keyframes groupStatisticsFadeIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.group-statistics-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 24px;
+}
+
+
+.group-statistics-title-row {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+}
+
+
+.group-statistics-title-icon {
+    width: 50px;
+    height: 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 15px;
+
+    background: linear-gradient(
+            135deg,
+            rgba(99, 102, 241, 0.14),
+            rgba(139, 92, 246, 0.10)
+    );
+
+    font-size: 23px;
+
+    box-shadow:
+            inset 0 0 0 1px
+            rgba(99, 102, 241, 0.08);
+}
+
+
+.group-statistics-header h2 {
+    margin: 0;
+
+    font-size: 23px;
+    font-weight: 750;
+
+    color: var(--text-primary, #111827);
+}
+
+
+.group-statistics-header p {
+    margin: 5px 0 0;
+
+    color: var(--text-secondary, #6b7280);
+
+    font-size: 14px;
+}
+
+
+.group-statistics-month {
+    min-width: 150px;
+
+    padding: 12px 16px;
+
+    border: 1px solid
+    var(--border-color, #e5e7eb);
+
+    border-radius: 13px;
+
+    background:
+            var(--card-bg, #ffffff);
+
+    text-align: right;
+}
+
+
+.group-statistics-month span {
+    display: block;
+
+    margin-bottom: 3px;
+
+    font-size: 11px;
+    color: var(--text-secondary, #6b7280);
+}
+
+
+.group-statistics-month strong {
+    font-size: 14px;
+
+    color: var(--text-primary, #111827);
+}
+
+
+/* =========================================================
+   SUMMARY
+   ========================================================= */
+
+.group-statistics-summary {
+    display: grid;
+
+    grid-template-columns:
+        repeat(6, minmax(0, 1fr));
+
+    gap: 14px;
+
+    margin-bottom: 26px;
+}
+
+
+.group-statistics-summary-card {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 17px;
+
+    border-radius: 16px;
+
+    background:
+            var(--card-bg, #ffffff);
+
+    border: 1px solid
+    var(--border-color, #e5e7eb);
+
+    box-shadow:
+            0 5px 18px
+            rgba(15, 23, 42, 0.04);
+
+    transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease,
+            border-color 0.2s ease;
+}
+
+
+.group-statistics-summary-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+            0 10px 25px
+            rgba(15, 23, 42, 0.08);
+}
+
+
+.group-statistics-summary-icon {
+    width: 42px;
+    height: 42px;
+
+    flex: 0 0 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background:
+            rgba(99, 102, 241, 0.10);
+
+    font-size: 19px;
+}
+
+
+.group-statistics-summary-info {
+    min-width: 0;
+}
+
+
+.group-statistics-summary-info span {
+    display: block;
+
+    margin-bottom: 4px;
+
+    font-size: 12px;
+
+    color:
+            var(--text-secondary, #6b7280);
+}
+
+
+.group-statistics-summary-info strong {
+    display: block;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    font-size: 17px;
+    font-weight: 750;
+
+    color:
+            var(--text-primary, #111827);
+}
+
+
+.group-statistics-summary-card.is-danger {
+    border-color:
+            rgba(239, 68, 68, 0.18);
+}
+
+
+.group-statistics-summary-card.is-danger
+.group-statistics-summary-icon {
+    background:
+            rgba(239, 68, 68, 0.10);
+}
+
+
+.group-statistics-summary-card.is-percent {
+    border-color:
+            rgba(16, 185, 129, 0.18);
+}
+
+
+.group-statistics-summary-card.is-percent
+.group-statistics-summary-icon {
+    background:
+            rgba(16, 185, 129, 0.10);
+}
+
+
+.group-statistics-summary-card.is-money
+.group-statistics-summary-icon {
+    background:
+            rgba(16, 185, 129, 0.10);
+}
+
+
+/* =========================================================
+   SECTION
+   ========================================================= */
+
+.group-statistics-section {
+    width: 100%;
+}
+
+
+.group-statistics-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 16px;
+}
+
+
+.group-statistics-section-header h3 {
+    margin: 0;
+
+    font-size: 18px;
+    font-weight: 750;
+
+    color:
+            var(--text-primary, #111827);
+}
+
+
+.group-statistics-section-header p {
+    margin: 4px 0 0;
+
+    font-size: 13px;
+
+    color:
+            var(--text-secondary, #6b7280);
+}
+
+
+.group-statistics-count {
+    padding: 7px 11px;
+
+    border-radius: 9px;
+
+    background:
+            var(--bg-secondary, #f3f4f6);
+
+    color:
+            var(--text-secondary, #6b7280);
+
+    font-size: 12px;
+    font-weight: 650;
+}
+
+
+/* =========================================================
+   GRID
+   ========================================================= */
+
+.group-statistics-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 18px;
+}
+
+
+/* =========================================================
+   GROUP CARD
+   ========================================================= */
+
+.group-statistics-card {
+    position: relative;
+
+    padding: 20px;
+
+    border-radius: 18px;
+
+    background:
+            var(--card-bg, #ffffff);
+
+    border: 1px solid
+    var(--border-color, #e5e7eb);
+
+    box-shadow:
+            0 6px 22px
+            rgba(15, 23, 42, 0.045);
+
+    overflow: hidden;
+
+    transition:
+            transform 0.25s ease,
+            box-shadow 0.25s ease,
+            border-color 0.25s ease;
+}
+
+
+.group-statistics-card::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 0;
+
+    width: 100%;
+    height: 3px;
+
+    background:
+            linear-gradient(
+                    90deg,
+                    #6366f1,
+                    #8b5cf6
+            );
+
+    opacity: 0;
+
+    transition: opacity 0.25s ease;
+}
+
+
+.group-statistics-card:hover {
+    transform: translateY(-4px);
+
+    box-shadow:
+            0 15px 35px
+            rgba(15, 23, 42, 0.09);
+
+    border-color:
+            rgba(99, 102, 241, 0.20);
+}
+
+
+.group-statistics-card:hover::before {
+    opacity: 1;
+}
+
+
+.group-statistics-card.is-error {
+    border-color:
+            rgba(245, 158, 11, 0.30);
+}
+
+
+/* =========================================================
+   CARD HEADER
+   ========================================================= */
+
+.group-statistics-card-header {
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+
+    margin-bottom: 18px;
+}
+
+
+.group-statistics-group-icon {
+    width: 45px;
+    height: 45px;
+
+    flex: 0 0 45px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background:
+            rgba(99, 102, 241, 0.10);
+
+    font-size: 20px;
+}
+
+
+.group-statistics-group-info {
+    min-width: 0;
+}
+
+
+.group-statistics-group-info h4 {
+    margin: 0 0 4px;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    font-size: 16px;
+    font-weight: 750;
+
+    color:
+            var(--text-primary, #111827);
+}
+
+
+.group-statistics-group-info span {
+    display: block;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    font-size: 12px;
+
+    color:
+            var(--text-secondary, #6b7280);
+}
+
+
+/* =========================================================
+   CHILDREN
+   ========================================================= */
+
+.group-statistics-children {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 8px;
+
+    margin-bottom: 17px;
+}
+
+
+.group-statistics-child-box {
+    padding: 10px 8px;
+
+    text-align: center;
+
+    border-radius: 11px;
+
+    background:
+            var(--bg-secondary, #f8fafc);
+}
+
+
+.group-statistics-child-box span {
+    display: block;
+
+    margin-bottom: 3px;
+
+    font-size: 10px;
+
+    color:
+            var(--text-secondary, #6b7280);
+}
+
+
+.group-statistics-child-box strong {
+    font-size: 15px;
+
+    color:
+            var(--text-primary, #111827);
+}
+
+
+.group-statistics-child-box.is-active {
+    background:
+            rgba(16, 185, 129, 0.08);
+}
+
+
+.group-statistics-child-box.is-active strong {
+    color: #059669;
+}
+
+
+.group-statistics-child-box.is-inactive {
+    background:
+            rgba(107, 114, 128, 0.08);
+}
+
+
+/* =========================================================
+   MONEY
+   ========================================================= */
+
+.group-statistics-money {
+    display: flex;
+    flex-direction: column;
+
+    gap: 9px;
+
+    padding: 14px;
+
+    margin-bottom: 17px;
+
+    border-radius: 13px;
+
+    background:
+            var(--bg-secondary, #f8fafc);
+}
+
+
+.group-statistics-money > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+}
+
+
+.group-statistics-money span {
+    font-size: 11px;
+
+    color:
+            var(--text-secondary, #6b7280);
+}
+
+
+.group-statistics-money strong {
+    font-size: 12px;
+
+    font-weight: 750;
+
+    color:
+            var(--text-primary, #111827);
+}
+
+
+.group-statistics-money strong.received {
+    color: #059669;
+}
+
+
+.group-statistics-money strong.debt {
+    color: #dc2626;
+}
+
+
+/* =========================================================
+   PROGRESS
+   ========================================================= */
+
+.group-statistics-progress {
+    margin-bottom: 18px;
+}
+
+
+.group-statistics-progress-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 7px;
+}
+
+
+.group-statistics-progress-top span {
+    font-size: 11px;
+
+    color:
+            var(--text-secondary, #6b7280);
+}
+
+
+.group-statistics-progress-top strong {
+    font-size: 12px;
+
+    color:
+            var(--text-primary, #111827);
+}
+
+
+.group-statistics-progress-track {
+    width: 100%;
+    height: 7px;
+
+    overflow: hidden;
+
+    border-radius: 100px;
+
+    background:
+            #eef2f7;
+}
+
+
+.group-statistics-progress-bar {
+    height: 100%;
+
+    border-radius: inherit;
+
+    background:
+            linear-gradient(
+                    90deg,
+                    #6366f1,
+                    #8b5cf6
+            );
+
+    transition:
+            width 0.6s ease;
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.group-statistics-statuses {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 7px;
+}
+
+
+.group-statistics-statuses .status {
+    display: flex;
+    align-items: center;
+
+    gap: 5px;
+
+    min-width: 0;
+
+    padding: 8px;
+
+    border-radius: 9px;
+
+    background:
+            var(--bg-secondary, #f8fafc);
+}
+
+
+.group-statistics-statuses .status > span:not(.status-dot) {
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    font-size: 10px;
+
+    color:
+            var(--text-secondary, #6b7280);
+}
+
+
+.group-statistics-statuses .status strong {
+    margin-left: auto;
+
+    font-size: 11px;
+
+    color:
+            var(--text-primary, #111827);
+}
+
+
+.status-dot {
+    width: 6px;
+    height: 6px;
+
+    flex: 0 0 6px;
+
+    border-radius: 50%;
+}
+
+
+.status.paid .status-dot {
+    background: #10b981;
+}
+
+
+.status.partial .status-dot {
+    background: #f59e0b;
+}
+
+
+.status.unpaid .status-dot {
+    background: #ef4444;
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.group-statistics-error {
+    margin-top: 14px;
+
+    padding: 9px 11px;
+
+    border-radius: 9px;
+
+    background:
+            rgba(245, 158, 11, 0.09);
+
+    color:
+            #b45309;
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   LOADING
+   ========================================================= */
+
+.group-statistics-loading {
+    min-height: 300px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 14px;
+
+    color:
+            var(--text-secondary, #6b7280);
+}
+
+
+.group-statistics-loading strong {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color:
+            var(--text-primary, #111827);
+
+    font-size: 14px;
+}
+
+
+.group-statistics-loading span {
+    font-size: 12px;
+}
+
+
+.group-statistics-spinner {
+    width: 30px;
+    height: 30px;
+
+    border-radius: 50%;
+
+    border: 3px solid
+    rgba(99, 102, 241, 0.15);
+
+    border-top-color:
+            #6366f1;
+
+    animation:
+            groupStatisticsSpin
+            0.8s linear infinite;
+}
+
+
+@keyframes groupStatisticsSpin {
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* =========================================================
+   EMPTY
+   ========================================================= */
+
+.group-statistics-empty,
+.group-statistics-error-page {
+    min-height: 350px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-direction: column;
+
+    text-align: center;
+
+    padding: 40px;
+}
+
+
+.group-statistics-empty-icon,
+.group-statistics-error-icon {
+    width: 70px;
+    height: 70px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 15px;
+
+    border-radius: 20px;
+
+    background:
+            rgba(99, 102, 241, 0.09);
+
+    font-size: 30px;
+}
+
+
+.group-statistics-empty h3,
+.group-statistics-error-page h3 {
+    margin: 0 0 7px;
+
+    font-size: 18px;
+
+    color:
+            var(--text-primary, #111827);
+}
+
+
+.group-statistics-empty p,
+.group-statistics-error-page p {
+    max-width: 430px;
+
+    margin: 0;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+
+    color:
+            var(--text-secondary, #6b7280);
+}
+
+
+/* =========================================================
+   RETRY
+   ========================================================= */
+
+.group-statistics-retry {
+    margin-top: 18px;
+
+    padding: 10px 17px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background:
+            #6366f1;
+
+    color: white;
+
+    font-size: 13px;
+    font-weight: 650;
+
+    cursor: pointer;
+
+    transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+}
+
+
+.group-statistics-retry:hover {
+    transform: translateY(-1px);
+
+    box-shadow:
+            0 7px 18px
+            rgba(99, 102, 241, 0.25);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1300px) {
+
+    .group-statistics-summary {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+    }
+
+
+    .group-statistics-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+@media (max-width: 800px) {
+
+    .group-statistics-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .group-statistics-month {
+        width: 100%;
+
+        text-align: left;
+    }
+
+
+    .group-statistics-summary {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+
+    .group-statistics-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media (max-width: 520px) {
+
+    .group-statistics-summary {
+        grid-template-columns: 1fr;
+    }
+
+
+    .group-statistics-header h2 {
+        font-size: 19px;
+    }
+
+
+    .group-statistics-title-icon {
+        width: 43px;
+        height: 43px;
+
+        flex-basis: 43px;
+    }
+
+
+    .group-statistics-card {
+        padding: 16px;
+    }
+
+
+    .group-statistics-statuses {
+        grid-template-columns: 1fr;
+    }
+
+
+    .group-statistics-statuses .status {
+        padding: 9px;
+    }
+}

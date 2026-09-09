@@ -1,0 +1,1199 @@
+/* =========================================================
+   BOXCHA ACCOUNTING
+   SALARIES.CSS
+   Teacher Salaries
+   ========================================================= */
+
+
+/* =========================================================
+   SALARY PAGE
+   ========================================================= */
+
+.salaries-page {
+    animation: fadeIn 0.3s ease both;
+}
+
+.salaries-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 20px;
+}
+
+.salaries-title {
+    font-size: 23px;
+    font-weight: 800;
+    letter-spacing: -0.6px;
+    line-height: 1.2;
+}
+
+.salaries-subtitle {
+    margin-top: 5px;
+
+    color: var(--text-muted);
+
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   SALARY SUMMARY
+   ========================================================= */
+
+.salary-summary-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 14px;
+
+    margin-bottom: 18px;
+}
+
+.salary-summary-card {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+
+    min-height: 90px;
+
+    padding: 16px;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius-lg);
+
+    box-shadow: var(--shadow-xs);
+
+    overflow: hidden;
+
+    transition:
+            transform var(--transition),
+            box-shadow var(--transition),
+            border-color var(--transition);
+}
+
+.salary-summary-card::after {
+    content: "";
+
+    position: absolute;
+
+    width: 90px;
+    height: 90px;
+
+    right: -35px;
+    bottom: -45px;
+
+    border-radius: 50%;
+
+    opacity: 0.07;
+
+    pointer-events: none;
+
+    transition:
+            transform 0.35s ease,
+            opacity 0.35s ease;
+}
+
+.salary-summary-card.total::after {
+    background: var(--primary);
+}
+
+.salary-summary-card.paid::after {
+    background: var(--success);
+}
+
+.salary-summary-card.unpaid::after {
+    background: var(--warning);
+}
+
+.salary-summary-card:hover {
+    transform: translateY(-3px);
+
+    box-shadow: var(--shadow-sm);
+}
+
+.salary-summary-card:hover::after {
+    opacity: 0.12;
+
+    transform: scale(1.2);
+}
+
+.salary-summary-icon {
+    position: relative;
+    z-index: 1;
+
+    width: 43px;
+    height: 43px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    font-size: 17px;
+
+    flex-shrink: 0;
+
+    transition:
+            transform var(--transition),
+            box-shadow var(--transition);
+}
+
+.salary-summary-card:hover .salary-summary-icon {
+    transform: scale(1.05);
+}
+
+.salary-summary-card.total .salary-summary-icon {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+.salary-summary-card.paid .salary-summary-icon {
+    background: var(--success-light);
+    color: var(--success-dark);
+}
+
+.salary-summary-card.unpaid .salary-summary-icon {
+    background: var(--warning-light);
+    color: var(--warning-dark);
+}
+
+.salary-summary-label {
+    position: relative;
+    z-index: 1;
+
+    color: var(--text-muted);
+
+    font-size: 10px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.35px;
+}
+
+.salary-summary-value {
+    position: relative;
+    z-index: 1;
+
+    margin-top: 3px;
+
+    font-size: 19px;
+    font-weight: 850;
+
+    font-variant-numeric: tabular-nums;
+
+    letter-spacing: -0.4px;
+}
+
+.salary-summary-card.total .salary-summary-value {
+    color: var(--primary-dark);
+}
+
+.salary-summary-card.paid .salary-summary-value {
+    color: var(--success-dark);
+}
+
+.salary-summary-card.unpaid .salary-summary-value {
+    color: var(--warning-dark);
+}
+
+
+/* =========================================================
+   SALARY TOOLBAR
+   ========================================================= */
+
+.salary-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    margin-bottom: 15px;
+}
+
+.salary-filters {
+    display: flex;
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+}
+
+
+/* =========================================================
+   SALARY TABLE CARD
+   ========================================================= */
+
+.salary-table-card {
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   TEACHER CELL
+   ========================================================= */
+
+.teacher-cell {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    min-width: 0;
+}
+
+.teacher-avatar {
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background:
+            linear-gradient(
+                    135deg,
+                    #ede9fe,
+                    #e0e7ff
+            );
+
+    color: var(--primary);
+
+    font-size: 10px;
+    font-weight: 800;
+
+    flex-shrink: 0;
+
+    box-shadow:
+            inset 0 0 0 1px rgba(99, 102, 241, 0.06);
+
+    transition:
+            transform var(--transition),
+            box-shadow var(--transition);
+}
+
+.teacher-cell:hover .teacher-avatar {
+    transform: scale(1.05);
+
+    box-shadow:
+            0 5px 14px rgba(99, 102, 241, 0.12);
+}
+
+.teacher-info {
+    min-width: 0;
+
+    overflow: hidden;
+}
+
+.teacher-name {
+    color: var(--text);
+
+    font-size: 12px;
+    font-weight: 750;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+.teacher-role {
+    margin-top: 2px;
+
+    color: var(--text-muted);
+
+    font-size: 10px;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+.salary-month {
+    color: var(--text-secondary);
+
+    font-size: 11px;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+.salary-amount {
+    color: var(--text);
+
+    font-size: 12px;
+    font-weight: 800;
+
+    white-space: nowrap;
+
+    font-variant-numeric: tabular-nums;
+}
+
+
+/* =========================================================
+   SALARY STATUS
+   ========================================================= */
+
+.salary-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 25px;
+
+    padding: 0 8px;
+
+    border-radius: 999px;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    white-space: nowrap;
+}
+
+.salary-status.paid,
+.salary-status.success {
+    background: var(--success-light);
+    color: var(--success-dark);
+}
+
+.salary-status.unpaid,
+.salary-status.warning {
+    background: var(--warning-light);
+    color: var(--warning-dark);
+}
+
+.salary-status.danger {
+    background: var(--danger-light);
+    color: var(--danger-dark);
+}
+
+
+/* =========================================================
+   SALARY ACTIONS
+   ========================================================= */
+
+.salary-action-edit,
+.salary-action-delete,
+.salary-action-view {
+    transition:
+            transform var(--transition-fast),
+            background var(--transition-fast),
+            color var(--transition-fast),
+            box-shadow var(--transition-fast);
+}
+
+.salary-action-edit {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+.salary-action-edit:hover {
+    background: #e0e7ff;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+            0 4px 10px rgba(79, 70, 229, 0.1);
+}
+
+.salary-action-delete {
+    background: var(--danger-light);
+    color: var(--danger);
+}
+
+.salary-action-delete:hover {
+    background: #fee2e2;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+            0 4px 10px rgba(239, 68, 68, 0.1);
+}
+
+.salary-action-view {
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+}
+
+.salary-action-view:hover {
+    background: #e2e8f0;
+
+    color: var(--text);
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   SALARY MODAL
+   ========================================================= */
+
+.salary-modal .modal {
+    width: min(590px, 100%);
+
+    max-height: calc(100vh - 40px);
+
+    overflow-y: auto;
+}
+
+.salary-form-section {
+    padding: 14px;
+
+    margin-bottom: 17px;
+
+    border-radius: 12px;
+
+    background:
+            linear-gradient(
+                    145deg,
+                    #f8fafc,
+                    #f9fafb
+            );
+
+    border: 1px solid var(--border-light);
+
+    transition:
+            border-color var(--transition),
+            box-shadow var(--transition);
+}
+
+.salary-form-section:focus-within {
+    border-color: rgba(99, 102, 241, 0.25);
+
+    box-shadow:
+            0 0 0 3px rgba(99, 102, 241, 0.05);
+}
+
+.salary-form-section:last-child {
+    margin-bottom: 0;
+}
+
+.salary-form-section-title {
+    margin-bottom: 12px;
+
+    color: var(--text);
+
+    font-size: 11px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.4px;
+}
+
+
+/* =========================================================
+   TEACHER PREVIEW
+   ========================================================= */
+
+.teacher-preview {
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+
+    padding: 11px;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+
+    border-radius: 11px;
+
+    box-shadow: var(--shadow-xs);
+
+    transition:
+            border-color var(--transition),
+            box-shadow var(--transition),
+            transform var(--transition);
+}
+
+.teacher-preview:hover {
+    border-color: #c7d2fe;
+
+    box-shadow: var(--shadow-sm);
+
+    transform: translateY(-1px);
+}
+
+.teacher-preview-avatar {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background:
+            linear-gradient(
+                    135deg,
+                    #ede9fe,
+                    #e0e7ff
+            );
+
+    color: var(--primary);
+
+    font-size: 11px;
+    font-weight: 800;
+
+    flex-shrink: 0;
+}
+
+.teacher-preview-name {
+    color: var(--text);
+
+    font-size: 12px;
+    font-weight: 800;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+.teacher-preview-role {
+    margin-top: 2px;
+
+    color: var(--text-muted);
+
+    font-size: 10px;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   SALARY DETAILS
+   ========================================================= */
+
+.salary-details {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 1px;
+
+    overflow: hidden;
+
+    border: 1px solid var(--border);
+
+    border-radius: 11px;
+
+    background: var(--border);
+}
+
+.salary-detail-item {
+    position: relative;
+
+    padding: 12px;
+
+    background: var(--surface);
+
+    transition:
+            background var(--transition);
+}
+
+.salary-detail-item:hover {
+    background: #fafbff;
+}
+
+.salary-detail-label {
+    color: var(--text-muted);
+
+    font-size: 9px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.3px;
+}
+
+.salary-detail-value {
+    margin-top: 4px;
+
+    color: var(--text);
+
+    font-size: 12px;
+    font-weight: 750;
+
+    line-height: 1.4;
+
+    word-break: break-word;
+}
+
+
+/* =========================================================
+   SALARY PAY ACTION
+   ========================================================= */
+
+.mark-paid-btn {
+    position: relative;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 5px;
+
+    min-height: 31px;
+
+    padding: 0 10px;
+
+    border: 1px solid transparent;
+
+    border-radius: 8px;
+
+    background: var(--success-light);
+
+    color: var(--success-dark);
+
+    font-size: 10px;
+    font-weight: 800;
+
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    transition:
+            transform var(--transition-fast),
+            background var(--transition-fast),
+            box-shadow var(--transition-fast),
+            border-color var(--transition-fast);
+}
+
+.mark-paid-btn:hover {
+    background: #d1fae5;
+
+    border-color: rgba(16, 185, 129, 0.12);
+
+    transform: translateY(-1px);
+
+    box-shadow:
+            0 4px 10px rgba(16, 185, 129, 0.12);
+}
+
+.mark-paid-btn:active {
+    transform: translateY(0);
+}
+
+.mark-paid-btn:focus-visible {
+    outline: none;
+
+    box-shadow:
+            0 0 0 3px rgba(16, 185, 129, 0.16);
+}
+
+
+/* =========================================================
+   SALARY EMPTY STATE
+   ========================================================= */
+
+.salary-empty {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 220px;
+
+    padding: 30px;
+
+    text-align: center;
+
+    color: var(--text-muted);
+}
+
+.salary-empty-icon {
+    width: 52px;
+    height: 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 12px;
+
+    border-radius: 15px;
+
+    background: var(--surface-soft);
+
+    color: var(--text-muted);
+
+    font-size: 21px;
+}
+
+.salary-empty-title {
+    color: var(--text);
+
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.salary-empty-text {
+    max-width: 360px;
+
+    margin-top: 5px;
+
+    color: var(--text-muted);
+
+    font-size: 10px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   SALARY LOADING
+   ========================================================= */
+
+.salary-loading {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 9px;
+
+    min-height: 180px;
+
+    color: var(--text-muted);
+
+    font-size: 11px;
+}
+
+.salary-loading .loading-spinner {
+    width: 20px;
+    height: 20px;
+}
+
+
+/* =========================================================
+   SALARY RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .salary-summary-grid {
+        gap: 11px;
+    }
+
+    .salary-summary-card {
+        padding: 14px;
+    }
+
+    .salary-summary-value {
+        font-size: 17px;
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    .salary-toolbar {
+        align-items: stretch;
+
+        flex-direction: column;
+    }
+
+    .salary-filters {
+        width: 100%;
+    }
+
+    .salary-filters > * {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .salary-summary-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .salary-details {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media (max-width: 576px) {
+
+    .salaries-header {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+    .salaries-title {
+        font-size: 20px;
+    }
+
+    .salaries-subtitle {
+        font-size: 11px;
+    }
+
+    .salary-summary-grid {
+        grid-template-columns: 1fr;
+
+        gap: 9px;
+    }
+
+    .salary-summary-card {
+        min-height: 78px;
+
+        padding: 13px;
+    }
+
+    .salary-summary-icon {
+        width: 39px;
+        height: 39px;
+
+        border-radius: 10px;
+
+        font-size: 15px;
+    }
+
+    .salary-summary-label {
+        font-size: 9px;
+    }
+
+    .salary-summary-value {
+        font-size: 17px;
+    }
+
+    .teacher-avatar {
+        width: 34px;
+        height: 34px;
+
+        border-radius: 9px;
+    }
+
+    .teacher-name {
+        font-size: 11px;
+    }
+
+    .teacher-role {
+        font-size: 9px;
+    }
+
+    .salary-amount {
+        font-size: 11px;
+    }
+
+    .salary-modal .modal {
+        max-height: calc(100vh - 20px);
+    }
+
+    .salary-form-section {
+        padding: 12px;
+    }
+}
+
+
+@media (max-width: 380px) {
+
+    .salary-summary-card {
+        padding: 12px;
+    }
+
+    .salary-summary-value {
+        font-size: 16px;
+    }
+
+    .teacher-preview {
+        padding: 9px;
+    }
+
+    .teacher-preview-avatar {
+        width: 36px;
+        height: 36px;
+    }
+
+    .salary-detail-item {
+        padding: 10px;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .salaries-page,
+    .salary-summary-card,
+    .salary-summary-card::after,
+    .salary-summary-icon,
+    .teacher-avatar,
+    .teacher-preview,
+    .salary-form-section,
+    .salary-action-edit,
+    .salary-action-delete,
+    .salary-action-view,
+    .mark-paid-btn {
+        animation: none !important;
+
+        transition: none !important;
+    }
+}
+
+/* =========================================================
+   FINAL RESPONSIVE / ANIMATION POLISH
+   ========================================================= */
+
+.accounting-content > .accounting-stats-grid,
+.accounting-content > .accounting-section-grid,
+.accounting-content > .accounting-financial-summary{
+    animation:accountingContentRise .5s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes accountingContentRise{
+    from{opacity:0;transform:translateY(10px)}
+    to{opacity:1;transform:none}
+}
+
+@media (max-width:900px){
+    .children-summary,
+    .payment-summary-grid,
+    .salary-summary-grid,
+    .expense-summary-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+}
+@media (max-width:640px){
+    .children-summary,
+    .payment-summary-grid,
+    .salary-summary-grid,
+    .expense-summary-grid{
+        grid-template-columns:1fr;
+    }
+    .children-header,
+    .payments-header,
+    .salaries-header,
+    .expenses-header{
+        flex-direction:column;
+        align-items:stretch;
+    }
+}
+@media (prefers-reduced-motion:reduce){
+    .accounting-content > .accounting-stats-grid,
+    .accounting-content > .accounting-section-grid,
+    .accounting-content > .accounting-financial-summary{
+        animation:none;
+    }
+}
+/* =========================================================
+   SALARY TOAST
+   ========================================================= */
+
+.accounting-toast {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    min-width: 300px;
+    max-width: 420px;
+
+    padding: 14px 18px;
+
+    border: 1px solid transparent;
+    border-radius: 12px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    box-shadow:
+            0 8px 24px rgba(0, 0, 0, 0.15);
+
+    opacity: 0;
+
+    transform: translateY(-10px);
+
+    transition:
+            opacity 0.3s ease,
+            transform 0.3s ease;
+}
+
+
+/* =========================================================
+   TOAST SHOW
+   ========================================================= */
+
+.accounting-toast.show {
+    opacity: 1;
+
+    transform: translateY(0);
+}
+
+
+/* =========================================================
+   SUCCESS
+   ========================================================= */
+
+.accounting-toast-success {
+    background: #16a34a !important;
+
+    color: #ffffff !important;
+
+    border-color: #15803d !important;
+
+    box-shadow:
+            0 8px 24px rgba(22, 163, 74, 0.25) !important;
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.accounting-toast-error {
+    background: #dc2626 !important;
+
+    color: #ffffff !important;
+
+    border-color: #b91c1c !important;
+
+    box-shadow:
+            0 8px 24px rgba(220, 38, 38, 0.25) !important;
+}
+
+
+/* =========================================================
+   WARNING
+   ========================================================= */
+
+.accounting-toast-warning {
+    background: #d97706 !important;
+
+    color: #ffffff !important;
+
+    border-color: #b45309 !important;
+
+    box-shadow:
+            0 8px 24px rgba(217, 119, 38, 0.25) !important;
+}
+
+
+/* =========================================================
+   TOAST ICON
+   ========================================================= */
+
+.accounting-toast-icon {
+    width: 24px;
+    height: 24px;
+
+    min-width: 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.2);
+
+    color: #ffffff !important;
+
+    font-size: 14px;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   TOAST TEXT
+   ========================================================= */
+
+.accounting-toast-text {
+    color: #ffffff !important;
+
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   TOAST CONTAINER
+   ========================================================= */
+
+.accounting-toast-container {
+    position: fixed;
+
+    top: 24px;
+    right: 24px;
+
+    z-index: 99999;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .accounting-toast-container {
+        top: 16px;
+        right: 16px;
+        left: 16px;
+    }
+
+    .accounting-toast {
+        min-width: 0;
+
+        width: 100%;
+
+        max-width: none;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .accounting-toast {
+        transition: none !important;
+    }
+}

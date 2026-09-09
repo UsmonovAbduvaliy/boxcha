@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Boxcha — Buxgalteriya</title>
+
+    <link rel="stylesheet" href="/accounting/css/common.css">
+    <link rel="stylesheet" href="/accounting/css/dashboard.css">
+    <link rel="stylesheet" href="/accounting/css/payments.css">
+    <link rel="stylesheet" href="/accounting/css/salaries.css">
+    <link rel="stylesheet" href="/accounting/css/expenses.css">
+    <link rel="stylesheet" href="/accounting/css/children.css">
+    <link rel="stylesheet" href="/accounting/css/group-statistics.css">
+    <link rel="stylesheet" href="/accounting/css/responsive.css">
+</head>
+
+<body>
+
+<div class="accounting-app">
+
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
+
+    <aside class="accounting-sidebar">
+
+        <div class="accounting-logo">
+            <div class="accounting-logo-icon">
+                B
+            </div>
+
+            <div class="accounting-logo-text">
+                <strong>Boxcha</strong>
+                <span>Buxgalteriya</span>
+            </div>
+        </div>
+
+
+        <!-- Navigation -->
+
+        <nav class="accounting-nav">
+
+            <button
+                    class="accounting-nav-item active"
+                    data-page="dashboard"
+            >
+                <span class="nav-icon">▦</span>
+                <span>Dashboard</span>
+            </button>
+
+            <button
+                    class="accounting-nav-item"
+                    data-page="payments"
+            >
+                <span class="nav-icon">₸</span>
+                <span>Bolalar to‘lovi</span>
+            </button>
+
+            <button
+                    class="accounting-nav-item"
+                    data-page="salaries"
+            >
+                <span class="nav-icon">👨‍🏫</span>
+                <span>Ustozlar oyligi</span>
+            </button>
+
+            <button
+                    class="accounting-nav-item"
+                    data-page="expenses"
+            >
+                <span class="nav-icon">↘</span>
+                <span>Rasxodlar</span>
+            </button>
+
+            <button
+                    class="accounting-nav-item"
+                    data-page="group-statistics"
+            >
+                <span class="nav-icon">📊</span>
+                <span>Guruhlar statistikasi</span>
+            </button>
+
+        </nav>
+
+
+        <!-- Bottom -->
+
+        <div class="accounting-sidebar-bottom">
+
+            <button
+                    class="accounting-nav-item"
+                    id="backToCabinetBtn"
+            >
+                <span class="nav-icon">←</span>
+                <span>Kabinetga qaytish</span>
+            </button>
+
+            <button
+                    class="accounting-nav-item logout-item"
+                    id="accountingLogoutBtn"
+            >
+                <span class="nav-icon">↪</span>
+                <span>Chiqish</span>
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN
+         ===================================================== -->
+
+    <main class="accounting-main">
+
+        <!-- HEADER -->
+
+        <header class="accounting-header">
+
+            <div class="accounting-header-left">
+
+                <button
+                        class="mobile-menu-btn"
+                        id="mobileMenuBtn"
+                >
+                    ☰
+                </button>
+
+                <div>
+
+                    <h1 id="pageTitle">
+                        Buxgalteriya
+                    </h1>
+
+                    <p id="pageSubtitle">
+                        Boxcha moliyaviy boshqaruv paneli
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="accounting-header-right">
+
+                <div class="accounting-month-picker">
+
+                    <label for="accountingMonth">
+                        Oy
+                    </label>
+
+                    <input
+                            type="month"
+                            id="accountingMonth"
+                    >
+
+                </div>
+
+                <div
+                        class="accounting-user"
+                        id="accountingUser"
+                >
+                    Admin
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- =================================================
+             PAGE CONTENT
+             ================================================= -->
+
+        <section
+                class="accounting-content"
+                id="accountingContent"
+        >
+
+            <!-- Dashboard will be loaded here -->
+
+            <div
+                    class="accounting-loading"
+                    id="accountingLoading"
+            >
+                <div class="loading-spinner"></div>
+
+                <span>
+                    Ma’lumotlar yuklanmoqda...
+                </span>
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- =========================================================
+     MOBILE OVERLAY
+     ========================================================= -->
+
+<div
+        class="accounting-overlay"
+        id="accountingOverlay"
+></div>
+
+<!-- Excel -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+<!-- PDF -->
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+     ========================================================= -->
+<script
+        type="module"
+        src="./js/accounting.js"
+></script>
+
+</body>
+</html>
