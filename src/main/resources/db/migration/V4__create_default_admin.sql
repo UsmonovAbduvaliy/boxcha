@@ -19,7 +19,7 @@ VALUES (
            '2026-09-09 00:00:00'
        );
 
-INSERT INTO users_roles (users_id, roles_id)
+INSERT INTO users_roles (user_id, roles_id)
 SELECT u.id, r.id
 FROM users u
          JOIN roles r ON r.role = 'ADMIN'
