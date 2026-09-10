@@ -189,11 +189,16 @@ export async function loadGroupsPage(state) {
                     "click",
                     () => {
 
-                        const id =
-                            Number(
-                                card.dataset.groupId
-                            );
+                        console.log("GROUP CARD BOSILDI");
 
+                        const id =
+                            Number(card.dataset.groupId);
+
+                        console.log("GROUP ID:", id);
+
+                        console.log("CURRENT USER:", currentUser());
+
+                        console.log("IS TEACHER:", isTeacher());
 
                         openGroup(
                             id,
@@ -234,6 +239,7 @@ export async function openGroup(
     state
 ) {
 
+    console.log("OPEN GROUP ISHLADI:", groupId);
     const groupsPage =
         $("#groupsPage");
 
