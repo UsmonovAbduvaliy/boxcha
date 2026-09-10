@@ -136,9 +136,9 @@ export function isAdmin() {
 
 
 export function isTeacher() {
+    const role = userRole();
 
-    return userRole() === "TEACHER";
-
+    return role === "TARBIYACHI" || role === "TEACHER";
 }
 
 
