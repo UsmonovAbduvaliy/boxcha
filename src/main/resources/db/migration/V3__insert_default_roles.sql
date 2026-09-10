@@ -1,0 +1,11 @@
+INSERT INTO roles (role)
+VALUES ('ADMIN');
+
+INSERT INTO roles (role)
+VALUES ('SUPER_ADMIN');
+
+INSERT INTO roles (role)
+VALUES ('DOCTOR');
+
+INSERT INTO roles (role)
+VALUES ('TARBIYACHI');
